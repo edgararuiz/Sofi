@@ -1,0 +1,41 @@
+\documentclass[letterpaper]{article}
+%\usepackage{lmodern}
+%\usepackage[T1]{fontenc}
+%\usepackage{mathtools}
+
+\title{INEGI}
+\author{Censos Econ\'omicos 2014}
+\date{10 de Julio de 2014}
+
+\begin{document}
+\maketitle
+
+\textbf{Sistema de an\'alisis multivariado}
+
+\begin{center}
+\section*{Reporte de puntos extremos}
+\end{center}
+
+See if the \texttt{landscape} environment \textbf{works}.
+
+hello \emph{world}
+
+\newpage
+
+\begin{table}\centering
+<<results='asis'>>=
+library(knitr)
+kable(head(mtcars), caption = "Title of the table")
+@
+\end{table}
+
+\newpage
+
+hello again
+
+<<results='asis'>>=
+library(Hmisc)
+latex(head(iris), file='', landscape=FALSE)
+@
+
+\end{document}
