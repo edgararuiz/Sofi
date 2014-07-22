@@ -2,19 +2,19 @@
 #                       F U N C I O N E S
 #
 #####################################################################
-## FUNCION PARA IDENTIFICAR PUNTOS AT?PICOS EN VARIABLES EN DONDE  
-## HAY CAMPOS CON ALG?N VALOR NA "NO APLICA" 
-## LA FUNCI?N REALIZA COMBINACIONES DE VARIABLES  
-## PAR?METROS DE ENTRADA
-## datos	matriz con los datos para identificar puntos extremos 
+## FUNCION PARA IDENTIFICAR PUNTOS ATIPICOS EN VARIABLES EN DONDE  
+## HAY CAMPOS CON ALGUN VALOR NA "NO APLICA" 
+## LA FUNCIÓN REALIZA COMBINACIONES DE VARIABLES  
+## PARÁMETROS DE ENTRADA
+## datos  matriz con los datos para identificar puntos extremos 
 ##		incluyendo campos llave, estos deben estar al inicio de 
 ##		los registros.
-## ncllav	n?mero de campos llave
+## ncllav	número de campos llave
 ## SALIDA	
-## regID	Campos de identificaci?n del registro
-## valores 	Valor de las variables idetificadas en grupo como at?picas
-## norm.estan  valor de la normal estandar del punto respecto a la variable
-## vars.ext  variables at?picas univariadas 
+## regID	Campos de identificación del registro
+## valores 	Valor de las variables identificadas en grupo como atípicas
+## norm.estan  valor de la normal estándar del punto respecto a la variable
+## vars.ext  variables atípicas univariadas.
 #####################################################################
 
 PEconNA<-function(datos,ncllav,nsig){
