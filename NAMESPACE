@@ -1,0 +1,2 @@
+importFrom("sampling", srswor)
+export(DefCap,Etapa01)
