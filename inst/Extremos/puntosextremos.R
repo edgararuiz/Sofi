@@ -18,99 +18,97 @@
 #####################################################################
 
 PEconNA<-function(datos,ncllav,nsig){
-nas<-sum(as.numeric(is.na(datos)))
-stopifnot(dim(datos)[1]>20,dim(datos)[2]>ncllav+2,nas>0)
-TAM<-dim(datos)
-TAM[2]<-TAM[2]-ncllav
-datos1<-matrix(rep(0,TAM[1]*TAM[2]),ncol=TAM[2])
-pvalores<-rep(0,TAM[2])
-Ttrans<-rep(NA,TAM[2])
-tranormal<-rep(NA,TAM[2])
-for(i in 1:TAM[2]){
-	paso <- MejorTr(datos[,i+ncllav])
-	datos1[,i] <- paso$vartra
-	pvalores[i] <- paso$pvalor
-	Ttrans[i] <- paso$trans
-#	ifelse(pvalores[i]<.01,
-#		print(paste("la variable",names(datos[i+ncllav]),"no se normaliz?"
-#		,"mejor transf.",Ttrans[i],"su pvalor =",pvalores[i],sep=' ')),
-#		print(paste("la variable",names(datos[i+ncllav]),"se normaliz?"
-#		,"con la transf.",Ttrans[i],"su pvalor =",pvalores[i],sep=' ')))
-	ifelse(pvalores[i]<.01,tranormal[i]<-"no se normalizo",
-         tranormal[i]<-"si se normalizo")
-}
-Trans<-cbind(names(datos[ncllav+1:TAM[2]]),tranormal,Ttrans,pvalores)
-##############################################################
-##										 #
-## Combinaci?n de variables en donde cada registro tenga     #
-## informaci?n diferente de cero.   n = n?m de variables     #
-##										 #
-##############################################################
-comple<-matrix(rep(0,3),ncol=3)
-NC<-0
-Ncombina<-0
-for(i in seq(dim(datos1)[2],3, by = -1)){   
-	combina<-combn(dim(datos1)[2],i)          # combinaciones n de i 
-	NC<-NC+Ncombina					
-	Ncombina<-choose(dim(datos1)[2],i)		# n?mero de combinaciones
-	compleA<-matrix(rep(0,Ncombina*3),ncol=3) 
-	comple<-rbind(comple,compleA)
-	for(j in 1:dim(combina)[2]){
-		datos1b<-datos1[,combina[,j]]
-		# calcula NA por registro (rengl?n)
-		SNA<-rep(0,dim(datos1b)[1])
-		for(k in 1:dim(datos1)[1])
-			SNA[k]<-sum(as.numeric(is.na(datos1b[k,])))
-		comple[NC+j,]<-c(i,j,length(SNA[SNA==0]))
-	}
-}
-# Selecci?n de combinaciones que contienen mas de 20 registros con informaci?n sin NA
-ComValid<-comple[comple[,3]>20,]
-PE<-rep(0,TAM[1])
-# identifica PE para cada combinaci?n v?lida
-for(i in 1:dim(ComValid)[1]){
-	combOK<-combn(dim(datos1)[2],ComValid[i,1])[,ComValid[i,2]]
-	datos1a<-datos1[,combOK]
-	# separa los datos sin NA para las variables seleccionadas
-	MV<-var(datos1a,na.rm=TRUE)
-	invMV<-solve(MV)
-	distM <- rep(0,TAM[1])
-	medias<-apply(datos1a,2,mean,na.rm=TRUE) 
-	# Genera distancias de Mahalanobis
-	for (j in 1:TAM[1])
-		distM[j]=as.numeric(datos1a[j,]-medias)%*%(invMV)%*%as.numeric(t(datos1a[j,]-medias))
-	#Compara con el valor de la Ji-cuadrada al 95% dos colas
-	mal<-length(na.omit(distM[distM>qchisq(nsig,dim(datos1a)[2]-1)]))
-	if (mal>0)
-		PE[distM>qchisq(nsig,dim(datos1a)[2]-1)]<-1
-}
-NPE<-length(PE[PE==1])	
-if (NPE == 0)
-	stop("No hay puntos extremos")
-medias<-apply(datos1,2,mean,na.rm=TRUE) 
-desvestan<-apply(datos1,2,sd,na.rm=TRUE)
-pextrem<-datos1[PE==1,]
-dpextrem<-datos[PE==1,c(1:ncllav)]
-pextori<-as.matrix(datos[PE==1,c((ncllav+1):(TAM[2]+ncllav))])
-tam<-dim(pextori)
-print(tam[1])
-if(tam[1]==1){
-	estan<-as.numeric((pextrem-medias)/desvestan)
-	idvarne<-names(datos[1,c((ncllav+1):(tam[2]+ncllav))])[abs(estan)>qnorm(nsig)]
-}
-if(tam[1]>1){
-	estan<-matrix(rep(0,tam[1]*tam[2]),ncol=tam[2])
-	idvarne<-matrix(rep(NA,tam[1]*tam[2]),ncol=tam[2])
-	for(j in 1:tam[1]){
-		estan[j,]<-as.numeric((pextrem[j,]-medias)/desvestan)
-		NN<-sum(as.numeric(na.omit(abs(estan[j,])>qnorm(nsig))))
-		if(NN>0)
-			idvarne[j,1:NN]<-na.omit(names(datos[j,c((ncllav+1):(tam[2]+ncllav))])[abs(estan[j,])>qnorm(nsig)])
-		else
-			idvarne[j,]<-rep(NA,tam[2])
-	}
-}
-return(list(Transforma=Trans,regID=dpextrem,valores=pextori,norm.estan=estan,vars.ext=idvarne))
+  nas<-sum(as.numeric(is.na(datos)))
+  stopifnot(dim(datos)[1]>20,dim(datos)[2]>ncllav+2,nas>0)
+  TAM<-dim(datos)
+  TAM[2]<-TAM[2]-ncllav
+  datos1<-matrix(rep(0,TAM[1]*TAM[2]),ncol=TAM[2])
+  pvalores<-rep(0,TAM[2])
+  Tipo_transforma<-rep(NA,TAM[2])
+  Normalidad<-rep(NA,TAM[2])
+  for(i in 1:TAM[2]){
+    paso <- MejorTr(datos[,i+ncllav])
+    datos1[,i] <- paso$vartra
+    pvalores[i] <- paso$pvalor
+    Tipo_transforma[i] <- paso$trans
+    ifelse(pvalores[i]>=.05,Normalidad[i]<-"Excelente",
+           ifelse(pvalores[i]<.05&pvalores[i]>=.01,Normalidad[i]<-"Muy buena",
+                  ifelse(pvalores[i]<.01&pvalores[i]>=.001,Normalidad[i]<-"Buena",
+                         ifelse(pvalores[i]<.001&pvalores[i]>1e-5,Normalidad[i]<-"Regular",
+                                Normalidad[i]<-"No se normaliz?"))))
+  }
+  Trans<-cbind(names(datos[ncllav+1:TAM[2]]),Normalidad,Tipo_transforma,pvalores)
+  ##############################################################
+  ##										 #
+  ## Combinaci?n de variables en donde cada registro tenga     #
+  ## informaci?n diferente de cero.   n = n?m de variables     #
+  ##										 #
+  ##############################################################
+  comple<-matrix(rep(0,3),ncol=3)
+  NC<-0
+  Ncombina<-0
+  for(i in seq(dim(datos1)[2],3, by = -1)){   
+    combina<-combn(dim(datos1)[2],i)          # combinaciones n de i 
+    NC<-NC+Ncombina					
+    Ncombina<-choose(dim(datos1)[2],i)		# n?mero de combinaciones
+    compleA<-matrix(rep(0,Ncombina*3),ncol=3) 
+    comple<-rbind(comple,compleA)
+    for(j in 1:dim(combina)[2]){
+      datos1b<-datos1[,combina[,j]]
+      # calcula NA por registro (rengl?n)
+      SNA<-rep(0,dim(datos1b)[1])
+      for(k in 1:dim(datos1)[1])
+        SNA[k]<-sum(as.numeric(is.na(datos1b[k,])))
+      comple[NC+j,]<-c(i,j,length(SNA[SNA==0]))
+    }
+  }
+  # Selecci?n de combinaciones que contienen mas de 20 registros con informaci?n sin NA
+  ComValid<-comple[comple[,3]>20,]
+  PE<-rep(0,TAM[1])
+  # identifica PE para cada combinaci?n v?lida
+  for(i in 1:dim(ComValid)[1]){
+    combOK<-combn(dim(datos1)[2],ComValid[i,1])[,ComValid[i,2]]
+    datos1a<-datos1[,combOK]
+    # separa los datos sin NA para las variables seleccionadas
+    MV<-var(datos1a,na.rm=TRUE)
+    invMV<-solve(MV)
+    distM <- rep(0,TAM[1])
+    medias<-apply(datos1a,2,mean,na.rm=TRUE) 
+    # Genera distancias de Mahalanobis
+    for (j in 1:TAM[1])
+      distM[j]=as.numeric(datos1a[j,]-medias)%*%(invMV)%*%as.numeric(t(datos1a[j,]-medias))
+    #Compara con el valor de la Ji-cuadrada al 95% dos colas
+    mal<-length(na.omit(distM[distM>qchisq(nsig,dim(datos1a)[2]-1)]))
+    if (mal>0)
+      PE[distM>qchisq(nsig,dim(datos1a)[2]-1)]<-1
+  }
+  NPE<-length(PE[PE==1])	
+  if (NPE == 0)
+    stop("No hay puntos extremos")
+  medias<-apply(datos1,2,mean,na.rm=TRUE) 
+  desvestan<-apply(datos1,2,sd,na.rm=TRUE)
+  pextrem<-datos1[PE==1,]
+  dpextrem<-datos[PE==1,c(1:ncllav)]
+  pextori<-as.matrix(datos[PE==1,c((ncllav+1):(TAM[2]+ncllav))])
+  tam<-dim(pextori)
+  print(tam[1])
+  if(tam[1]==1){
+    estan<-as.numeric((pextrem-medias)/desvestan)
+    idvarne<-names(datos[1,c((ncllav+1):(tam[2]+ncllav))])[abs(estan)>qnorm(nsig)]
+  }
+  if(tam[1]>1){
+    estan<-matrix(rep(0,tam[1]*tam[2]),ncol=tam[2])
+    idvarne<-matrix(rep(NA,tam[1]*tam[2]),ncol=tam[2])
+    for(j in 1:tam[1]){
+      estan[j,]<-as.numeric((pextrem[j,]-medias)/desvestan)
+      NN<-sum(as.numeric(na.omit(abs(estan[j,])>qnorm(nsig))))
+      if(NN>0)
+        idvarne[j,1:NN]<-na.omit(names(datos[j,c((ncllav+1):(tam[2]+ncllav))])[abs(estan[j,])>qnorm(nsig)])
+      else
+        idvarne[j,]<-rep(NA,tam[2])
+    }
+  }
+  return(list(Transforma=Trans,regID=dpextrem,valores=pextori,norm.estan=estan,vars.ext=idvarne))
 }
 
 ###########################################################################
