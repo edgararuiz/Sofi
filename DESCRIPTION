@@ -1,0 +1,14 @@
+Package: INEGI
+Type: Package
+Language: es
+Title: Procesos INEGI
+Version: 0.0.12
+Date: 2014-07-17
+Imports: sampling
+encoding: UTF-8
+Author: Jose D. Loera
+Maintainer: Jose D. Loera <jose.loera@inegi.org.mx>
+URL: http://www.inegi.org.mx/
+BugReports: https://github.com/loerasg/INEGI/issues
+Description: Varios procesos con una interfaz grafica para encontrar valores extremos y el soporte de registros administrativos.
+License: GPL-3
