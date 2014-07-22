@@ -20,12 +20,10 @@ See if the \texttt{landscape} environment \textbf{works}.
 
 hello \emph{world}
 
-\newpage
-
 \begin{table}\centering
 <<results='asis'>>=
 library(knitr)
-kable(head(mtcars), caption = "Title of the table")
+kable(datasetInput2()$Transforma, caption = "Tabla de variables")
 @
 \end{table}
 
@@ -34,8 +32,8 @@ kable(head(mtcars), caption = "Title of the table")
 hello again
 
 <<results='asis'>>=
-library(Hmisc)
-latex(head(iris), file='', landscape=FALSE)
+library(knitr)
+kable(datasetInput2()$regID, caption = "Tabla de Extremos")
 @
 
 \end{document}
