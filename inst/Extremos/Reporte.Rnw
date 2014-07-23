@@ -16,12 +16,14 @@
 \section*{Reporte de puntos extremos}
 \end{center}
 
+Aqui encontramos los \Sexpr{dim(datasetInput())[1]} registros y \Sexpr{dim(datasetInput())[2]-2} variables.
+
 See if the \texttt{landscape} environment \textbf{works}.
 
 hello \emph{world}
 
 \begin{table}\centering
-<<results='asis'>>=
+<<results='asis',echo=FALSE>>=
 library(knitr)
 kable(datasetInput2()$Transforma, caption = "Tabla de variables")
 @
@@ -31,9 +33,47 @@ kable(datasetInput2()$Transforma, caption = "Tabla de variables")
 
 hello again
 
-<<results='asis'>>=
-library(knitr)
-kable(datasetInput2()$regID, caption = "Tabla de Extremos")
+%<<results='asis'>>=
+%library(knitr)
+%#kable(datasetInput2()$regID, caption = "Tabla de Extremos")
+%#@
+
+<<setup, echo=FALSE, results="hide", message=FALSE>>=
+options(replace.assign=TRUE,width=90)
+opts_chunk$set(fig.path='fig/demo-', cache.path='cache/manual-',
+fig.align='center', dev='pdf', tidy=FALSE,
+fig.width=2.75, fig.height=2.95,
+out.width="0.47\\texwidth", fig.show='hold',
+cache=TRUE, par=TRUE)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,1.6,.2),
+cex=1, cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),
+tcl=-.3)
+}, crop=hook_pdfcrop)
 @
+
+<<knitr-run, eval=FALSE, echo=TRUE>>=
+library(knitr)
+knit('knitDemo.Rnw')
+@
+
+<<cmdline, echo=TRUE, eval=TRUE, tidy=FALSE>>=
+2*3*4*5 # * denotes 'multiply'
+sqrt(10) # the square root of 10
+pi # R knows about pi
+2*pi*6378 # Circumference of earth at equator (km)
+# (radius at equator is 6378 km)
+@
+
+\begin{figure}
+<<graph01, eval=TRUE, echo=FALSE, out.width="0.47\\textwidth">>=
+Year <- c(1800, 1850, 1900, 1950, 2000)
+Carbon <- c(8, 54, 534, 1630, 6611)
+## Now plot Carbon as a function of Year
+plot(Carbon ~ Year, pch=16)
+@
+\caption{Annual totals of carbon emissions (millions of tonnes),
+against year}
+\end{figure}
 
 \end{document}
