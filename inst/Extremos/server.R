@@ -54,6 +54,15 @@ shinyServer(function(input, output) {
     return(Tam)
   })
   
+  datasetInput3 <- reactive({
+    if(input$updat2==0) return()
+    Ext1<-datasetInput2()$vars.ext[,1]
+    Ext2<-datasetInput2()$vars.ext[,2]
+    Ext3<-datasetInput2()$vars.ext[,3]
+    Tam<-data.frame(datasetInput2()$regID,Ext1,Ext2,Ext3)
+    return(Tam)
+  })
+  
   #___________________________________________________________________________
   #Tablas
   #___________________________________________________________________________
