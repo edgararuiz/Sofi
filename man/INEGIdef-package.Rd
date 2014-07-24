@@ -12,7 +12,7 @@ Este paquete tiene la finalidad de ayudar a la dirección de registros administr
 Package: \tab INEGI\cr
 Type: \tab Package\cr
 Version: \tab 0.0.14\cr
-Date: \tab 2014-07-17\cr
+Date: \tab 2014-07-23\cr
 License: \tab GPL (>= 3)\cr
 }
 Aquí se usan pocas funciones como es DefCap y Etapa01, otras en desarrollo.
