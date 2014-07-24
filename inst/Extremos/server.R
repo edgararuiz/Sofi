@@ -117,7 +117,7 @@ shinyServer(function(input, output) {
   
   output$DescarResum <- downloadHandler(
     filename = function() {
-      paste('ResumenDat', Sys.Date(), '.csv', sep='') 
+      paste('Dat',input$file[1], Sys.Date(),'.csv', sep='-') 
     },
     content = function(file) {
       write.csv(datasetInput20(), file)
@@ -126,7 +126,7 @@ shinyServer(function(input, output) {
   
   output$downloadReport <- downloadHandler(
     filename = function() {
-      paste('Reporte', Sys.Date(), '.pdf', sep='') 
+      paste('Rep',input$file[1],Sys.Date(), '.pdf', sep='-')
     },
     content = function(file) {
       rnw <- normalizePath('Reporte.Rnw')
