@@ -1,6 +1,6 @@
-\name{INEGI-package}
-\alias{INEGI-package}
-\alias{INEGI}
+\name{CensosEco2014-package}
+\alias{CensosEco2014-package}
+\alias{CensosEco2014}
 \encoding{UTF-8}
 \docType{package}
 \title{Soporte para registros administrativos}
@@ -9,7 +9,7 @@ Este paquete tiene la finalidad de ayudar a la dirección de registros administr
 }
 \details{
 \tabular{ll}{
-Package: \tab INEGI\cr
+Package: \tab CensosEco2014\cr
 Type: \tab Package\cr
 Version: \tab 0.0.14\cr
 Date: \tab 2014-07-23\cr
