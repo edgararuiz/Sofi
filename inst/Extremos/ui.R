@@ -44,7 +44,7 @@ shinyUI(fluidPage(theme = "bootstrap04.css",
         'input.Etap01 === "Extremos"',
         h3("Resultados"),
         tags$hr(),
-        numericInput("ns", "nsig:", 0.975,
+        numericInput("ns", "Nivel de Significancia:", 0.975,
                      min = 0.6, max = 1,step = 0.005),
         br(),
         actionButton("updat2", "Obtener Extremos"),
@@ -67,16 +67,16 @@ shinyUI(fluidPage(theme = "bootstrap04.css",
       conditionalPanel(
         'input.Etap01 === "Graficas"',
         h4("Gráfica de densidad de una distribución normal univariada.", align = "center"),
-        p("La visualización grafica de un punto extremo multivariado con más de dos variables 
-          no es posible realizarla, sin embargo, en una grafica bidimensional de la curva de 
+        p("La visualización gráfica de un punto extremo multivariado con más de dos variables 
+          no es posible realizarla, sin embargo, en una gráfica bidimensional de la curva de 
           densidad normal estándar, se puede dar una buena idea de la localización de cada 
           variable dentro del conjunto de registros que se están analizando."),
-        p("En esta grafica se presenta con líneas en guiones verticales de colores la 
+        p("En esta gráfica se presenta con líneas en guiones verticales de colores la 
           ubicación de cada variable de un registro identificado como punto extremo (PE) 
           multivariado, respecto de la curva normal estándar univariada representada en 
-          negro, con el mismo color de las líneas punteadas se proporciona el valor y 
+          rojo, con el mismo color de las líneas punteadas se proporciona el valor y 
           el nombre de las variables del PE. Se ha marcado con líneas discontinuas 
-          verticales negra los umbrales de aceptación para facilitar identificación de 
+          verticales negras los umbrales de aceptación para facilitar la identificación de 
           las variables que de forma univariada son valores extremos."),
         tags$hr(),
         p("Para obtener un pequeño reporte"),
@@ -126,7 +126,7 @@ shinyUI(fluidPage(theme = "bootstrap04.css",
                  ),
         
         tabPanel("Graficas",
-                 h4("Grafica de extemos"),
+                 h4("Gráfica de extemos"),
                  numericInput("graf", "Gráfica que desea notar:", 1,min = 1),
                  tags$hr(),
                  plotOutput('plot1')
