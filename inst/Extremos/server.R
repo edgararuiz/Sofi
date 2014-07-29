@@ -62,7 +62,9 @@ shinyServer(function(input, output) {
     Ext2[is.na(Ext2)]<-" "
     Ext3<-datasetInput2()$vars.ext[,3]
     Ext3[is.na(Ext3)]<-" "
-    Tam<-data.frame(datasetInput2()$regID,Ext1,Ext2,Ext3)
+    ValoR<-datasetInput2()$valores
+    ValoR[is.na(ValoR)]<-" "
+    Tam<-data.frame(datasetInput2()$regID,ValoR,Ext1,Ext2,Ext3)
     return(Tam)
   })
   
@@ -120,7 +122,7 @@ shinyServer(function(input, output) {
   
   output$DescarResum <- downloadHandler(
     filename = function() {
-      paste('Dat',input$file[1], Sys.Date(),'.csv', sep='-') 
+      paste('Dat',input$file[1], Sys.Date(),'.csv', sep='_') 
     },
     content = function(file) {
       write.csv(datasetInput20(), file)
@@ -129,7 +131,7 @@ shinyServer(function(input, output) {
   
   output$downloadReport <- downloadHandler(
     filename = function() {
-      paste('Rep',input$file[1],Sys.Date(), '.pdf', sep='-')
+      paste('Rep',input$file[1],Sys.Date(), '.pdf', sep='_')
     },
     content = function(file) {
       rnw <- normalizePath('Reporte.Rnw')
