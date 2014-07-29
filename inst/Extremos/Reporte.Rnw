@@ -1,4 +1,5 @@
 \documentclass[letterpaper]{article}
+\usepackage{lscape}
 %\usepackage{lmodern}
 %\usepackage[T1]{fontenc}
 %\usepackage{mathtools}
@@ -27,10 +28,12 @@ kable(datasetInput2()$Transforma, caption = "Tabla de variables")
 
 \newpage
 
+\begin{landscape}
 \begin{table}\centering
 <<results='asis',echo=FALSE>>=
 kable(datasetInput3(), caption = "Tabla de Extremos")
 @
 \end{table}
+\end{landscape}
 
 \end{document}
