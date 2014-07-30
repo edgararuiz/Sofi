@@ -93,13 +93,7 @@ values <- reactiveValues()
       return(Datos)}
       values$a[input$CapEcu,2]<-input$bw_Error
       values$a[input$CapEcu,3]<-input$bw_P
-    #input$updat3
       values$a[input$CapEcu,4]<-optn(values$a[input$CapEcu,5],input$bw_P,input$bw_Error)
-    
-    #dat2<-data.frame(dat,dat[,4])
-    #input$nmanual
-    #Npob<-datasetInput3()[[2]][,2]
-    #Datos<-data.frame(dat2,Npob)
     return(values$a)
   })
   
@@ -110,14 +104,7 @@ values <- reactiveValues()
       Datos<-data.frame(dat,Npob)
       values$b<-Datos
       return(Datos)}
-    #dat<-datasetInput5()
-    #input$updat4
-    #dat[input$CapMod,4]<-isolate(input$nmanual)
     values$b[input$CapMod,4]<-input$nmanual
-    #dat2<-data.frame(dat,dat[,4])
-    #input$nmanual
-    #Npob<-datasetInput3()[[2]][,2]
-    #Datos<-data.frame(dat2,Npob)
     return(values$b)
   })
 

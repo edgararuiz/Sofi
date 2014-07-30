@@ -1,6 +1,6 @@
 library(shiny)
 
-shinyUI(fluidPage(#theme = "bootstrap02.css",
+shinyUI(fluidPage(theme = "bootstrap02.css",
   titlePanel("Etapa 1"),
   sidebarLayout(
     sidebarPanel(
@@ -51,9 +51,9 @@ shinyUI(fluidPage(#theme = "bootstrap02.css",
                        "Manual" = "man")),
         conditionalPanel(condition = 'input.En === "ecu"',
                          actionButton("updat3", "Renovar"),
+                         tags$hr(),
                          selectInput("CapEcu","Capitulo que desea modificar:", 
                                      choices=c(1:20),selected="1"),
-                         tags$hr(),
                          sliderInput(inputId = "bw_Error",
                                      label = "Valor para Error:",
                                      min = 0, max = 0.2, value = .04, step = 0.01),
@@ -63,9 +63,9 @@ shinyUI(fluidPage(#theme = "bootstrap02.css",
         ),
         conditionalPanel(condition = 'input.En === "man"',
                          actionButton("updat4", "Renovar"),
+                         tags$hr(),
                          selectInput("CapMod","Capitulo que desea modificar:", 
                                      choices=c(1:20)),
-                         tags$hr(),
                          numericInput("nmanual", "Introducir valores para n:", 
                                       100)                
         ),
