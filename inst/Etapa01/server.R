@@ -170,9 +170,13 @@ values <- reactiveValues()
       paste('Resumen',input$file1[1], Sys.Date(), '.csv', sep='_') 
     },
     content = function(file) {
-      write.csv(datasetInput5(), file)
+      if(input$En=="ecu"){write.csv(datasetInput51(), file)}
+      else {if(input$En=="man"){write.csv(datasetInput52(), file)}
+      else {write.csv(datasetInput5(), file)}}
     }
   )
+
+#condition = 'input.En === "ecu"'
   
   output$DescarMuestra <- downloadHandler(
     filename = function() {
