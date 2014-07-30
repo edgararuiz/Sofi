@@ -69,10 +69,10 @@ shinyUI(fluidPage(theme = "bootstrap02.css",
                          numericInput("nmanual", "Introducir valores para n:", 
                                       100)                
         ),
+        #tags$hr(),
+        downloadButton('DescarResum', 'Guardar'),
         tags$hr(),
-        actionButton("updat2", "Obtener Muestra"),
-        tags$hr(),
-        downloadButton('DescarResum', 'Guardar')
+        actionButton("updat2", "Obtener Muestra")
       ),
       
       conditionalPanel(
