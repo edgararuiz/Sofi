@@ -25,13 +25,14 @@ shinyServer(function(input, output) {
     points(clusters()$centers, pch = 4, cex = 4, lwd = 4)
   })
   ####
-  
+
+##_____________________________________________________________
+# Leer Datos
+##_____________________________________________________________
   
   datasetInput1 <- reactive({
     read.dbf(input$file1$datapath)
   })
-  
-  
   
   output$NomID <- renderUI({
     if (is.null(input$file1))
@@ -52,11 +53,6 @@ shinyServer(function(input, output) {
              sep=input$sep, quote=input$quote)
   })
   
-  #output$nMan <- renderUI({
-  #  if(input$updat1==0) return()
-  #  
-  #})
-  
   datasetInput3 <- reactive({
     if (is.null(datasetInput1()))
       return(NULL)
@@ -70,7 +66,9 @@ shinyServer(function(input, output) {
     if (is.null(datasetInput2()))
       return(NULL)
     dat<-data.frame(datasetInput2())
-    MuestraGr<-OptFact(dat$Capitulo,datasetInput3()[[2]][,2],dat$n)
+    N<-datasetInput3()[[2]][,2]
+    input$updat2
+    MuestraGr<-isolate(OptFact(dat$Capitulo,N,dat$n))
     Muestra<-merge(datasetInput3()[[1]], MuestraGr, by.x="Id", 
                    by.y="NT")
     return(Muestra)
@@ -84,31 +82,45 @@ shinyServer(function(input, output) {
     return(Datos)
   })
   
+values <- reactiveValues()
+
   datasetInput51 <- reactive({
-    if(input$updat1==0) return()
-    dat<-datasetInput5()
-    dat[input$CapEcu,2]<-input$bw_Error
-    dat[input$CapEcu,3]<-input$bw_P
-    dat[input$CapEcu,4]<-optn(dat[input$CapEcu,5],input$bw_P,input$bw_Error)
+    if(input$updat3==0) {
+      dat<-as.data.frame(datasetInput2())
+      Npob<-datasetInput3()[[2]][,2]
+      Datos<-data.frame(dat,Npob)
+      values$a<-Datos
+      return(Datos)}
+      values$a[input$CapEcu,2]<-input$bw_Error
+      values$a[input$CapEcu,3]<-input$bw_P
+    #input$updat3
+      values$a[input$CapEcu,4]<-optn(values$a[input$CapEcu,5],input$bw_P,input$bw_Error)
+    
     #dat2<-data.frame(dat,dat[,4])
     #input$nmanual
     #Npob<-datasetInput3()[[2]][,2]
     #Datos<-data.frame(dat2,Npob)
-    return(dat)
+    return(values$a)
   })
   
   datasetInput52 <- reactive({
-    if(input$updat1==0) return()
-    dat<-datasetInput5()
+    if(input$updat4==0) {
+      dat<-as.data.frame(datasetInput2())
+      Npob<-datasetInput3()[[2]][,2]
+      Datos<-data.frame(dat,Npob)
+      values$b<-Datos
+      return(Datos)}
+    #dat<-datasetInput5()
     #input$updat4
     #dat[input$CapMod,4]<-isolate(input$nmanual)
-    dat[input$CapMod,4]<-input$nmanual
+    values$b[input$CapMod,4]<-input$nmanual
     #dat2<-data.frame(dat,dat[,4])
     #input$nmanual
     #Npob<-datasetInput3()[[2]][,2]
     #Datos<-data.frame(dat2,Npob)
-    return(dat)
+    return(values$b)
   })
+
   datasetInput6 <- reactive({
     if (is.null(datasetInput4()))
       return(NULL)
@@ -126,9 +138,9 @@ shinyServer(function(input, output) {
   })
   
   
-  #
+  #_______________________________________________________________
   #Tablas
-  #
+  #_______________________________________________________________
   output$tabla1 <- renderTable({
     inFile <- input$file1
     if (is.null(inFile))
@@ -142,17 +154,17 @@ shinyServer(function(input, output) {
     datasetInput2()
   })
   
-  output$tabla3 <- renderTable({
+  output$tabla5 <- renderTable({
     if(input$updat1==0) return()
     datasetInput5()
   })
   
-  output$tabla31 <- renderTable({
+  output$tabla51 <- renderTable({
     if(input$updat1==0) return()
     datasetInput51()
   })
   
-  output$tabla32 <- renderTable({
+  output$tabla52 <- renderTable({
     if(input$updat1==0) return()
     datasetInput52()
   })
@@ -168,7 +180,7 @@ shinyServer(function(input, output) {
   #
   output$DescarResum <- downloadHandler(
     filename = function() {
-      paste('Resumen', Sys.Date(), '.csv', sep='') 
+      paste('Resumen',input$file1[1], Sys.Date(), '.csv', sep='_') 
     },
     content = function(file) {
       write.csv(datasetInput5(), file)
@@ -177,7 +189,7 @@ shinyServer(function(input, output) {
   
   output$DescarMuestra <- downloadHandler(
     filename = function() {
-      paste('Muestra', Sys.Date(), '.zip', sep='') 
+      paste('Muestra',input$file1[1], Sys.Date(), '.zip', sep='_') 
     },
     content = function(file) {
       if (input$mues){write.dbf(datasetInput7(), "Muestra.dbf")}
