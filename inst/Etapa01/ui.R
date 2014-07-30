@@ -1,6 +1,6 @@
 library(shiny)
 
-shinyUI(fluidPage(#theme = "bootstrap01.css",
+shinyUI(fluidPage(#theme = "bootstrap02.css",
   titlePanel("Etapa 1"),
   sidebarLayout(
     sidebarPanel(
@@ -50,26 +50,26 @@ shinyUI(fluidPage(#theme = "bootstrap01.css",
                        "Ecuación" = "ecu",
                        "Manual" = "man")),
         conditionalPanel(condition = 'input.En === "ecu"',
+                         actionButton("updat3", "Renovar"),
                          selectInput("CapEcu","Capitulo que desea modificar:", 
-                                     choices=c(1:20),selected="2"),
+                                     choices=c(1:20),selected="1"),
+                         tags$hr(),
                          sliderInput(inputId = "bw_Error",
                                      label = "Valor para Error:",
-                                     min = 0, max = 0.1, value = .04, step = 0.01),
+                                     min = 0, max = 0.2, value = .04, step = 0.01),
                          sliderInput(inputId = "bw_P",
                                      label = "Valor para P:",
-                                     min = 0, max = 1, value = .5, step = 0.01),
-                         actionButton("updat3", "Renovar"),
-                         tags$hr()
+                                     min = 0, max = 1, value = .5, step = 0.05)
         ),
         conditionalPanel(condition = 'input.En === "man"',
+                         actionButton("updat4", "Renovar"),
                          selectInput("CapMod","Capitulo que desea modificar:", 
                                      choices=c(1:20)),
+                         tags$hr(),
                          numericInput("nmanual", "Introducir valores para n:", 
-                                      100),
-                         actionButton("updat4", "Renovar"),
-                         tags$hr()
-                         
+                                      100)                
         ),
+        tags$hr(),
         actionButton("updat2", "Obtener Muestra"),
         tags$hr(),
         downloadButton('DescarResum', 'Guardar')
@@ -118,15 +118,15 @@ shinyUI(fluidPage(#theme = "bootstrap01.css",
         tabPanel("Resumen",
                  conditionalPanel(condition = 'input.En === "arc"',
                                   h4("Tabla de Resumen Archivo"),
-                                  tableOutput('tabla3')
+                                  tableOutput('tabla5')
                  ),
                  conditionalPanel(condition = 'input.En === "ecu"',
                                   h4("Tabla de Resumen Ecuaciones"),
-                                  tableOutput('tabla31')
+                                  tableOutput('tabla51')
                  ),
                  conditionalPanel(condition = 'input.En === "man"',
                                   h4("Tabla de Resumen Manual"),
-                                  tableOutput('tabla32')
+                                  tableOutput('tabla52')
                  )
                  
                  ),
