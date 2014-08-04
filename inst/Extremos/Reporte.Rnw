@@ -6,7 +6,7 @@
 
 \title{INEGI}
 \author{Censos Econ\'omicos 2014}
-\date{22 de Julio de 2014}
+\date{}
 
 \begin{document}
 \maketitle
