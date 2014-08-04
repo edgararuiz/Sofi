@@ -65,10 +65,17 @@ shinyServer(function(input, output) {
   datasetInput4 <- reactive({
     if (is.null(datasetInput2()))
       return(NULL)
-    dat<-data.frame(datasetInput2())
+    if(input$En=="ecu"){
+      dat<-data.frame(datasetInput51())
+      values$c<-dat$n}
+    else {if(input$En=="man"){
+      dat<-data.frame(datasetInput52())
+      values$c<-dat$n}
+          else {dat<-data.frame(datasetInput2())
+                values$c<-dat$n}}
     N<-datasetInput3()[[2]][,2]
     input$updat2
-    MuestraGr<-isolate(OptFact(dat$Capitulo,N,dat$n))
+    MuestraGr<-isolate(OptFact(dat$Capitulo,N,values$c))
     Muestra<-merge(datasetInput3()[[1]], MuestraGr, by.x="Id", 
                    by.y="NT")
     return(Muestra)
@@ -79,10 +86,27 @@ shinyServer(function(input, output) {
     dat<-as.data.frame(datasetInput2())
     Npob<-datasetInput3()[[2]][,2]
     Datos<-data.frame(dat,Npob)
+    #dat<-data.frame(datasetInput2())
+    #values$c<-dat$n
     return(Datos)
   })
   
+#________________________________
+#Varios
+#___________________________________
 values <- reactiveValues()
+output$num5<-renderPrint({
+  if (input$updat1==0) return(":-)")
+  sum(datasetInput5()[,4])})
+output$num51<-renderPrint({
+  if (input$updat3==0) return(":-)")
+  sum(datasetInput51()[,4])})
+output$num52<-renderPrint({
+  if (input$updat4==0) return(":-)")
+  sum(datasetInput52()[,4])})
+
+#____________________________________
+#_____________________________________
 
   datasetInput51 <- reactive({
     if(input$updat3==0) {
