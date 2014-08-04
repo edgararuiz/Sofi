@@ -117,18 +117,29 @@ shinyUI(fluidPage(theme = "bootstrap02.css",
         
         tabPanel("Resumen",
                  conditionalPanel(condition = 'input.En === "arc"',
-                                  h4("Tabla de Resumen Archivo"),
-                                  tableOutput('tabla5')
+                                  fluidRow(
+                                    column(4,h4("Tabla de Resumen Archivo"),
+                                           tableOutput('tabla5')),
+                                    column(7,offset = 1,h5("Cantidad de registros para la muestra:"),
+                                           verbatimTextOutput("num5"))
+                                  )
                  ),
                  conditionalPanel(condition = 'input.En === "ecu"',
-                                  h4("Tabla de Resumen Ecuaciones"),
-                                  tableOutput('tabla51')
+                                  fluidRow(
+                                    column(5,h4("Tabla de Resumen Ecuaciones"),
+                                           tableOutput('tabla51')),
+                                    column(5,offset = 1,h5("Cantidad de registros para la muestra:"),
+                                           verbatimTextOutput("num51"))
+                                  )
                  ),
                  conditionalPanel(condition = 'input.En === "man"',
-                                  h4("Tabla de Resumen Manual"),
-                                  tableOutput('tabla52')
+                                  fluidRow(
+                                    column(5,h4("Tabla de Resumen Manual"),
+                                           tableOutput('tabla52')),
+                                    column(5,offset = 1,h5("Cantidad de registros para la muestra:"),
+                                           verbatimTextOutput("num52"))
+                                  )
                  )
-                 
                  ),
         
         tabPanel("Muestra",
