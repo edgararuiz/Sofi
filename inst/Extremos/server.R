@@ -1,5 +1,6 @@
 library(shiny)
 source("puntosextremos.R")
+options(shiny.maxRequestSize=30*1024^2)
 
 
 shinyServer(function(input, output) {
@@ -72,15 +73,17 @@ shinyServer(function(input, output) {
   #Tablas
   #___________________________________________________________________________
   
-  output$tabla1 <- renderTable({
+  output$tabla1 <- renderDataTable({
     if (is.null(input$file)) return(NULL)
-    head(datasetInput(), n = input$obs)
-  })
+    datasetInput()
+  },options = list(aLengthMenu = c(10, 30, 50), 
+                   iDisplayLength = 10))
   
-  output$tabla2 <- renderTable({
+  output$tabla2 <- renderDataTable({
     if(is.null(input$file)) {return(NULL)}
-    head(datasetInput1(), n = input$obs)
-  })
+    datasetInput1()
+  },options = list(aLengthMenu = c(10, 30, 50), 
+                   iDisplayLength = 10))
   
   output$tabla30 <- renderTable({
     if(input$updat2==0) return()
