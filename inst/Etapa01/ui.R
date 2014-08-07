@@ -1,7 +1,9 @@
 library(shiny)
 
-shinyUI(fluidPage(theme = "bootstrap02.css",
-  titlePanel("Etapa 1"),
+shinyUI(navbarPage("Defunciones",
+                   tabPanel("Etapa 1",
+  fluidPage(#theme = "bootstrap02.css",
+  #titlePanel("Etapa 1"),
   sidebarLayout(
     sidebarPanel(
       conditionalPanel(
@@ -71,12 +73,13 @@ shinyUI(fluidPage(theme = "bootstrap02.css",
         ),
         #tags$hr(),
         downloadButton('DescarResum', 'Guardar'),
-        tags$hr(),
-        actionButton("updat2", "Obtener Muestra")
+        tags$hr()
       ),
       
       conditionalPanel(
         'input.Etap01 === "Muestra"',
+        actionButton("updat2", "Obtener Muestra"),
+        tags$hr(),
         helpText('Elige las variables a exhibir'),
         checkboxGroupInput('show_vars', 'Elegir:',
                            c("Id" = "Id",
@@ -153,4 +156,8 @@ shinyUI(fluidPage(theme = "bootstrap02.css",
               )
           )
   )
-))
+)),
+tabPanel("Etapa 2",
+         #verbatimTextOutput("summary"),
+         tags$script(type='text/javascript', src='//www.google.com/trends/embed.js?hl=es-419&q=/m/02y1vz,+YouTube&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330')
+)))
