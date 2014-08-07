@@ -12,7 +12,7 @@ shinyUI(fluidPage(theme = "bootstrap04.css",
                   accept=c('text/csv',
                            'text/comma-separated-values,text/plain', 
                            '.csv')),
-        numericInput("obs", "Primeros casos del archive:", 20),
+        #numericInput("obs", "Primeros casos del archive:", 20),
         tags$hr(),
         
         checkboxInput('header', 'Encabezado', TRUE),
@@ -94,12 +94,12 @@ shinyUI(fluidPage(theme = "bootstrap04.css",
         id = 'Etap01',
         tabPanel("Datos",
                   h4("Tabla de indices"),
-                  tableOutput('tabla1')
+                 dataTableOutput('tabla1')
                 ),
         
         tabPanel("CerosNA",
                  h4("Tabla de indices"),
-                 tableOutput('tabla2')
+                 dataTableOutput('tabla2')
         ),
         
         tabPanel("Extremos",
