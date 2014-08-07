@@ -2,6 +2,7 @@ library(shiny)
 library(foreign)
 library(sampling)
 source("helpers.R")
+options(shiny.maxRequestSize=30*1024^2)
 
 palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
           "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
@@ -213,4 +214,16 @@ output$num52<-renderPrint({
       file.copy("fbCrawlExport.zip", file)
     }
   )
+
+Etapa2Data1 <- reactive({
+  read.dbf(input$Etapa2file1$datapath)
+})
+
+output$Etapa2Tabla1 <- renderDataTable({
+  if (is.null(input$Etapa2file1)) return(NULL)
+  Etapa2Data1()
+},options = list(aLengthMenu = c(10, 30, 50), 
+                 iDisplayLength = 10))
+
+
 })
