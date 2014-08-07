@@ -158,6 +158,16 @@ shinyUI(navbarPage("Defunciones",
   )
 )),
 tabPanel("Etapa 2",
+         sidebarLayout(
+           sidebarPanel(
+             fileInput('Etapa2file1', 'Archivo de códigos (en dbf)',
+                       accept=c('.dbf'))
+           ),
+           mainPanel(
+             h4("Tabla de indices"),
+             dataTableOutput('Etapa2Tabla1')
+           )
+         )
          #verbatimTextOutput("summary"),
-         tags$script(type='text/javascript', src='//www.google.com/trends/embed.js?hl=es-419&q=/m/02y1vz,+YouTube&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330')
+         #tags$script(type='text/javascript', src='//www.google.com/trends/embed.js?hl=es-419&q=/m/02y1vz,+YouTube&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330')
 )))
