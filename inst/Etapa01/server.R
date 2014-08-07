@@ -133,7 +133,7 @@ output$num52<-renderPrint({
   })
 
   datasetInput6 <- reactive({
-    if (is.null(datasetInput4()))
+    if (input$updat2==0)
       return(NULL)
     dat<-datasetInput4()
     Datos<-dat[,input$show_vars, drop = FALSE]
