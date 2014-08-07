@@ -93,15 +93,6 @@ shinyUI(navbarPage("Defunciones",
         tags$hr(),
         checkboxInput("mues","Solo los elementos de la muestra",value = T),
         downloadButton('DescarMuestra', 'Guardar')
-      ),
-      conditionalPanel(
-        'input.Etap01 === "Ejemplo"',
-        helpText('Elige las variables a exhibir'),
-        selectInput('xcol', 'X Variable', names(iris)),
-        selectInput('ycol', 'Y Variable', names(iris),
-                    selected=names(iris)[[2]]),
-        numericInput('clusters', 'Numero de Cluster', 3,
-                     min = 1, max = 9)
       )
       ),
     
@@ -148,11 +139,7 @@ shinyUI(navbarPage("Defunciones",
         tabPanel("Muestra",
                  h4("Tabla con la muestra para la Etapa 1"),
                  dataTableOutput('tabla4')
-                ),
-        tabPanel("Ejemplo",
-                 h4("Gráfica usando K medias"),
-                 plotOutput('plot1')
-        )
+                )
               )
           )
   )
@@ -164,7 +151,7 @@ tabPanel("Etapa 2",
                        accept=c('.dbf'))
            ),
            mainPanel(
-             h4("Tabla de indices"),
+             h4("Tabla de Datos"),
              dataTableOutput('Etapa2Tabla1')
            )
          )
