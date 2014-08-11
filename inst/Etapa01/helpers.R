@@ -1,39 +1,6 @@
+#______________________________________________________________
 #Etapa 1
-
-DefCap <- function(cau="character")
-{
-  d<-length(cau)
-  cat("~~~ Lectura de ",d, " c\u00F3digos de defunci\u00F3n      ~~~ \n")
-  Capitulo<-rep(0,d)
-  for (i in 1:d)
-  {
-    ca<-substr(cau[i],1,3)
-    if ("A00"<=ca & ca<="B99") {Capitulo[i]<-1}
-    else if ("C00"<=ca & ca<="D48") {Capitulo[i]<-2}
-    else if ("D50"<=ca & ca<="D89") {Capitulo[i]<-3}
-    else if ("E00"<=ca & ca<="E90") {Capitulo[i]<-4}
-    else if ("F00"<=ca & ca<="F99") {Capitulo[i]<-5}
-    else if ("G00"<=ca & ca<="G99") {Capitulo[i]<-6}
-    else if ("H00"<=ca & ca<="H59") {Capitulo[i]<-7}
-    else if ("H60"<=ca & ca<="H95") {Capitulo[i]<-8}
-    else if ("I00"<=ca & ca<="I99") {Capitulo[i]<-9}
-    else if ("J00"<=ca & ca<="J99") {Capitulo[i]<-10}
-    else if ("K00"<=ca & ca<="K93") {Capitulo[i]<-11}
-    else if ("L00"<=ca & ca<="L99") {Capitulo[i]<-12}
-    else if ("M00"<=ca & ca<="M99") {Capitulo[i]<-13}
-    else if ("N00"<=ca & ca<="N99") {Capitulo[i]<-14}
-    else if ("O00"<=ca & ca<="O99") {Capitulo[i]<-15}
-    else if ("P00"<=ca & ca<="P96") {Capitulo[i]<-16}
-    else if ("Q00"<=ca & ca<="Q99") {Capitulo[i]<-17}
-    else if ("R00"<=ca & ca<="R99") {Capitulo[i]<-18}
-    else if ("S01"<=ca & ca<="T99") {Capitulo[i]<-19}
-    else if ("V00"<=ca & ca<="Y98") {Capitulo[i]<-20}
-    else Capitulo[i]<-99
-  }
-  Error<-sum(Capitulo==99)
-  cat("~~~ Finalizo lectura de los c\u00F3digos con",Error, "Errores ~~~ \n")
-  list(Capitulo,Error)
-}
+#_____________________________________________________________
 
 Ordenar<-function(IDm,CausaD)
 {
@@ -94,32 +61,60 @@ optn<-function(N,p,E)
       n<-as.integer(S/I)
       return(n)
     }
+#_____________________________________________________________
+#Etapa 2
+#_______________________________________________________________
 
+Revic<-function(CAUSADEF,RECODCBD,RECODCBD2){
+dimn<-nrow(CAUSADEF)
+dimn
+Valor3<-rep(0,dimn)
+Valor4<-rep(0,dimn)
+Bien3<-rep(0,dimn)
+Bien<-rep(0,dimn)
+Rev<-rep(0,dimn)
+Caus<-as.character(CAUSADEF)
+Rec1<-as.character(RECODCBD)
+Rec2<-as.character(RECODCBD2)
 
-Etapa01<-function(IDm,CausaD,Cap,Es,ps,n,Grande){
-  cat("~~~ Probando dimenciones                          ~~~ \n")
-  if(length(IDm)!=length(CausaD)){
-    stop ("No se puede seguir, numero de ID y Casos de defunci\u00F3n no coinciden")}
-   #Tam<-Ordenar(IDm,CausaD)
-  if(missing(Cap)){Cap <- 1:20}
-  else{Cap<-as.integer(Cap)}
-  if(missing(Es)){Es <- rep(.03,20)}
-  else{Es <- Es}
-  if(missing(ps)){ps <- rep(.5,20)}
-  else{ps <- ps}
-  if(missing(n))
-  {
-    Ns<-Tam[[2]][,2]
-    z<-rep(1.96, 20)
-    S<-z^2*ps*(1-ps)*Ns
-    I<-Es^2*(Ns-1)+z^2*ps*(1-ps)
-    n<-as.integer(S/I)
-  }
-  else{n <- as.integer(n)}
-  MuestraGr<-OptFact(Cap,Tam[[2]][,2],n)
-  Muestra<-merge(Tam[[1]], MuestraGr, by.x="Id", by.y="NT")
-  if(missing(Grande)){
-  Mu<-Muestra
-  Muestra<-Mu[Mu$EnMuestra==1,]}
-  return(Muestra)
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,3)
+  R1<-substr(Rec1[i],1,3)
+  R2<-substr(Rec2[i],1,3)
+  if (Ca==R1 & R1==R2) {Valor3[i]<-1;Bien3[i]<-1}
+  else if (Ca==R1 & R1!=R2) {Valor3[i]<-2}
+  else if (Ca==R2 & R1!=R2) {Valor3[i]<-3}
+  else if (Ca!=R1 & R1==R2) {Valor3[i]<-4}
+  else if (Ca!=R1 & R1!=R2) {Valor3[i]<-5}
+  else Valor[i]<-6
+}
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,4)
+  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  R1<-substr(Rec1[i],1,4)
+  if (substr(Rec1[i],4,4)=="X") {Ca<-substr(Rec1[i],1,3)}
+  R2<-substr(Rec2[i],1,4)
+  if (substr(Rec2[i],4,4)=="X") {Ca<-substr(Rec2[i],1,3)}
+  if (Ca==R1 & R1==R2) {Valor4[i]<-1;Bien[i]<-1}
+  else if (Ca==R1 & R1!=R2) {Valor4[i]<-2;Rev[i]<-1}
+  else if (Ca==R2 & R1!=R2) {Valor4[i]<-3;Rev[i]<-1}
+  else if (Ca!=R1 & R1==R2) {Valor4[i]<-4}
+  else if (Ca!=R1 & R1!=R2) {Valor4[i]<-5;Rev[i]<-1}
+  else Valor[i]<-6
+}
+
+Valor3<-as.integer(Valor3)
+Valor4<-as.integer(Valor4)
+Bien3<-as.integer(Bien3)
+Bien<-as.integer(Bien)
+Rev<-as.integer(Rev)
+Cap1<-DefCap(CAUSADEF)
+Cap<-DefCap(RECODCBD)
+CapAut<-as.integer(Cap1[[1]])
+ManualDoble<-as.integer(Cap[[1]])
+Etapa4<-cbind(CAUSADEF,RECODCBD,RECODCBD2,CapAut,ManualDoble,Valor3,Valor4,Bien3,Bien,Rev)
+return(Etapa4)
 }
