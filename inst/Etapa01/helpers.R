@@ -66,7 +66,7 @@ optn<-function(N,p,E)
 #_______________________________________________________________
 
 Revic<-function(CAUSADEF,RECODCBD,RECODCBD2){
-dimn<-nrow(CAUSADEF)
+dimn<-length(CAUSADEF)
 dimn
 Valor3<-rep(0,dimn)
 Valor4<-rep(0,dimn)
