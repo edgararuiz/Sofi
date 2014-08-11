@@ -234,4 +234,14 @@ Etapa2Data2 <- reactive({
   return(Tam)
 })
 
+output$Etapa2Tabla2 <- renderDataTable({
+  if (is.null(input$E2updat1==0)) return(NULL)
+  Etapa2Data2()
+},options = list(aLengthMenu = c(5, 10, 50), 
+                 iDisplayLength = 5))
+
+output$RegRev<-renderPrint({
+  if (input$E2updat1==0) return(":-)")
+  sum(Etapa2Data2()[,10])})
+
 })
