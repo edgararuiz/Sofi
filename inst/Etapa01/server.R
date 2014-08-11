@@ -218,7 +218,7 @@ output$Etap2Causa1 <- renderUI({
               choices=c("",colnames(Etapa2Data1())),selected="")
 })
 
-output$Etap2Causa1 <- renderUI({
+output$Etap2Causa2 <- renderUI({
   if (is.null(input$Etapa2file1)) return(NULL)
   selectInput("E2C2","Codificador 2 (generalmente RECODCBD2)", 
               choices=c("",colnames(Etapa2Data1())),selected="")
