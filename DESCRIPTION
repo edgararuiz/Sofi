@@ -2,7 +2,7 @@ Package: CensosEco2014
 Type: Package
 Language: es
 Title: Procesos INEGI
-Version: 0.0.14
+Version: 0.0.15
 Date: 2014-07-23
 Imports: sampling
 encoding: UTF-8
