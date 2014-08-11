@@ -11,7 +11,7 @@ Este paquete tiene la finalidad de ayudar a la dirección de registros administr
 \tabular{ll}{
 Package: \tab CensosEco2014\cr
 Type: \tab Package\cr
-Version: \tab 0.0.14\cr
+Version: \tab 0.0.15\cr
 Date: \tab 2014-07-23\cr
 License: \tab GPL (>= 3)\cr
 }
