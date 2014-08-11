@@ -145,17 +145,53 @@ shinyUI(navbarPage("Defunciones",
   )
 #)
 ),
-tabPanel("Etapa 2",
+tabPanel("Etapa 02",
+         #fluidPage(
          sidebarLayout(
            sidebarPanel(
-             fileInput('Etapa2file1', 'Archivo de códigos (en dbf)',
-                       accept=c('.dbf'))
+             conditionalPanel(
+               'input.Etap2 === "Datos2"',
+               fileInput('Etapa2file1', 'Archivo de códigos (en dbf)',
+                         accept=c('.dbf')),
+               #numericInput("obs", "Primeros casos del archive:", 20),
+               tags$hr()
+               
+             ),
+             
+             
+             
+             conditionalPanel(
+               'input.Etap2 === "Resumen2"',
+               helpText('Elegir las variables a utilizar'),
+               uiOutput("Etap2CausaA"),
+               uiOutput("Etap2Causa1"),
+               uiOutput("Etap2Causa2"),
+               tags$hr()
+             )
+             
            ),
+           
            mainPanel(
-             h4("Tabla de Datos"),
-             dataTableOutput('Etapa2Tabla1')
+             tabsetPanel(
+               id = 'Etap2',
+               tabPanel("Datos2",    
+                        h4("Tabla de Datos1"),
+                        dataTableOutput('Etapa2Tabla1')
+               ),
+               
+               
+               
+               tabPanel("Resumen2",
+                        h4("Tabla de Datos2"),
+                        tags$script(type='text/javascript', src='//www.google.com/trends/embed.js?hl=es-419&q=/m/02y1vz,+YouTube&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330')
+               )
+               
+             )
            )
          )
          #verbatimTextOutput("summary"),
          #tags$script(type='text/javascript', src='//www.google.com/trends/embed.js?hl=es-419&q=/m/02y1vz,+YouTube&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330')
-)))
+         #)
+)
+
+))
