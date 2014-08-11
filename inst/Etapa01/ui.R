@@ -2,7 +2,7 @@ library(shiny)
 
 shinyUI(navbarPage("Defunciones",
                    tabPanel("Etapa 1",
-  fluidPage(#theme = "bootstrap02.css",
+  #fluidPage(#theme = "bootstrap02.css",
   #titlePanel("Etapa 1"),
   sidebarLayout(
     sidebarPanel(
@@ -143,7 +143,8 @@ shinyUI(navbarPage("Defunciones",
               )
           )
   )
-)),
+#)
+),
 tabPanel("Etapa 2",
          sidebarLayout(
            sidebarPanel(
