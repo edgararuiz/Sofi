@@ -1,11 +1,9 @@
 library(shiny)
 library(foreign)
 library(sampling)
+library(INEGI)
 source("helpers.R")
 options(shiny.maxRequestSize=300*1024^2)
-
-palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
-          "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
 
 shinyServer(function(input, output) {
 
@@ -69,8 +67,6 @@ shinyServer(function(input, output) {
     dat<-as.data.frame(datasetInput2())
     Npob<-datasetInput3()[[2]][,2]
     Datos<-data.frame(dat,Npob)
-    #dat<-data.frame(datasetInput2())
-    #values$c<-dat$n
     return(Datos)
   })
   
@@ -168,10 +164,7 @@ output$num52<-renderPrint({
     datasetInput6()
   }, options = list(aLengthMenu = c(10, 30, 50), 
                     iDisplayLength = 10))
-    
-  #options = list(aLengthMenu = c(5, 30, 50), iDisplayLength = 5
-  #Guardar Datos
-  #
+
   output$DescarResum <- downloadHandler(
     filename = function() {
       paste('Resumen',input$file1[1], Sys.Date(), '.csv', sep='_') 
@@ -182,8 +175,6 @@ output$num52<-renderPrint({
       else {write.csv(datasetInput5(), file)}}
     }
   )
-
-#condition = 'input.En === "ecu"'
   
   output$DescarMuestra <- downloadHandler(
     filename = function() {
@@ -197,14 +188,17 @@ output$num52<-renderPrint({
     }
   )
 
-
+#_______________________________________________________________
 #_______________________________________________________________
 #Etapa 2
 #_______________________________________________________________
+#_______________________________________________________________
 
+#Datos
 Etapa2Data1 <- reactive({
   read.dbf(input$Etapa2file1$datapath)
 })
+
 
 output$Etapa2Tabla1 <- renderDataTable({
   if (is.null(input$Etapa2file1)) return(NULL)
@@ -212,5 +206,32 @@ output$Etapa2Tabla1 <- renderDataTable({
 },options = list(aLengthMenu = c(5, 10, 50), 
                  iDisplayLength = 5))
 
+output$Etap2CausaA <- renderUI({
+  if (is.null(input$Etapa2file1)) return(NULL)
+  selectInput("E2CA","Autom\u00e1tico (generalmente CAUSADEF)", 
+              choices=c("",colnames(Etapa2Data1())),selected="")
+})
+
+output$Etap2Causa1 <- renderUI({
+  if (is.null(input$Etapa2file1)) return(NULL)
+  selectInput("E2C1","Codificador 1 (generalmente RECODCBD)", 
+              choices=c("",colnames(Etapa2Data1())),selected="")
+})
+
+output$Etap2Causa1 <- renderUI({
+  if (is.null(input$Etapa2file1)) return(NULL)
+  selectInput("E2C2","Codificador 2 (generalmente RECODCBD2)", 
+              choices=c("",colnames(Etapa2Data1())),selected="")
+})
+
+
+Etapa2Data2 <- reactive({
+  if (input$E2updat1==0) return(NULL)
+  input$E2updat1
+  Tam<-isolate(Revic(CAUSADEF=Etapa2Data1()[,input$E2CA],
+                     RECODCBD=Etapa2Data1()[,input$E2C1],
+                     RECODCBD2=Etapa2Data1()[,input$E2C2]))
+  return(Tam)
+})
 
 })
