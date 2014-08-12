@@ -169,6 +169,9 @@ tabPanel("Etapa 2",
                tags$hr(),
                h6("Registros para revisión:"),
                verbatimTextOutput("RegRev"),
+               tags$hr(),
+               checkboxInput("RevGua","Solo los Registros para revisión",value = T),
+               downloadButton('DescarRev', 'Guardar'),
                tags$hr()
              )
              
