@@ -115,6 +115,6 @@ Cap1<-DefCap(CAUSADEF)
 Cap<-DefCap(RECODCBD)
 CapAut<-as.integer(Cap1[[1]])
 ManualDoble<-as.integer(Cap[[1]])
-Etapa4<-cbind(CAUSADEF,RECODCBD,RECODCBD2,CapAut,ManualDoble,Valor3,Valor4,Bien3,Bien,Rev)
+Etapa4<-cbind(Caus,Rec1,Rec2,CapAut,ManualDoble,Valor3,Valor4,Bien3,Bien,Rev)
 return(Etapa4)
 }
