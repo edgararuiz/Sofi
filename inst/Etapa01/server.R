@@ -120,8 +120,7 @@ output$num52<-renderPrint({
   })
   
   datasetInput7 <- reactive({
-    if (is.null(datasetInput6()))
-      return(NULL)
+    if (is.null(datasetInput6())) return(NULL)
     dat<-datasetInput6()
     Datos<-dat[dat$EnMuestra==1,]
     return(Datos)
@@ -234,6 +233,14 @@ Etapa2Data2 <- reactive({
   return(Tam)
 })
 
+Etapa2Data3 <- reactive({
+  if (input$E2updat1==0) return(NULL)
+  dat<-cbind(Etapa2Data1(),Etapa2Data2())
+  if (!input$RevGua){return(dat)}
+  Datos<-dat[dat$Rev==1,]
+  return(Datos)
+})
+
 output$Etapa2Tabla2 <- renderDataTable({
   if (is.null(input$E2updat1==0)) return(NULL)
   Etapa2Data2()
@@ -242,6 +249,17 @@ output$Etapa2Tabla2 <- renderDataTable({
 
 output$RegRev<-renderPrint({
   if (input$E2updat1==0) return(":-)")
-  sum(Etapa2Data2()[,10])})
+  sum(as.integer(Etapa2Data2()[,10]))})
+
+output$DescarRev <- downloadHandler(
+  filename = function() {
+    paste('Revisión',input$Etapa2file1[1], Sys.Date(), '.zip', sep='_') 
+  },
+  content = function(file) {
+    write.dbf(Etapa2Data3(), "Rev.dbf")
+    zip(zipfile='fbCrawlExport.zip', files="Rev.dbf")
+    file.copy("fbCrawlExport.zip", file)
+  }
+)
 
 })
