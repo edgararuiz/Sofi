@@ -114,7 +114,60 @@ Rev<-as.integer(Rev)
 Cap1<-DefCap(CAUSADEF)
 Cap<-DefCap(RECODCBD)
 CapAut<-as.integer(Cap1[[1]])
-ManualDoble<-as.integer(Cap[[1]])
-Etapa4<-cbind(Caus,Rec1,Rec2,CapAut,ManualDoble,Valor3,Valor4,Bien3,Bien,Rev)
+ManualD<-as.integer(Cap[[1]])
+Etapa4<-cbind(Caus,Rec1,Rec2,CapAut,ManualD,Valor3,Valor4,Bien3,Bien,Rev)
+#Etapa4<-cbind(CapAut,ManualD,Valor3,Valor4,Bien3,Bien,Rev)
 return(Etapa4)
+}
+
+
+Frecu<-function(FrecDif){
+  #cat("Hola \n")
+  #FrecDif<-table(CAUSADEF,RECODCBD)
+  #cat("Hola2 \n")
+  d<-dim(FrecDif)
+  #cat("FrecDif", d," es la dimension \n")
+  #t<-0
+  #PosDif<-0
+  #for (i in 1:d[1]){
+  #  if (sum(FrecDif[i,])==0) {t<-t+1
+  #                            PosDif[t]<-i}
+  #}
+  #cat("PosDif", PosDif," es la dimension \n")
+  #FrecDif<-FrecDif[-PosDif,]
+  #cat("FrecDif", dim(FrecDif)," es la dimension \n")
+  d2<-nrow(FrecDif)
+  PosDif<-matrix(NA, d2, 35)
+  #cat("PosDif", dim(PosDif)," es la dimension \n")
+  #cat("Hola3 \n")
+  for (i in 1:d2){
+    PosDif[i,1]<-i
+    PosDif[i,2]<-sum(FrecDif[i,])
+    p<-3
+  #cat("Hola3.5 \n")
+    for (j in 1:d[2]) {
+      if (FrecDif[i,j]!=0) {p<-p+1
+                            PosDif[i,p]<-j}
+    }
+    PosDif[i,3]<-p-3
+  }
+  #cat("Hola4 \n")
+  FrecDif2<-matrix(NA, d2*2, max(PosDif[,3])+1)
+  rown<-rownames(FrecDif)
+  coln<-colnames(FrecDif)
+
+  FrecDif2[1,1]<-rown[1]
+  for (j in 1:PosDif[1,3]){
+  FrecDif2[1,j+1]<-coln[PosDif[1,j+3]]
+  FrecDif2[2,j+1]<-FrecDif[1,PosDif[1,j+3]]
+  }
+  #cat("Hola5 \n")
+  for (i in 2:d2){
+  FrecDif2[i+(i-1),1]<-rown[i]
+  for (j in 1:PosDif[i,3]){
+    FrecDif2[i+(i-1),j+1]<-coln[PosDif[i,j+3]]
+    FrecDif2[i+(i-1)+1,j+1]<-FrecDif[i,PosDif[i,j+3]]
+    }
+  }
+return(FrecDif2)
 }
