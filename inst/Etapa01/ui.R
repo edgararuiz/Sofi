@@ -179,7 +179,41 @@ tabPanel("Etapa 2",
              conditionalPanel(
                'input.Etap02 === "Tablas"',
                helpText('Elegir la tabla que decea ver'),
-               
+               tags$hr(),
+               radioButtons("Tab", "Tipo de tabla:",
+                            c("Totales por caso" = "Caso",
+                              "Errores a 3 Dígitos" = "Er3D",
+                              "Errores a 4 Dígitos" = "Er4D",
+                              "Caso 4 Mismo Capítulo" = "C4MC",
+                              "Caso 4 Diferente Capítulo" = "C4DF"
+                              )),
+               conditionalPanel(condition = 'input.Tab === "Caso"',
+                                helpText('Si desea guardar la tabla de totales por caso:'),
+                                downloadButton('DescarCaso', 'Guardar'),
+                                tags$hr()
+               ),
+               conditionalPanel(condition = 'input.Tab === "Er3D"',
+                                helpText('Si desea guardar la tabla de Errores a 3 Dígitos:'),
+                                downloadButton('DescarEr3D', 'Guardar'),
+                                tags$hr()             
+               ),
+               conditionalPanel(condition = 'input.Tab === "Er4D"',
+                                helpText('Si desea guardar la tabla de Errores a 4 Dígitos:'),
+                                downloadButton('DescarEr4D', 'Guardar'),
+                                tags$hr()               
+               ),
+               conditionalPanel(condition = 'input.Tab === "C4MC"',
+                                numericInput("nMis", "Mínimo de Errores:", 1),
+                                helpText('Si desea guardar frecuencias para mismo capítulo:'),
+                                downloadButton('DescarC4MC', 'Guardar'),
+                                tags$hr()               
+               ),
+               conditionalPanel(condition = 'input.Tab === "C4DF"',
+                                numericInput("nDif", "Mínimo de Errores:", 1),
+                                helpText('Si desea guardar frecuencias para diferente capítulo:'),
+                                downloadButton('DescarC4DF', 'Guardar'),
+                                tags$hr()               
+               ),
                tags$hr()
              )
              
@@ -199,9 +233,29 @@ tabPanel("Etapa 2",
                ),
                
                tabPanel("Tablas",
-                        h4("Tabla de Totales"),
-                        tableOutput('Etapa2Tabla34')
-                        #dataTableOutput('Etapa2Tabla34')
+                        conditionalPanel(condition = 'input.Tab === "Caso"',
+                                         h4("Tabla de Totales por Caso"),
+                                         tableOutput('Etapa2Tabla31')
+                                         #dataTableOutput('Etapa2Tabla34')
+                        ),
+                        conditionalPanel(condition = 'input.Tab === "Er3D"',
+                                         h4("Tabla de Errores a 3 Dígitos"),
+                                         tableOutput('Etapa2Tabla32')
+                        ),
+                        conditionalPanel(condition = 'input.Tab === "Er4D"',
+                                         h4("Tabla de Errores a 4 Dígitos"),
+                                         tableOutput('Etapa2Tabla33')
+                        ),
+                        conditionalPanel(condition = 'input.Tab === "C4MC"',
+                                         h4("Frecuencias para mismo capítulo"),
+                                         tableOutput('Etapa2TablaMis')
+                        ),
+                        conditionalPanel(condition = 'input.Tab === "C4DF"',
+                                         h4("Frecuencias para diferente capítulo"),
+                                         tableOutput('Etapa2TablaDif')
+                        )
+                        
+                        
                )
                
              )
