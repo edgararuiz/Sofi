@@ -146,6 +146,7 @@ shinyUI(navbarPage("Defunciones",
 #)
 ),
 
+#___________________________Etapa 2______________________________
 tabPanel("Etapa 2",
          #fluidPage(
          sidebarLayout(
@@ -173,6 +174,13 @@ tabPanel("Etapa 2",
                checkboxInput("RevGua","Solo los Registros para revisión",value = T),
                downloadButton('DescarRev', 'Guardar'),
                tags$hr()
+             ),
+             
+             conditionalPanel(
+               'input.Etap02 === "Tablas"',
+               helpText('Elegir la tabla que decea ver'),
+               
+               tags$hr()
              )
              
            ),
@@ -188,6 +196,12 @@ tabPanel("Etapa 2",
                tabPanel("Revisión",
                         h4("Tabla de Revisión"),
                         dataTableOutput('Etapa2Tabla2')
+               ),
+               
+               tabPanel("Tablas",
+                        h4("Tabla de Totales"),
+                        tableOutput('Etapa2Tabla34')
+                        #dataTableOutput('Etapa2Tabla34')
                )
                
              )
