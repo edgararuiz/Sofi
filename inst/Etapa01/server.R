@@ -199,30 +199,29 @@ Etapa2Data1 <- reactive({
 })
 
 
-output$Etapa2Tabla1 <- renderDataTable({
-  if (is.null(input$Etapa2file1)) return(NULL)
-  Etapa2Data1()
-},options = list(aLengthMenu = c(5, 10, 50), 
-                 iDisplayLength = 5))
 
+#_________________________________________________________________
 output$Etap2CausaA <- renderUI({
   if (is.null(input$Etapa2file1)) return(NULL)
   selectInput("E2CA","Autom\u00e1tico (generalmente CAUSADEF)", 
-              choices=c("",colnames(Etapa2Data1())),selected="")
+              choices=c("",colnames(Etapa2Data1())),selected="CAUSADEF")
 })
 
 output$Etap2Causa1 <- renderUI({
   if (is.null(input$Etapa2file1)) return(NULL)
   selectInput("E2C1","Codificador 1 (generalmente RECODCBD)", 
-              choices=c("",colnames(Etapa2Data1())),selected="")
+              choices=c("",colnames(Etapa2Data1())),selected="RECODCBD")
 })
 
 output$Etap2Causa2 <- renderUI({
   if (is.null(input$Etapa2file1)) return(NULL)
   selectInput("E2C2","Codificador 2 (generalmente RECODCBD2)", 
-              choices=c("",colnames(Etapa2Data1())),selected="")
+              choices=c("",colnames(Etapa2Data1())),selected="RECODCBD2")
 })
 
+#__________________________________________________________________
+#Reactive
+#__________________________________________________________________
 
 Etapa2Data2 <- reactive({
   if (input$E2updat1==0) return(NULL)
@@ -230,10 +229,82 @@ Etapa2Data2 <- reactive({
   Tam<-isolate(Revic(CAUSADEF=Etapa2Data1()[,input$E2CA],
                      RECODCBD=Etapa2Data1()[,input$E2C1],
                      RECODCBD2=Etapa2Data1()[,input$E2C2]))
+  #Ta<-as.data.frame(Tam)
   return(Tam)
 })
 
-Etapa2Data3 <- reactive({
+Etapa2Data31 <- reactive({
+  if (is.null(Etapa2Data2())) return(NULL)
+  Tabla3<-as.data.frame(matrix(NA,6,4))
+  colnames(Tabla3)<-c("Caso","Comparaci\u00f3n","3 d\u00edgitos","4 d\u00edgitos")
+  Tabla3[1:5,1]<-1:5
+  Tabla3[1,2]<-"Automática = codificador 1 = codificador 2"
+  Tabla3[2,2]<-"Automática = codificador 1 != codificador 2"
+  Tabla3[3,2]<-"Automática = codificador 2 != codificador 1"
+  Tabla3[4,2]<-"Automática != codificador 1 = codificador 2"
+  Tabla3[5,2]<-"Automática != codificador 1 != codificador 2"
+  Tabla3[6,2]<-"Total"
+  dat<-Etapa2Data2()
+  for (i in 1:5){
+    Tabla3[i,3]<-nrow(dat[dat[,6]==i,])
+    Tabla3[i,4]<-nrow(dat[dat[,7]==i,])
+  }
+  Tabla3[6,3]<-sum(as.integer(Tabla3[1:5,3]))
+  Tabla3[6,4]<-sum(as.integer(Tabla3[1:5,4]))
+  return(Tabla3)
+})
+
+Etapa2Data32 <- reactive({
+  if (is.null(Etapa2Data2())) return(NULL)
+  dat<-Etapa2Data2()
+  Digit3<-dat[dat[,6]==4,]
+  Table<-table(as.integer(Digit3[,4]),as.integer(Digit3[,5]))
+  return(Table)
+})
+
+Etapa2Data33 <- reactive({
+  if (is.null(Etapa2Data2())) return(NULL)
+  dat<-Etapa2Data2()
+  Digit4<-dat[dat[,7]==4,]
+  Table<-table(as.integer(Digit4[,4]),as.integer(Digit4[,5]))
+  return(Table)
+})
+
+Etapa2Data34 <- reactive({
+  if (is.null(Etapa2Data2())) return(NULL)
+  #dat<-data.frame(cbind(Etapa2Data1(),Etapa2Data2()))
+  #da<-cbind(Etapa2Data1(),Etapa2Data2())
+  #dat<-as.data.frame(cbind(Etapa2Data1(),Etapa2Data2()),stringsAsFactors = FALSE)
+  dat<-as.data.frame(Etapa2Data2(),stringsAsFactors = FALSE)
+  dat2<-dat[dat[,7]==4,]
+  CapMis<-dat2[dat2[,4]==dat2[,5],]
+  CapDif<-dat2[dat2[,4]!=dat2[,5],]
+  #dato<-subset(dat,Valor4==4)
+  #cat("~~~ Dimension de dat2 ",dim(dat2), " c\u00F3digos de defunci\u00F3n      ~~~ \n")
+  #dato$CapAut<-as.integer(dato$CapAut)
+  #dato$ManualD<-as.integer(dato$ManualD)
+  #as.character
+  #datos2<-dato[as.integer(dato[,7])!=as.integer(dato[,8]),]
+  #cat("~~~ Dimension de dat3 ",dim(dat3), " c~~~ \n")
+  #dat<-Etapa2Data2()
+  #dato<-dat[dat[,7]==4,]
+  #datos2<-dato[dato[,4]!=dato[,5],]
+  #Table<-Frecu(CAUSADEF=datos2[,input$E2CA],
+  #             RECODCBD=datos2[,input$E2C1])
+  #datos2[,2]<-as.character(datos2[,2])
+  #datos2[,4]<-as.character(datos2[,4])
+  FrecMis<-table(CapMis[,1],CapMis[,2])
+  FrecDif<-table(CapDif[,1],CapDif[,2])
+  #cat("~~~ Dimension de FrecDif ",dim(FrecDif), " c~~~ \n")
+  #cat("Hola \n")
+  TableMis<-Frecu(FrecMis)
+  TableDif<-Frecu(FrecDif)
+  #cat("Hola23")
+  #return(FrecDif)
+  list(TableMis,TableDif)
+})
+
+Etapa2DataG1 <- reactive({
   if (input$E2updat1==0) return(NULL)
   dat<-cbind(Etapa2Data1(),Etapa2Data2())
   if (!input$RevGua){return(dat)}
@@ -241,22 +312,58 @@ Etapa2Data3 <- reactive({
   return(Datos)
 })
 
+
+#_____________________________________________________________
+#Render
+#_____________________________________________________________
+output$Etapa2Tabla1 <- renderDataTable({
+  if (is.null(input$Etapa2file1)) return(NULL)
+  Etapa2Data1()
+},options = list(aLengthMenu = c(5, 10, 50), 
+                 iDisplayLength = 5))
+
 output$Etapa2Tabla2 <- renderDataTable({
   if (is.null(input$E2updat1==0)) return(NULL)
   Etapa2Data2()
 },options = list(aLengthMenu = c(5, 10, 50), 
                  iDisplayLength = 5))
 
+output$Etapa2Tabla31 <- renderTable({
+  if (input$E2updat1==0) return(NULL)
+  Etapa2Data31()
+})
+
+output$Etapa2Tabla32 <- renderTable({
+  if (input$E2updat1==0) return(NULL)
+  Etapa2Data32()
+})
+
+output$Etapa2Tabla33 <- renderTable({
+  if (input$E2updat1==0) return(NULL)
+  Etapa2Data33()
+})
+
+output$Etapa2Tabla34 <- renderTable({
+  if (is.null(input$E2updat1==0)) return(NULL)
+  Etapa2Data34()[[1]]
+})
+
 output$RegRev<-renderPrint({
   if (input$E2updat1==0) return(":-)")
   sum(as.integer(Etapa2Data2()[,10]))})
+
+
+
+#_________________________________________________________________
+#Guardar Datos
+#_________________________________________________________________
 
 output$DescarRev <- downloadHandler(
   filename = function() {
     paste('Revisión',input$Etapa2file1[1], Sys.Date(), '.zip', sep='_') 
   },
   content = function(file) {
-    write.dbf(Etapa2Data3(), "Rev.dbf")
+    write.dbf(Etapa2DataG1(), "Rev.dbf")
     zip(zipfile='fbCrawlExport.zip', files="Rev.dbf")
     file.copy("fbCrawlExport.zip", file)
   }
