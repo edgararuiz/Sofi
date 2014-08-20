@@ -272,36 +272,27 @@ Etapa2Data33 <- reactive({
 
 Etapa2Data34 <- reactive({
   if (is.null(Etapa2Data2())) return(NULL)
-  #dat<-data.frame(cbind(Etapa2Data1(),Etapa2Data2()))
-  #da<-cbind(Etapa2Data1(),Etapa2Data2())
-  #dat<-as.data.frame(cbind(Etapa2Data1(),Etapa2Data2()),stringsAsFactors = FALSE)
   dat<-as.data.frame(Etapa2Data2(),stringsAsFactors = FALSE)
   dat2<-dat[dat[,7]==4,]
   CapMis<-dat2[dat2[,4]==dat2[,5],]
   CapDif<-dat2[dat2[,4]!=dat2[,5],]
-  #dato<-subset(dat,Valor4==4)
-  #cat("~~~ Dimension de dat2 ",dim(dat2), " c\u00F3digos de defunci\u00F3n      ~~~ \n")
-  #dato$CapAut<-as.integer(dato$CapAut)
-  #dato$ManualD<-as.integer(dato$ManualD)
-  #as.character
-  #datos2<-dato[as.integer(dato[,7])!=as.integer(dato[,8]),]
-  #cat("~~~ Dimension de dat3 ",dim(dat3), " c~~~ \n")
-  #dat<-Etapa2Data2()
-  #dato<-dat[dat[,7]==4,]
-  #datos2<-dato[dato[,4]!=dato[,5],]
-  #Table<-Frecu(CAUSADEF=datos2[,input$E2CA],
-  #             RECODCBD=datos2[,input$E2C1])
-  #datos2[,2]<-as.character(datos2[,2])
-  #datos2[,4]<-as.character(datos2[,4])
   FrecMis<-table(CapMis[,1],CapMis[,2])
   FrecDif<-table(CapDif[,1],CapDif[,2])
-  #cat("~~~ Dimension de FrecDif ",dim(FrecDif), " c~~~ \n")
-  #cat("Hola \n")
   TableMis<-Frecu(FrecMis)
   TableDif<-Frecu(FrecDif)
-  #cat("Hola23")
-  #return(FrecDif)
   list(TableMis,TableDif)
+})
+
+Etapa2DataMis <- reactive({
+  Tem<-as.integer(Etapa2Data34()[[1]][,ncol(Etapa2Data34()[[1]])])
+  TableD<-subset(Etapa2Data34()[[1]], Tem >= input$nMis)
+  return(TableD)
+})
+
+Etapa2DataDif <- reactive({
+  Tem<-as.integer(Etapa2Data34()[[2]][,ncol(Etapa2Data34()[[2]])])
+  TableD<-subset(Etapa2Data34()[[2]], Tem >= input$nDif)
+  return(TableD)
 })
 
 Etapa2DataG1 <- reactive({
@@ -323,7 +314,7 @@ output$Etapa2Tabla1 <- renderDataTable({
                  iDisplayLength = 5))
 
 output$Etapa2Tabla2 <- renderDataTable({
-  if (is.null(input$E2updat1==0)) return(NULL)
+  if (input$E2updat1==0) return(NULL)
   Etapa2Data2()
 },options = list(aLengthMenu = c(5, 10, 50), 
                  iDisplayLength = 5))
@@ -343,9 +334,14 @@ output$Etapa2Tabla33 <- renderTable({
   Etapa2Data33()
 })
 
-output$Etapa2Tabla34 <- renderTable({
-  if (is.null(input$E2updat1==0)) return(NULL)
-  Etapa2Data34()[[1]]
+output$Etapa2TablaMis <- renderTable({
+  if (is.null(Etapa2Data34())) return(NULL)
+  Etapa2DataMis()
+})
+
+output$Etapa2TablaDif <- renderTable({
+  if (is.null(Etapa2Data34())) return(NULL)
+  Etapa2DataDif()
 })
 
 output$RegRev<-renderPrint({
@@ -366,6 +362,51 @@ output$DescarRev <- downloadHandler(
     write.dbf(Etapa2DataG1(), "Rev.dbf")
     zip(zipfile='fbCrawlExport.zip', files="Rev.dbf")
     file.copy("fbCrawlExport.zip", file)
+  }
+)
+
+output$DescarCaso <- downloadHandler(
+  filename = function() {
+    paste('Casos',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa2Data31(), file)
+  }
+)
+
+output$DescarEr3D <- downloadHandler(
+  filename = function() {
+    paste('Error3D',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa2Data32(), file)
+  }
+)
+
+output$DescarEr4D <- downloadHandler(
+  filename = function() {
+    paste('Error4D',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa2Data33(), file)
+  }
+)
+
+output$DescarC4MC <- downloadHandler(
+  filename = function() {
+    paste('Caso4Mismo',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa2DataMis(), file)
+  }
+)
+
+output$DescarC4DF <- downloadHandler(
+  filename = function() {
+    paste('Caso4Difer',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa2DataDif(), file)
   }
 )
 
