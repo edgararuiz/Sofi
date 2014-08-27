@@ -1,7 +1,7 @@
 #______________________________________________________________
 #Etapa 1
 #_____________________________________________________________
-
+#####
 Ordenar<-function(IDm,CausaD)
 {
   IDm <- as.integer(IDm)
@@ -61,10 +61,12 @@ optn<-function(N,p,E)
       n<-as.integer(S/I)
       return(n)
     }
+
+#####
 #_____________________________________________________________
 #Etapa 2
 #_______________________________________________________________
-
+#####
 Revic<-function(CAUSADEF,RECODCBD,RECODCBD2){
 dimn<-length(CAUSADEF)
 dimn
@@ -155,4 +157,46 @@ Frecu<-function(TabFrec){
   TabFrec2[i+(i-1)+1,ColFin]<-PosDif[i,2]
   }
 return(TabFrec2)
+}
+
+InterVal<-function(CapAutBien,Pob,Error){
+  #INTERVALOS DE CONFIANZA
+  Muestra<-rep(0,21)
+  Bien<-Muestra;BienT<-Muestra;Poblacion<-Muestra;P<-Muestra;Pn<-Muestra;FactorExp<-Muestra
+  
+  for (i in 1:20)
+  {TemCap<-CapAutBien[CapAutBien[,1]==i,]
+   Muestra[i]<-nrow(TemCap)
+   Bien[i]<-sum(TemCap[,2])
+   FactorExp[i]<-Pob[i]/Muestra[i]
+   Pn[i]<-(Bien[i]/Muestra[i])*100
+   BienT[i]<-sum(TemCap[,2])*FactorExp[i]
+   Poblacion[i]<-Pob[i]
+   P[i]<-(BienT[i]/Pob[i])*100
+  }
+
+  i<-21
+  Muestra[i]<-nrow(CapAutBien)
+  Bien[i]<-sum(CapAutBien[,2])
+  Pn[i]<-(Bien[i]/Muestra[i])*100
+  Poblacion[i]<-sum(Pob)
+  BienT[i]<-sum(BienT,na.rm = T)
+  P[i]<-(BienT[i]/Poblacion[i])*100
+  Cap<-c(1:21)
+  
+  psup<-(qbeta(1-Error/2,Bien+.5,Muestra-Bien+.5))*100
+  pinf<-(qbeta(Error/2,Bien+.5,Muestra-Bien+.5))*100
+  #psup4<-(qbeta(1-Error/2,BienT+.5,Poblacion-BienT+.5))*100
+  #pinf4<-(qbeta(Error/2,BienT+.5,Poblacion-BienT+.5))*100
+  psup2<-P+(psup-Pn)
+  pinf2<-P-(Pn-pinf)
+  pinf3<-P-(1-(Muestra/Poblacion))^(1/2)*(P-pinf2)
+  psup3<-P+(1-(Muestra/Poblacion))^(1/2)*(psup2-P)
+  #as.integer(B,Poblacion,n,N)
+  Int.Conf<-cbind(Cap,Poblacion,BienT,Muestra,Bien,P,pinf3,psup3)
+  #cat("inter",Int.Conf)
+  #Int.Conf<-cbind(Cap,Poblacion,BienT,N,n,Pn,pinf4,psup4,P,pinf2,psup2,pinf3,psup3)
+  Int.Conf<-Int.Conf[!is.na(Int.Conf[,3]),]
+  #Int.Conf<-Int.Conf[Int.Conf[,2]==0,]
+  return(Int.Conf)
 }
