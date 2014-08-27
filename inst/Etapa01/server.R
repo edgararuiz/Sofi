@@ -1,16 +1,17 @@
 library(shiny)
 library(foreign)
-library(sampling)
+library(ggplot2)
+#library(sampling)
 library(INEGI)
 source("helpers.R")
 options(shiny.maxRequestSize=300*1024^2)
 
 shinyServer(function(input, output) {
-
+#Etapa 1
 ##_____________________________________________________________
 # Leer Datos
 ##_____________________________________________________________
-  
+####
   datasetInput1 <- reactive({
     read.dbf(input$file1$datapath)
   })
@@ -73,6 +74,7 @@ shinyServer(function(input, output) {
 #________________________________
 #Varios
 #___________________________________
+
 values <- reactiveValues()
 output$num5<-renderPrint({
   if (input$updat1==0) return(":-)")
@@ -126,10 +128,11 @@ output$num52<-renderPrint({
     return(Datos)
   })
   
-  
+#####
   #_______________________________________________________________
   #Tablas
   #_______________________________________________________________
+#####
   output$tabla1 <- renderTable({
     inFile <- input$file1
     if (is.null(inFile))
@@ -187,18 +190,22 @@ output$num52<-renderPrint({
     }
   )
 
+#####
 #_______________________________________________________________
 #_______________________________________________________________
 #Etapa 2
 #_______________________________________________________________
 #_______________________________________________________________
-
+#####
 #Datos
 Etapa2Data1 <- reactive({
   read.dbf(input$Etapa2file1$datapath)
 })
 
-
+Etapa2DataTot <- reactive({
+  read.csv(input$Etapa2file2$datapath, header=input$header, 
+           sep=input$sep, quote=input$quote)
+})
 
 #_________________________________________________________________
 output$Etap2CausaA <- renderUI({
@@ -219,6 +226,24 @@ output$Etap2Causa2 <- renderUI({
               choices=c("",colnames(Etapa2Data1())),selected="RECODCBD2")
 })
 
+output$Etap2Pobla <- renderUI({
+  if (is.null(input$Etapa2file2)) return(NULL)
+  selectInput("E2Po","Población de la muestra:", 
+              choices=c("",colnames(Etapa2DataTot())),selected="Npob")
+})
+
+output$Etap2Int3 <- renderUI({
+  if (is.null(Etapa2DataInt3())) return(NULL)
+  selectInput("E2I3","Variable de color:", 
+              choices=c(colnames(Etapa2DataInt3())),selected="Muestra")
+})
+
+output$Etap2Int4 <- renderUI({
+  if (is.null(Etapa2DataInt4())) return(NULL)
+  selectInput("E2I4","Variable de color:", 
+              choices=c(colnames(Etapa2DataInt4())),selected="Muestra")
+})
+
 #__________________________________________________________________
 #Reactive
 #__________________________________________________________________
@@ -232,6 +257,7 @@ Etapa2Data2 <- reactive({
   #Ta<-as.data.frame(Tam)
   return(Tam)
 })
+
 
 Etapa2Data31 <- reactive({
   if (is.null(Etapa2Data2())) return(NULL)
@@ -303,10 +329,28 @@ Etapa2DataG1 <- reactive({
   return(Datos)
 })
 
+Etapa2DataInt3 <- reactive({
+  if (input$E2Inter==0) return(NULL)
+  Dat<-Etapa2Data2()
+  CapAutBien<-cbind(as.integer(Dat[,4]),as.integer(Dat[,8]))
+  Datos<-InterVal(CapAutBien,Etapa2DataTot()[,input$E2Po],input$E2ErrorI3)
+  return(Datos)
+})
+
+Etapa2DataInt4 <- reactive({
+  if (input$E2Inter==0) return(NULL)
+  Dat<-Etapa2Data2()
+  CapAutBien<-cbind(as.integer(Dat[,4]),as.integer(Dat[,9]))
+  Datos<-InterVal(CapAutBien,Etapa2DataTot()[,input$E2Po],input$E2ErrorI4)
+  return(Datos)
+})
+
+
 
 #_____________________________________________________________
 #Render
 #_____________________________________________________________
+
 output$Etapa2Tabla1 <- renderDataTable({
   if (is.null(input$Etapa2file1)) return(NULL)
   Etapa2Data1()
@@ -344,16 +388,59 @@ output$Etapa2TablaDif <- renderTable({
   Etapa2DataDif()
 })
 
+output$Etapa2TablaTot <- renderTable({
+  if (is.null(input$Etapa2file2)) return(NULL)
+  Etapa2DataTot()
+})
+
+output$Etapa2Inter3 <- renderTable({
+  if (is.null(Etapa2DataInt3())) return(NULL)
+  Etapa2DataInt3()
+  #Dat<-Etapa2DataInt()
+  #Dat[,1]<-as.integer(Dat[,1])
+  #Dat[,2]<-as.integer(Dat[,2])
+  #Dat[,3]<-as.integer(Dat[,3])
+  #Dat[,4]<-as.integer(Dat[,4])
+  #Dat$Poblacion<-as.integer(Dat$Poblacion)
+  #Dat$n<-as.integer(Dat$n)
+  #Dat$N<-as.integer(Dat$N)
+  #return(Dat)
+})
+
+output$Etapa2Inter4 <- renderTable({
+  if (is.null(Etapa2DataInt4())) return(NULL)
+  Etapa2DataInt4()
+})
+
+output$E2GI3 <- renderPlot({
+  if(is.null(Etapa2DataInt3())) return()
+  Int.Conf3<-as.data.frame(Etapa2DataInt3())
+  Fcolor<-as.factor(Etapa2DataInt3()[,input$E2I3])
+  Int.Conf3<-data.frame(Int.Conf3,Fcolor)
+  Graf3D<-ggplot(Int.Conf3, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.6,size = .8)+theme_bw(base_size=14)
+  #graNormPE(datasetInput2(),input$graf)
+  return(Graf3D)
+})
+
+output$E2GI4 <- renderPlot({
+  if(is.null(Etapa2DataInt4())) return()
+  Int.Conf4<-as.data.frame(Etapa2DataInt4())
+  Fcolor<-as.factor(Etapa2DataInt4()[,input$E2I4])
+  Int.Conf4<-data.frame(Int.Conf4,Fcolor)
+  Graf4D<-ggplot(Int.Conf4, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.6,size = .8)+theme_bw(base_size=14)
+  #graNormPE(datasetInput2(),input$graf)
+  return(Graf4D)
+})
+
 output$RegRev<-renderPrint({
   if (input$E2updat1==0) return(":-)")
   sum(as.integer(Etapa2Data2()[,10]))})
 
-
-
+#####
 #_________________________________________________________________
 #Guardar Datos
 #_________________________________________________________________
-
+#####
 output$DescarRev <- downloadHandler(
   filename = function() {
     paste('Revisión',input$Etapa2file1[1], Sys.Date(), '.zip', sep='_') 
@@ -407,6 +494,25 @@ output$DescarC4DF <- downloadHandler(
   },
   content = function(file) {
     write.csv(Etapa2DataDif(), file)
+  }
+)
+
+
+output$DescarE2Inter3 <- downloadHandler(
+  filename = function() {
+    paste('InterConf3',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa2DataInt3(), file)
+  }
+)
+
+output$DescarE2Inter4 <- downloadHandler(
+  filename = function() {
+    paste('InterConf3',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa2DataInt4(), file)
   }
 )
 
