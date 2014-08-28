@@ -186,17 +186,11 @@ InterVal<-function(CapAutBien,Pob,Error){
   
   psup<-(qbeta(1-Error/2,Bien+.5,Muestra-Bien+.5))*100
   pinf<-(qbeta(Error/2,Bien+.5,Muestra-Bien+.5))*100
-  #psup4<-(qbeta(1-Error/2,BienT+.5,Poblacion-BienT+.5))*100
-  #pinf4<-(qbeta(Error/2,BienT+.5,Poblacion-BienT+.5))*100
   psup2<-P+(psup-Pn)
   pinf2<-P-(Pn-pinf)
   pinf3<-P-(1-(Muestra/Poblacion))^(1/2)*(P-pinf2)
   psup3<-P+(1-(Muestra/Poblacion))^(1/2)*(psup2-P)
-  #as.integer(B,Poblacion,n,N)
   Int.Conf<-cbind(Cap,Poblacion,BienT,Muestra,Bien,P,pinf3,psup3)
-  #cat("inter",Int.Conf)
-  #Int.Conf<-cbind(Cap,Poblacion,BienT,N,n,Pn,pinf4,psup4,P,pinf2,psup2,pinf3,psup3)
   Int.Conf<-Int.Conf[!is.na(Int.Conf[,3]),]
-  #Int.Conf<-Int.Conf[Int.Conf[,2]==0,]
   return(Int.Conf)
 }

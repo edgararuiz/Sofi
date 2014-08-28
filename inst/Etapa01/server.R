@@ -190,13 +190,13 @@ output$num52<-renderPrint({
     }
   )
 
-#####
+####
 #_______________________________________________________________
 #_______________________________________________________________
 #Etapa 2
 #_______________________________________________________________
 #_______________________________________________________________
-#####
+####
 #Datos
 Etapa2Data1 <- reactive({
   read.dbf(input$Etapa2file1$datapath)
@@ -396,15 +396,6 @@ output$Etapa2TablaTot <- renderTable({
 output$Etapa2Inter3 <- renderTable({
   if (is.null(Etapa2DataInt3())) return(NULL)
   Etapa2DataInt3()
-  #Dat<-Etapa2DataInt()
-  #Dat[,1]<-as.integer(Dat[,1])
-  #Dat[,2]<-as.integer(Dat[,2])
-  #Dat[,3]<-as.integer(Dat[,3])
-  #Dat[,4]<-as.integer(Dat[,4])
-  #Dat$Poblacion<-as.integer(Dat$Poblacion)
-  #Dat$n<-as.integer(Dat$n)
-  #Dat$N<-as.integer(Dat$N)
-  #return(Dat)
 })
 
 output$Etapa2Inter4 <- renderTable({
@@ -417,8 +408,7 @@ output$E2GI3 <- renderPlot({
   Int.Conf3<-as.data.frame(Etapa2DataInt3())
   Fcolor<-as.factor(Etapa2DataInt3()[,input$E2I3])
   Int.Conf3<-data.frame(Int.Conf3,Fcolor)
-  Graf3D<-ggplot(Int.Conf3, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.6,size = .8)+theme_bw(base_size=14)
-  #graNormPE(datasetInput2(),input$graf)
+  Graf3D<-ggplot(Int.Conf3, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.3,size = .8)+theme_bw(base_size=14)
   return(Graf3D)
 })
 
@@ -427,21 +417,20 @@ output$E2GI4 <- renderPlot({
   Int.Conf4<-as.data.frame(Etapa2DataInt4())
   Fcolor<-as.factor(Etapa2DataInt4()[,input$E2I4])
   Int.Conf4<-data.frame(Int.Conf4,Fcolor)
-  Graf4D<-ggplot(Int.Conf4, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.6,size = .8)+theme_bw(base_size=14)
-  #graNormPE(datasetInput2(),input$graf)
+  Graf4D<-ggplot(Int.Conf4, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.3,size = .8)+theme_bw(base_size=14)
   return(Graf4D)
 })
 
-output$RegRev<-renderPrint({
+output$E2RegRev<-renderPrint({
   if (input$E2updat1==0) return(":-)")
   sum(as.integer(Etapa2Data2()[,10]))})
 
-#####
+####
 #_________________________________________________________________
 #Guardar Datos
 #_________________________________________________________________
-#####
-output$DescarRev <- downloadHandler(
+####
+output$E2DescarRev <- downloadHandler(
   filename = function() {
     paste('Revisión',input$Etapa2file1[1], Sys.Date(), '.zip', sep='_') 
   },
@@ -452,7 +441,7 @@ output$DescarRev <- downloadHandler(
   }
 )
 
-output$DescarCaso <- downloadHandler(
+output$E2DescarCaso <- downloadHandler(
   filename = function() {
     paste('Casos',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
   },
@@ -461,7 +450,7 @@ output$DescarCaso <- downloadHandler(
   }
 )
 
-output$DescarEr3D <- downloadHandler(
+output$E2DescarEr3D <- downloadHandler(
   filename = function() {
     paste('Error3D',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
   },
@@ -470,7 +459,7 @@ output$DescarEr3D <- downloadHandler(
   }
 )
 
-output$DescarEr4D <- downloadHandler(
+output$E2DescarEr4D <- downloadHandler(
   filename = function() {
     paste('Error4D',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
   },
@@ -479,7 +468,7 @@ output$DescarEr4D <- downloadHandler(
   }
 )
 
-output$DescarC4MC <- downloadHandler(
+output$E2DescarC4MC <- downloadHandler(
   filename = function() {
     paste('Caso4Mismo',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
   },
@@ -488,7 +477,7 @@ output$DescarC4MC <- downloadHandler(
   }
 )
 
-output$DescarC4DF <- downloadHandler(
+output$E2DescarC4DF <- downloadHandler(
   filename = function() {
     paste('Caso4Difer',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
   },
@@ -515,5 +504,16 @@ output$DescarE2Inter4 <- downloadHandler(
     write.csv(Etapa2DataInt4(), file)
   }
 )
+
+####
+#_______________________________________________________________
+#_______________________________________________________________
+#Etapa 4
+#_______________________________________________________________
+#_______________________________________________________________
+####
+#Datos
+
+
 
 })
