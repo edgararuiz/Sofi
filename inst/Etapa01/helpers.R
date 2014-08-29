@@ -69,7 +69,7 @@ optn<-function(N,p,E)
 #####
 Revic<-function(CAUSADEF,RECODCBD,RECODCBD2){
 dimn<-length(CAUSADEF)
-dimn
+#dimn
 Valor3<-rep(0,dimn)
 Valor4<-rep(0,dimn)
 Bien3<-rep(0,dimn)
@@ -125,6 +125,7 @@ return(Etapa4)
 
 Frecu<-function(TabFrec){
   d<-dim(TabFrec)
+  cat("TabFrec",d)
   PosDif<-matrix(NA, d[1], 35)
   for (i in 1:d[1]){
     PosDif[i,1]<-i
@@ -193,4 +194,206 @@ InterVal<-function(CapAutBien,Pob,Error){
   Int.Conf<-cbind(Cap,Poblacion,BienT,Muestra,Bien,P,pinf3,psup3)
   Int.Conf<-Int.Conf[!is.na(Int.Conf[,3]),]
   return(Int.Conf)
+}
+
+#___________________________________________________________________
+#                  Etapa 4 y 5
+#__________________________________________________________________
+
+RevicE4<-function(CAUSADEF,RECODCBD,RECODCBD2,COD_SEL){
+dimn<-length(CAUSADEF)
+#dimn
+Fin3<-rep(0,dimn)
+Fin4<-rep(0,dimn)
+Caus<-as.character(CAUSADEF)
+CauFin<-as.character(CAUSADEF)
+CodFin<-as.character(COD_SEL)
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,3)
+  CF<-substr(CodFin[i],1,3)
+  if (is.na(CF)==FALSE) {if (Ca==CF){Fin3[i]<-1}}
+}
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,4)
+  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  CF<-substr(CodFin[i],1,4)
+  if (is.na(CF)==FALSE){CauFin[i]<-CF}
+  if (is.na(CF)==FALSE){if (substr(CodFin[i],4,4)=="X"){CF<-substr(CodFin[i],1,3)}
+                        else if (Ca==CF){Fin4[i]<-1}}
+}
+
+Fin3<-as.integer(Fin3)
+Fin4<-as.integer(Fin4)
+
+Valor3<-rep(0,dimn)
+Valor4<-rep(0,dimn)
+Bien3<-rep(0,dimn)
+Bien4<-rep(0,dimn)
+Rev<-rep(0,dimn)
+#Caus<-as.character(CAUSADEF)
+Rec1<-as.character(RECODCBD)
+Rec2<-as.character(RECODCBD2)
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,3)
+  R1<-substr(Rec1[i],1,3)
+  R2<-substr(Rec2[i],1,3)
+  if (Ca==R1 & R1==R2) {Valor3[i]<-1;Bien3[i]<-1}
+  else if (Ca==R1 & R1!=R2) {Valor3[i]<-2}
+  else if (Ca==R2 & R1!=R2) {Valor3[i]<-3}
+  else if (Ca!=R1 & R1==R2) {Valor3[i]<-4}
+  else if (Ca!=R1 & R1!=R2) {Valor3[i]<-5}
+  else Valor[i]<-6
+}
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,4)
+  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  R1<-substr(Rec1[i],1,4)
+  if (substr(Rec1[i],4,4)=="X") {R1<-substr(Rec1[i],1,3)}
+  R2<-substr(Rec2[i],1,4)
+  if (substr(Rec2[i],4,4)=="X") {R2<-substr(Rec2[i],1,3)}
+  if (Ca==R1 & R1==R2) {Valor4[i]<-1;Bien4[i]<-1}
+  else if (Ca==R1 & R1!=R2) {Valor4[i]<-2;Rev[i]<-1}
+  else if (Ca==R2 & R1!=R2) {Valor4[i]<-3;Rev[i]<-1}
+  else if (Ca!=R1 & R1==R2) {Valor4[i]<-4;CauFin[i]<-R1}
+  else if (Ca!=R1 & R1!=R2) {Valor4[i]<-5;Rev[i]<-1}
+  else Valor[i]<-6
+}
+
+Valor3<-as.integer(Valor3)
+Valor4<-as.integer(Valor4)
+Bien3<-as.integer(Bien3)
+Bien4<-as.integer(Bien4)
+Rev2<-as.integer(Rev)
+Cap1<-DefCap(Caus)
+Cap<-DefCap(Rec1)
+CapAut<-as.integer(Cap1[[1]])
+ManualD<-as.integer(Cap[[1]])
+
+Cap<-DefCap(CauFin)
+CapFin<-as.integer(Cap[[1]])
+
+BienFin4<-rep(0,dimn)
+BienFin4[CauFin==CAUSADEF]<-1
+BienFin4<-as.integer(BienFin4)
+BienFin3<-rep(0,dimn)
+BienFin3[substr(CauFin,1,3)==substr(CAUSADEF,1,3)]<-1
+BienFin3<-as.integer(BienFin3)
+
+#Etapa5rev<-cbind(Caus,Rec1,Rec2,CodFin,CauFin,Valor3,Valor4,BienFin3,BienFin4,Rev2,Bien3,Bien4,Fin3,Fin4,CapAut,ManualD,CapFin)
+
+Fin3c1<-rep(0,dimn)
+Fin4c1<-rep(0,dimn)
+Caus<-as.character(RECODCBD)
+CodFin<-CauFin
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,3)
+  CF<-substr(CodFin[i],1,3)
+  if (Ca==CF) {Fin3c1[i]<-1} 
+  else {Fin3c1[i]<-0}
+}
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,4)
+  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  CF<-substr(CodFin[i],1,4)
+  if (substr(CodFin[i],4,4)=="X") {CF<-substr(CodFin[i],1,3)}
+  if (Ca==CF) {Fin4c1[i]<-1}
+  else {Fin4c1[i]<-0}
+}
+
+Fin3c1<-as.integer(Fin3c1)
+Fin4c1<-as.integer(Fin4c1)
+
+Fin3c2<-rep(0,dimn)
+Fin4c2<-rep(0,dimn)
+Caus<-as.character(RECODCBD2)
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,3)
+  CF<-substr(CodFin[i],1,3)
+  if (Ca==CF) {Fin3c2[i]<-1}
+  else {Fin3c2[i]<-0}
+}
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,4)
+  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  CF<-substr(CodFin[i],1,4)
+  if (substr(CodFin[i],4,4)=="X") {CF<-substr(CodFin[i],1,3)}
+  if (Ca==CF) {Fin4c2[i]<-1} 
+  else {Fin4c2[i]<-0}
+}
+
+Fin3c2<-as.integer(Fin3c2)
+Fin4c2<-as.integer(Fin4c2)
+
+#####################################
+##Para compararar los codificadores manuales C1 y C2 con el 
+##codificador automatico
+
+Aut3c1<-rep(0,dimn)
+Aut4c1<-rep(0,dimn)
+Caus<-as.character(RECODCBD)
+CodFin<-as.character(CAUSADEF)
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,3)
+  CF<-substr(CodFin[i],1,3)
+  if (Ca==CF) {Aut3c1[i]<-1} 
+  else {Aut3c1[i]<-0}
+}
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,4)
+  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  CF<-substr(CodFin[i],1,4)
+  if (substr(CodFin[i],4,4)=="X") {CF<-substr(CodFin[i],1,3)}
+  if (Ca==CF) {Aut4c1[i]<-1} 
+  else {Aut4c1[i]<-0}
+}
+
+Aut3c1<-as.integer(Aut3c1)
+Aut4c1<-as.integer(Aut4c1)
+
+Aut3c2<-rep(0,dimn)
+Aut4c2<-rep(0,dimn)
+Caus<-as.character(RECODCBD2)
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,3)
+  CF<-substr(CodFin[i],1,3)
+  if (Ca==CF) {Aut3c2[i]<-1}
+  else {Aut3c2[i]<-0}
+}
+
+for (i in 1:dimn)
+{
+  Ca<-substr(Caus[i],1,4)
+  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  CF<-substr(CodFin[i],1,4)
+  if (substr(CodFin[i],4,4)=="X") {CF<-substr(CodFin[i],1,3)}
+  if (Ca==CF) {Aut4c2[i]<-1} 
+  else {Aut4c2[i]<-0}
+}
+
+Aut3c2<-as.integer(Aut3c2)
+Aut4c2<-as.integer(Aut4c2)
+Etapa5rev<-cbind(Caus,Rec1,Rec2,CodFin,CauFin,Valor3,Valor4,BienFin3,BienFin4,Rev2,Bien3,Bien4,Fin3,Fin4,CapAut,ManualD,CapFin,Fin3c1,Fin4c1,Fin3c2,Fin4c2,Aut3c1,Aut4c1,Aut3c2,Aut4c2)
+return(Etapa5rev)
 }
