@@ -258,6 +258,13 @@ Etapa2Data2 <- reactive({
   return(Tam)
 })
 
+Etapa2DataG1 <- reactive({
+  if (input$E2updat1==0) return(NULL)
+  dat<-cbind(Etapa2Data1(),Etapa2Data2())
+  if (!input$E2RevGua){return(dat)}
+  Datos<-dat[dat$Rev==1,]
+  return(Datos)
+})
 
 Etapa2Data31 <- reactive({
   if (is.null(Etapa2Data2())) return(NULL)
@@ -311,22 +318,14 @@ Etapa2Data34 <- reactive({
 
 Etapa2DataMis <- reactive({
   Tem<-as.integer(Etapa2Data34()[[1]][,ncol(Etapa2Data34()[[1]])])
-  TableD<-subset(Etapa2Data34()[[1]], Tem >= input$nMis)
+  TableD<-subset(Etapa2Data34()[[1]], Tem >= input$E2nMis)
   return(TableD)
 })
 
 Etapa2DataDif <- reactive({
   Tem<-as.integer(Etapa2Data34()[[2]][,ncol(Etapa2Data34()[[2]])])
-  TableD<-subset(Etapa2Data34()[[2]], Tem >= input$nDif)
+  TableD<-subset(Etapa2Data34()[[2]], Tem >= input$E2nDif)
   return(TableD)
-})
-
-Etapa2DataG1 <- reactive({
-  if (input$E2updat1==0) return(NULL)
-  dat<-cbind(Etapa2Data1(),Etapa2Data2())
-  if (!input$RevGua){return(dat)}
-  Datos<-dat[dat$Rev==1,]
-  return(Datos)
 })
 
 Etapa2DataInt3 <- reactive({
@@ -514,6 +513,320 @@ output$DescarE2Inter4 <- downloadHandler(
 ####
 #Datos
 
+#Datos
+Etapa4Data1 <- reactive({
+  read.dbf(input$Etapa4file1$datapath)
+})
+
+Etapa4DataTot <- reactive({
+  read.csv(input$Etapa4file2$datapath, header=input$header, 
+           sep=input$sep, quote=input$quote)
+})
+
+#_________________________________________________________________
+output$Etap4CausaA <- renderUI({
+  if (is.null(input$Etapa4file1)) return(NULL)
+  selectInput("E4CA","Autom\u00e1tico (generalmente CAUSADEF)", 
+              choices=c("",colnames(Etapa4Data1())),selected="CAUSADEF")
+})
+
+output$Etap4Causa1 <- renderUI({
+  if (is.null(input$Etapa4file1)) return(NULL)
+  selectInput("E4C1","Codificador 1 (generalmente RECODCBD)", 
+              choices=c("",colnames(Etapa4Data1())),selected="RECODCBD")
+})
+
+output$Etap4Causa2 <- renderUI({
+  if (is.null(input$Etapa4file1)) return(NULL)
+  selectInput("E4C2","Codificador 2 (generalmente RECODCBD2)", 
+              choices=c("",colnames(Etapa4Data1())),selected="RECODCBD2")
+})
+
+output$Etap4CausaF <- renderUI({
+  if (is.null(input$Etapa4file1)) return(NULL)
+  selectInput("E4CF","Codificador 2 (generalmente RECODCBD2)", 
+              choices=c("",colnames(Etapa4Data1())),selected="COD_SEL")
+})
+
+output$Etap4Pobla <- renderUI({
+  if (is.null(input$Etapa4file2)) return(NULL)
+  selectInput("E4Po","Población de la muestra:", 
+              choices=c("",colnames(Etapa4DataTot())),selected="Npob")
+})
+
+output$Etap4Int3 <- renderUI({
+  if (is.null(Etapa4DataInt3())) return(NULL)
+  selectInput("E4I3","Variable de color:", 
+              choices=c(colnames(Etapa4DataInt3())),selected="Muestra")
+})
+
+output$Etap4Int4 <- renderUI({
+  if (is.null(Etapa4DataInt4())) return(NULL)
+  selectInput("E4I4","Variable de color:", 
+              choices=c(colnames(Etapa4DataInt4())),selected="Muestra")
+})
+
+#__________________________________________________________________
+#Reactive
+#__________________________________________________________________
+
+Etapa4Data2 <- reactive({
+  if (input$E4updat1==0) return(NULL)
+  input$E4updat1
+  Tam<-isolate(RevicE4(CAUSADEF=Etapa4Data1()[,input$E4CA],
+                     RECODCBD=Etapa4Data1()[,input$E4C1],
+                     RECODCBD2=Etapa4Data1()[,input$E4C2],
+                     COD_SEL=Etapa4Data1()[,input$E4CF]))
+  #Ta<-as.data.frame(Tam)
+  return(Tam)
+})
+
+Etapa4DataG1 <- reactive({
+  if (input$E4updat1==0) return(NULL)
+  dat<-cbind(Etapa4Data1(),Etapa4Data2())
+  if (!input$E4RevGua){return(dat)}
+  Datos<-dat[dat$Rev==1,]
+  return(Datos)
+})
+
+Etapa4Data31 <- reactive({
+  if (is.null(Etapa4Data2())) return(NULL)
+  Tabla3<-as.data.frame(matrix(NA,6,4))
+  colnames(Tabla3)<-c("Caso","Comparaci\u00f3n","3 d\u00edgitos","4 d\u00edgitos")
+  Tabla3[1:5,1]<-1:5
+  Tabla3[1,2]<-"Automática = codificador 1 = codificador 2"
+  Tabla3[2,2]<-"Automática = codificador 1 != codificador 2"
+  Tabla3[3,2]<-"Automática = codificador 2 != codificador 1"
+  Tabla3[4,2]<-"Automática != codificador 1 = codificador 2"
+  Tabla3[5,2]<-"Automática != codificador 1 != codificador 2"
+  Tabla3[6,2]<-"Total"
+  dat<-Etapa4Data2()
+  for (i in 1:5){
+    Tabla3[i,3]<-nrow(dat[dat[,6]==i,])
+    Tabla3[i,4]<-nrow(dat[dat[,7]==i,])
+  }
+  Tabla3[6,3]<-sum(as.integer(Tabla3[1:5,3]))
+  Tabla3[6,4]<-sum(as.integer(Tabla3[1:5,4]))
+  return(Tabla3)
+})
+
+Etapa4Data32 <- reactive({
+  if (is.null(Etapa4Data2())) return(NULL)
+  dat<-Etapa4Data2()
+  Digit3<-dat[dat[,6]==4,]
+  Table<-table(as.integer(Digit3[,15]),as.integer(Digit3[,17]))
+  return(Table)
+})
+
+Etapa4Data33 <- reactive({
+  if (is.null(Etapa4Data2())) return(NULL)
+  dat<-Etapa4Data2()
+  Digit4<-dat[dat[,7]==4,]
+  Table<-table(as.integer(Digit4[,15]),as.integer(Digit4[,17]))
+  return(Table)
+})
+
+Etapa4Data34 <- reactive({
+  if (is.null(Etapa4Data2())) return(NULL)
+  E4dat<-as.data.frame(Etapa4Data2(),stringsAsFactors = FALSE)
+  #dat<-Etapa4Data2()
+  E4dat2<-E4dat[as.integer(E4dat[,7])==4,]
+  E4CapMis<-E4dat2[as.integer(E4dat2[,15])==as.integer(E4dat2[,17]),]
+  E4CapDif<-E4dat2[as.integer(E4dat2[,15])!=as.integer(E4dat2[,17]),]
+  E4FrecMis<-table(E4CapMis[,1],E4CapMis[,2])
+  E4FrecDif<-table(E4CapDif[,1],E4CapDif[,2])
+  E4TableMis<-Frecu(E4FrecMis)
+  E4TableDif<-Frecu(E4FrecDif)
+  list(E4TableMis,E4TableDif)
+})
+
+Etapa4DataMis <- reactive({
+  Tem<-as.integer(Etapa4Data34()[[1]][,ncol(Etapa4Data34()[[1]])])
+  TableD<-subset(Etapa4Data34()[[1]], Tem >= input$E4nMis)
+  return(TableD)
+})
+
+Etapa4DataDif <- reactive({
+  Tem<-as.integer(Etapa4Data34()[[2]][,ncol(Etapa4Data34()[[2]])])
+  TableD<-subset(Etapa4Data34()[[2]], Tem >= input$E4nDif)
+  return(TableD)
+})
+
+Etapa4DataInt3 <- reactive({
+  if (input$E4Inter==0) return(NULL)
+  Dat<-Etapa4Data2()
+  CapAutBien<-cbind(as.integer(Dat[,15]),as.integer(Dat[,8]))
+  Datos<-InterVal(CapAutBien,Etapa4DataTot()[,input$E4Po],input$E4ErrorI3)
+  return(Datos)
+})
+
+Etapa4DataInt4 <- reactive({
+  if (input$E4Inter==0) return(NULL)
+  Dat<-Etapa4Data2()
+  CapAutBien<-cbind(as.integer(Dat[,15]),as.integer(Dat[,9]))
+  Datos<-InterVal(CapAutBien,Etapa4DataTot()[,input$E4Po],input$E4ErrorI4)
+  return(Datos)
+})
+
+
+
+#_____________________________________________________________
+#Render
+#_____________________________________________________________
+
+output$Etapa4Tabla1 <- renderDataTable({
+  if (is.null(input$Etapa4file1)) return(NULL)
+  Etapa4Data1()
+},options = list(aLengthMenu = c(5, 10, 50), 
+                 iDisplayLength = 5))
+
+output$Etapa4Tabla2 <- renderDataTable({
+  if (input$E4updat1==0) return(NULL)
+  Etapa4Data2()
+},options = list(aLengthMenu = c(5, 10, 50), 
+                 iDisplayLength = 5))
+
+output$Etapa4Tabla31 <- renderTable({
+  if (input$E4updat1==0) return(NULL)
+  Etapa4Data31()
+})
+
+output$Etapa4Tabla32 <- renderTable({
+  if (input$E4updat1==0) return(NULL)
+  Etapa4Data32()
+})
+
+output$Etapa4Tabla33 <- renderTable({
+  if (input$E4updat1==0) return(NULL)
+  Etapa4Data33()
+})
+
+output$Etapa4TablaMis <- renderTable({
+  if (is.null(Etapa4Data34())) return(NULL)
+  Etapa4DataMis()
+})
+
+output$Etapa4TablaDif <- renderTable({
+  if (is.null(Etapa4Data34())) return(NULL)
+  Etapa4DataDif()
+})
+
+output$Etapa4TablaTot <- renderTable({
+  if (is.null(input$Etapa4file2)) return(NULL)
+  Etapa4DataTot()
+})
+
+output$Etapa4Inter3 <- renderTable({
+  if (is.null(Etapa4DataInt3())) return(NULL)
+  Etapa4DataInt3()
+})
+
+output$Etapa4Inter4 <- renderTable({
+  if (is.null(Etapa4DataInt4())) return(NULL)
+  Etapa4DataInt4()
+})
+
+output$E4GI3 <- renderPlot({
+  if(is.null(Etapa4DataInt3())) return()
+  Int.Conf3<-as.data.frame(Etapa4DataInt3())
+  Fcolor<-as.factor(Etapa4DataInt3()[,input$E4I3])
+  Int.Conf3<-data.frame(Int.Conf3,Fcolor)
+  Graf3D<-ggplot(Int.Conf3, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.3,size = .8)+theme_bw(base_size=14)
+  return(Graf3D)
+})
+
+output$E4GI4 <- renderPlot({
+  if(is.null(Etapa4DataInt4())) return()
+  Int.Conf4<-as.data.frame(Etapa4DataInt4())
+  Fcolor<-as.factor(Etapa4DataInt4()[,input$E4I4])
+  Int.Conf4<-data.frame(Int.Conf4,Fcolor)
+  Graf4D<-ggplot(Int.Conf4, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.3,size = .8)+theme_bw(base_size=14)
+  return(Graf4D)
+})
+
+output$E4RegRev<-renderPrint({
+  if (input$E4updat1==0) return(":-)")
+  sum(as.integer(Etapa4Data2()[,10]))})
+
+####
+#_________________________________________________________________
+#Guardar Datos
+#_________________________________________________________________
+####
+output$E4DescarRev <- downloadHandler(
+  filename = function() {
+    paste('Revisión',input$Etapa4file1[1], Sys.Date(), '.zip', sep='_') 
+  },
+  content = function(file) {
+    write.dbf(Etapa4DataG1(), "Rev.dbf")
+    zip(zipfile='fbCrawlExport.zip', files="Rev.dbf")
+    file.copy("fbCrawlExport.zip", file)
+  }
+)
+
+output$E4DescarCaso <- downloadHandler(
+  filename = function() {
+    paste('Casos',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa4Data31(), file)
+  }
+)
+
+output$E4DescarEr3D <- downloadHandler(
+  filename = function() {
+    paste('Error3D',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa4Data32(), file)
+  }
+)
+
+output$E4DescarEr4D <- downloadHandler(
+  filename = function() {
+    paste('Error4D',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa4Data33(), file)
+  }
+)
+
+output$E4DescarC4MC <- downloadHandler(
+  filename = function() {
+    paste('Caso4Mismo',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa4DataMis(), file)
+  }
+)
+
+output$E4DescarC4DF <- downloadHandler(
+  filename = function() {
+    paste('Caso4Difer',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa4DataDif(), file)
+  }
+)
+
+
+output$DescarE4Inter3 <- downloadHandler(
+  filename = function() {
+    paste('InterConf3',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa4DataInt3(), file)
+  }
+)
+
+output$DescarE4Inter4 <- downloadHandler(
+  filename = function() {
+    paste('InterConf3',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
+  },
+  content = function(file) {
+    write.csv(Etapa4DataInt4(), file)
+  }
+)
 
 
 })
