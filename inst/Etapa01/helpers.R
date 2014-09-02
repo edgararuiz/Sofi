@@ -125,7 +125,7 @@ return(Etapa4)
 
 Frecu<-function(TabFrec){
   d<-dim(TabFrec)
-  cat("TabFrec",d)
+  #cat("TabFrec",d)
   PosDif<-matrix(NA, d[1], 35)
   for (i in 1:d[1]){
     PosDif[i,1]<-i
@@ -205,24 +205,24 @@ dimn<-length(CAUSADEF)
 #dimn
 Fin3<-rep(0,dimn)
 Fin4<-rep(0,dimn)
-Caus<-as.character(CAUSADEF)
+CAUSADEF<-as.character(CAUSADEF)
 CauFin<-as.character(CAUSADEF)
-CodFin<-as.character(COD_SEL)
+COD_SEL<-as.character(COD_SEL)
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,3)
-  CF<-substr(CodFin[i],1,3)
+  Ca<-substr(CAUSADEF[i],1,3)
+  CF<-substr(COD_SEL[i],1,3)
   if (is.na(CF)==FALSE) {if (Ca==CF){Fin3[i]<-1}}
 }
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,4)
-  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
-  CF<-substr(CodFin[i],1,4)
+  Ca<-substr(CAUSADEF[i],1,4)
+  if (substr(CAUSADEF[i],4,4)=="X") {Ca<-substr(CAUSADEF[i],1,3)}
+  CF<-substr(COD_SEL[i],1,4)
   if (is.na(CF)==FALSE){CauFin[i]<-CF}
-  if (is.na(CF)==FALSE){if (substr(CodFin[i],4,4)=="X"){CF<-substr(CodFin[i],1,3)}
+  if (is.na(CF)==FALSE){if (substr(COD_SEL[i],4,4)=="X"){CF<-substr(COD_SEL[i],1,3)}
                         else if (Ca==CF){Fin4[i]<-1}}
 }
 
@@ -234,15 +234,15 @@ Valor4<-rep(0,dimn)
 Bien3<-rep(0,dimn)
 Bien4<-rep(0,dimn)
 Rev<-rep(0,dimn)
-#Caus<-as.character(CAUSADEF)
-Rec1<-as.character(RECODCBD)
-Rec2<-as.character(RECODCBD2)
+#CAUSADEF<-as.character(CAUSADEF)
+RECODCBD<-as.character(RECODCBD)
+RECODCBD2<-as.character(RECODCBD2)
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,3)
-  R1<-substr(Rec1[i],1,3)
-  R2<-substr(Rec2[i],1,3)
+  Ca<-substr(CAUSADEF[i],1,3)
+  R1<-substr(RECODCBD[i],1,3)
+  R2<-substr(RECODCBD2[i],1,3)
   if (Ca==R1 & R1==R2) {Valor3[i]<-1;Bien3[i]<-1}
   else if (Ca==R1 & R1!=R2) {Valor3[i]<-2}
   else if (Ca==R2 & R1!=R2) {Valor3[i]<-3}
@@ -253,12 +253,12 @@ for (i in 1:dimn)
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,4)
-  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
-  R1<-substr(Rec1[i],1,4)
-  if (substr(Rec1[i],4,4)=="X") {R1<-substr(Rec1[i],1,3)}
-  R2<-substr(Rec2[i],1,4)
-  if (substr(Rec2[i],4,4)=="X") {R2<-substr(Rec2[i],1,3)}
+  Ca<-substr(CAUSADEF[i],1,4)
+  if (substr(CAUSADEF[i],4,4)=="X") {Ca<-substr(CAUSADEF[i],1,3)}
+  R1<-substr(RECODCBD[i],1,4)
+  if (substr(RECODCBD[i],4,4)=="X") {R1<-substr(RECODCBD[i],1,3)}
+  R2<-substr(RECODCBD2[i],1,4)
+  if (substr(RECODCBD2[i],4,4)=="X") {R2<-substr(RECODCBD2[i],1,3)}
   if (Ca==R1 & R1==R2) {Valor4[i]<-1;Bien4[i]<-1}
   else if (Ca==R1 & R1!=R2) {Valor4[i]<-2;Rev[i]<-1}
   else if (Ca==R2 & R1!=R2) {Valor4[i]<-3;Rev[i]<-1}
@@ -272,8 +272,8 @@ Valor4<-as.integer(Valor4)
 Bien3<-as.integer(Bien3)
 Bien4<-as.integer(Bien4)
 Rev2<-as.integer(Rev)
-Cap1<-DefCap(Caus)
-Cap<-DefCap(Rec1)
+Cap1<-DefCap(CAUSADEF)
+Cap<-DefCap(RECODCBD)
 CapAut<-as.integer(Cap1[[1]])
 ManualD<-as.integer(Cap[[1]])
 
@@ -287,16 +287,16 @@ BienFin3<-rep(0,dimn)
 BienFin3[substr(CauFin,1,3)==substr(CAUSADEF,1,3)]<-1
 BienFin3<-as.integer(BienFin3)
 
-#Etapa5rev<-cbind(Caus,Rec1,Rec2,CodFin,CauFin,Valor3,Valor4,BienFin3,BienFin4,Rev2,Bien3,Bien4,Fin3,Fin4,CapAut,ManualD,CapFin)
+#Etapa5rev<-cbind(CAUSADEF,RECODCBD,RECODCBD2,COD_SEL,CauFin,Valor3,Valor4,BienFin3,BienFin4,Rev2,Bien3,Bien4,Fin3,Fin4,CapAut,ManualD,CapFin)
 
 Fin3c1<-rep(0,dimn)
 Fin4c1<-rep(0,dimn)
-Caus<-as.character(RECODCBD)
+RECODCBD<-as.character(RECODCBD)
 CodFin<-CauFin
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,3)
+  Ca<-substr(RECODCBD[i],1,3)
   CF<-substr(CodFin[i],1,3)
   if (Ca==CF) {Fin3c1[i]<-1} 
   else {Fin3c1[i]<-0}
@@ -304,8 +304,8 @@ for (i in 1:dimn)
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,4)
-  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  Ca<-substr(RECODCBD[i],1,4)
+  if (substr(RECODCBD[i],4,4)=="X") {Ca<-substr(RECODCBD[i],1,3)}
   CF<-substr(CodFin[i],1,4)
   if (substr(CodFin[i],4,4)=="X") {CF<-substr(CodFin[i],1,3)}
   if (Ca==CF) {Fin4c1[i]<-1}
@@ -317,11 +317,11 @@ Fin4c1<-as.integer(Fin4c1)
 
 Fin3c2<-rep(0,dimn)
 Fin4c2<-rep(0,dimn)
-Caus<-as.character(RECODCBD2)
+RECODCBD2<-as.character(RECODCBD2)
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,3)
+  Ca<-substr(RECODCBD2[i],1,3)
   CF<-substr(CodFin[i],1,3)
   if (Ca==CF) {Fin3c2[i]<-1}
   else {Fin3c2[i]<-0}
@@ -329,8 +329,8 @@ for (i in 1:dimn)
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,4)
-  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
+  Ca<-substr(RECODCBD2[i],1,4)
+  if (substr(RECODCBD2[i],4,4)=="X") {Ca<-substr(RECODCBD2[i],1,3)}
   CF<-substr(CodFin[i],1,4)
   if (substr(CodFin[i],4,4)=="X") {CF<-substr(CodFin[i],1,3)}
   if (Ca==CF) {Fin4c2[i]<-1} 
@@ -346,23 +346,23 @@ Fin4c2<-as.integer(Fin4c2)
 
 Aut3c1<-rep(0,dimn)
 Aut4c1<-rep(0,dimn)
-Caus<-as.character(RECODCBD)
-CodFin<-as.character(CAUSADEF)
+RECODCBD<-as.character(RECODCBD)
+CAUSADEF<-as.character(CAUSADEF)
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,3)
-  CF<-substr(CodFin[i],1,3)
+  Ca<-substr(RECODCBD[i],1,3)
+  CF<-substr(CAUSADEF[i],1,3)
   if (Ca==CF) {Aut3c1[i]<-1} 
   else {Aut3c1[i]<-0}
 }
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,4)
-  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
-  CF<-substr(CodFin[i],1,4)
-  if (substr(CodFin[i],4,4)=="X") {CF<-substr(CodFin[i],1,3)}
+  Ca<-substr(RECODCBD[i],1,4)
+  if (substr(RECODCBD[i],4,4)=="X") {Ca<-substr(RECODCBD[i],1,3)}
+  CF<-substr(CAUSADEF[i],1,4)
+  if (substr(CAUSADEF[i],4,4)=="X") {CF<-substr(CAUSADEF[i],1,3)}
   if (Ca==CF) {Aut4c1[i]<-1} 
   else {Aut4c1[i]<-0}
 }
@@ -372,28 +372,109 @@ Aut4c1<-as.integer(Aut4c1)
 
 Aut3c2<-rep(0,dimn)
 Aut4c2<-rep(0,dimn)
-Caus<-as.character(RECODCBD2)
+RECODCBD2<-as.character(RECODCBD2)
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,3)
-  CF<-substr(CodFin[i],1,3)
+  Ca<-substr(RECODCBD2[i],1,3)
+  CF<-substr(CAUSADEF[i],1,3)
   if (Ca==CF) {Aut3c2[i]<-1}
   else {Aut3c2[i]<-0}
 }
 
 for (i in 1:dimn)
 {
-  Ca<-substr(Caus[i],1,4)
-  if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
-  CF<-substr(CodFin[i],1,4)
-  if (substr(CodFin[i],4,4)=="X") {CF<-substr(CodFin[i],1,3)}
+  Ca<-substr(RECODCBD2[i],1,4)
+  if (substr(RECODCBD2[i],4,4)=="X") {Ca<-substr(RECODCBD2[i],1,3)}
+  CF<-substr(CAUSADEF[i],1,4)
+  if (substr(CAUSADEF[i],4,4)=="X") {CF<-substr(CAUSADEF[i],1,3)}
   if (Ca==CF) {Aut4c2[i]<-1} 
   else {Aut4c2[i]<-0}
 }
 
 Aut3c2<-as.integer(Aut3c2)
 Aut4c2<-as.integer(Aut4c2)
-Etapa5rev<-cbind(Caus,Rec1,Rec2,CodFin,CauFin,Valor3,Valor4,BienFin3,BienFin4,Rev2,Bien3,Bien4,Fin3,Fin4,CapAut,ManualD,CapFin,Fin3c1,Fin4c1,Fin3c2,Fin4c2,Aut3c1,Aut4c1,Aut3c2,Aut4c2)
+Etapa5rev<-cbind(CAUSADEF,RECODCBD,RECODCBD2,COD_SEL,CauFin,Valor3,Valor4,BienFin3,BienFin4,Rev2,Bien3,Bien4,Fin3,Fin4,CapAut,ManualD,CapFin,Fin3c1,Fin4c1,Fin3c2,Fin4c2,Aut3c1,Aut4c1,Aut3c2,Aut4c2)
 return(Etapa5rev)
+}
+
+PonerFact<-function(Base,Ns){
+  Base_ord<-Base[order(Base[,1]),]
+  cat("Dim orde",dim(Base_ord),"\n")
+  #i<-1 #Esto es para el primer capitulo
+  #n<-0
+  n<-rep(0,20)
+  Tempo<-subset(Base_ord,as.integer(Base_ord[,15])==1)#nrow(Base_ord[Base_ord[,1]==i,])
+  n[1]<-nrow(Tempo)
+  #cat("Dim n 1 ",dim(n),"Valor Ns ",Ns[1],"Valor n ",n[1], "\n")
+  Capit<-as.integer(rep(1,n[1]))
+  FactorExp<-rep(Ns[1]/n[1],n[1])
+  #cat("Capit ",Capit," Fsa ",FactorExp, "\n")
+  CapFact<-cbind(Capit,FactorExp)
+  #cat("Dim CapFact 1",dim(CapFact),"\n")
+  
+  Ac<-Ns[1]
+  for (i in 2:20) {Ac[i]<-Ac[i-1]+Ns[i]}
+  
+  for (i in 2:20){
+    n[i]<-nrow(Base_ord[as.integer(Base_ord[,15])==i,])
+    if (n[i]!=0){
+      N<-Ns[i];m<-n[i]
+      Capit<-as.integer(rep(i,m))
+      FactorExp<-rep(N/m,m)
+      Mu<-data.frame(Capit,FactorExp)
+      cat("lugar",i, "dim Mu ",dim(Mu),"\n")
+      CapFact<-rbind(CapFact,Mu)}}
+  
+  
+  BaseFacExp<-cbind(Base_ord,CapFact)
+  cat("dim ",dim(BaseFacExp))
+  return(BaseFacExp)
+}
+
+#Crear tablas de ponderados
+TabPon<-function(CapAut_CapFin){
+  #DimT<-dim(Tabla)
+  #Muestra<-rep(0,DimT[1])
+  #FactorExp<-rep(0,DimT[1])
+  #FactorExp<-rep(0,20)
+  #Tabla<-as.matrix(Tabla)
+  #MatPon<-matrix(DimT[1], DimT[2])
+  #Pob<-Pob[Pob!=0]
+  #cat("Tabla dim",DimT,"Pob",Pob)
+  #for (i in 1:DimT[1]){
+  #  Muestra[i]<-length(PaMue[PaMue==i])
+  #  FactorExp[i]<-Pob[i]/Muestra[i]
+  #  cat("Muesttra",Muestra,"Factor",FactorExp)
+  #  for (j in 1:DimT[2]){MatPon[i,j]<-as.integer(Tabla[i,j])*FactorExp[i]}
+  #}
+  #CapAut_CapFin<-as.data.frame(CapAut_CapFin)
+  #MatPon<-matrix(nrow = 20, ncol = 20)
+  #for (i in 1:20)
+  #{
+  #  Tempo<-subset(CapAut_CapFin,CapAut_CapFin[,1]==i)
+  #  #Tempo<-subset(CapAut_CapFin,CapAut==i)
+  #  FactorExp<-as.integer(Pob[i]/nrow(Tempo))
+  #  cat("Tempo 1",Tempo[,1],"Tempo 2",Tempo[,2], "factor",FactorExp," i",i,"\n")
+  #  for (j in 1:20)
+  #  {line<-subset(Tempo,Tempo[,2]==j)
+  #    cont<-nrow(line)
+  #   cat("line",line,"  Cont",cont," j",j,"\n")
+  #    MatPon[i,j]<-cont*FactorExp}
+  #}
+  
+  
+  MatPon<-matrix(nrow = 20, ncol = 20)
+  for (i in 1:20)
+  {
+    Tempo<-CapAut_CapFin[CapAut_CapFin[,1]==i,]
+    #Tempo<-subset(CapAut_CapFin,CapAut_CapFin[,1]==i)
+    cat("  i",i, "dim Tempo",dim(Tempo),"head",head(Tempo), "\n")
+    for (j in 1:20)
+    {line<-subset(Tempo,Tempo[,2]==j)
+     #cat("j",j, "line",line[,3],"\n")
+      MatPon[i,j]<-sum(line[,3],na.rm = T)}
+  }
+  cat("MatPon",MatPon)
+  return(MatPon)
 }
