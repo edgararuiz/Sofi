@@ -360,7 +360,7 @@ output$Etapa2Tabla2 <- renderDataTable({
   if (input$E2updat1==0) return(NULL)
   Etapa2Data2()
 },options = list(aLengthMenu = c(5, 10, 50), 
-                 iDisplayLength = 5))
+                 iDisplayLength = 10))
 
 output$Etapa2Tabla31 <- renderTable({
   if (input$E2updat1==0) return(NULL)
@@ -507,7 +507,7 @@ output$DescarE2Inter4 <- downloadHandler(
 ####
 #_______________________________________________________________
 #_______________________________________________________________
-#Etapa 4
+#Etapa 4 y 5
 #_______________________________________________________________
 #_______________________________________________________________
 ####
@@ -544,7 +544,7 @@ output$Etap4Causa2 <- renderUI({
 
 output$Etap4CausaF <- renderUI({
   if (is.null(input$Etapa4file1)) return(NULL)
-  selectInput("E4CF","Codificador 2 (generalmente RECODCBD2)", 
+  selectInput("E4CF","Codificador Final (generalmente COD_SEL)", 
               choices=c("",colnames(Etapa4Data1())),selected="COD_SEL")
 })
 
@@ -613,7 +613,8 @@ Etapa4Data31 <- reactive({
 Etapa4Data32 <- reactive({
   if (is.null(Etapa4Data2())) return(NULL)
   dat<-Etapa4Data2()
-  Digit3<-dat[dat[,6]==4,]
+  #Digit3<-dat[dat[,6]==4,]
+  Digit3<-dat[substr(dat[,1],1,3)!=substr(dat[,5],1,3),]
   Table<-table(as.integer(Digit3[,15]),as.integer(Digit3[,17]))
   return(Table)
 })
@@ -621,7 +622,8 @@ Etapa4Data32 <- reactive({
 Etapa4Data33 <- reactive({
   if (is.null(Etapa4Data2())) return(NULL)
   dat<-Etapa4Data2()
-  Digit4<-dat[dat[,7]==4,]
+  #Digit4<-dat[dat[,7]==4,]
+  Digit4<-dat[dat[,1]!=dat[,5],]
   Table<-table(as.integer(Digit4[,15]),as.integer(Digit4[,17]))
   return(Table)
 })
@@ -630,11 +632,12 @@ Etapa4Data34 <- reactive({
   if (is.null(Etapa4Data2())) return(NULL)
   E4dat<-as.data.frame(Etapa4Data2(),stringsAsFactors = FALSE)
   #dat<-Etapa4Data2()
-  E4dat2<-E4dat[as.integer(E4dat[,7])==4,]
-  E4CapMis<-E4dat2[as.integer(E4dat2[,15])==as.integer(E4dat2[,17]),]
-  E4CapDif<-E4dat2[as.integer(E4dat2[,15])!=as.integer(E4dat2[,17]),]
-  E4FrecMis<-table(E4CapMis[,1],E4CapMis[,2])
-  E4FrecDif<-table(E4CapDif[,1],E4CapDif[,2])
+  #E4dat2<-E4dat[as.integer(E4dat[,7])==4,]
+  E4dat<-E4dat[E4dat[,1]!=E4dat[,5],]
+  E4CapMis<-E4dat[as.integer(E4dat[,15])==as.integer(E4dat[,17]),]
+  E4CapDif<-E4dat[as.integer(E4dat[,15])!=as.integer(E4dat[,17]),]
+  E4FrecMis<-table(E4CapMis[,1],E4CapMis[,5])
+  E4FrecDif<-table(E4CapDif[,1],E4CapDif[,5])
   E4TableMis<-Frecu(E4FrecMis)
   E4TableDif<-Frecu(E4FrecDif)
   list(E4TableMis,E4TableDif)
@@ -642,8 +645,8 @@ Etapa4Data34 <- reactive({
 
 Etapa4DataMis <- reactive({
   Tem<-as.integer(Etapa4Data34()[[1]][,ncol(Etapa4Data34()[[1]])])
-  TableD<-subset(Etapa4Data34()[[1]], Tem >= input$E4nMis)
-  return(TableD)
+  TableM<-subset(Etapa4Data34()[[1]], Tem >= input$E4nMis)
+  return(TableM)
 })
 
 Etapa4DataDif <- reactive({
@@ -668,7 +671,23 @@ Etapa4DataInt4 <- reactive({
   return(Datos)
 })
 
+Etapa4DataExp <- reactive({
+  if (input$E4Inter==0) return(NULL)
+  Dat<-PonerFact(Etapa4Data2(),Etapa4DataTot()[,input$E4Po])
+  return(Dat)
+})
 
+Etapa4DataPon3 <- reactive({
+  if (input$E4Inter==0) return(NULL)
+  Dat<-Etapa4DataExp()
+  #Dat2<-Dat[substr(Dat[,1],1,3)!=substr(Dat[,5],1,3),]
+  CapAut_Fin<-cbind(as.integer(Dat[,15]),as.integer(Dat[,17]),Dat[,27])
+  #CapA<-as.integer(Dat[,15])
+  #Tabla<-as.matrix(Etapa4Data32())
+  #Datos<-TabPon(CapAut_CapFin,Etapa4DataTot()[,input$E4Po])
+  Datos<-TabPon(CapAut_Fin)
+  return(Dat)
+})
 
 #_____________________________________________________________
 #Render
@@ -684,7 +703,7 @@ output$Etapa4Tabla2 <- renderDataTable({
   if (input$E4updat1==0) return(NULL)
   Etapa4Data2()
 },options = list(aLengthMenu = c(5, 10, 50), 
-                 iDisplayLength = 5))
+                 iDisplayLength = 10))
 
 output$Etapa4Tabla31 <- renderTable({
   if (input$E4updat1==0) return(NULL)
@@ -725,6 +744,22 @@ output$Etapa4Inter4 <- renderTable({
   if (is.null(Etapa4DataInt4())) return(NULL)
   Etapa4DataInt4()
 })
+
+output$Etapa4TabPon3 <- renderTable({
+  if (is.null(Etapa4DataPon3())) return(NULL)
+  Etapa4DataPon3()
+})
+
+
+
+output$Etapa4Prueba <- renderDataTable({
+  if (input$E4updat1==0) return(NULL)
+  Etapa4DataPon3()
+},options = list(aLengthMenu = c(5, 10, 50), 
+                 iDisplayLength = 10))
+
+
+
 
 output$E4GI3 <- renderPlot({
   if(is.null(Etapa4DataInt3())) return()
