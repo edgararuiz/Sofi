@@ -1,10 +1,10 @@
 library(shiny)
 library(foreign)
 library(ggplot2)
-#library(sampling)
+library(sampling)
 library(INEGI)
 source("helpers.R")
-options(shiny.maxRequestSize=300*1024^2)
+options(shiny.maxRequestSize=1300*1024^2)
 
 shinyServer(function(input, output) {
 #Etapa 1
@@ -58,7 +58,8 @@ shinyServer(function(input, output) {
     N<-datasetInput3()[[2]][,2]
     input$updat2
     MuestraGr<-isolate(OptFact(dat$Capitulo,N,values$c))
-    Muestra<-merge(datasetInput3()[[1]], MuestraGr, by.x="Id", 
+    Orig<-data.frame(datasetInput3()[[1]])
+    Muestra<-merge(Orig, MuestraGr, by.x="Id", 
                    by.y="NT")
     return(Muestra)
   })
@@ -95,10 +96,15 @@ output$num52<-renderPrint({
       Npob<-datasetInput3()[[2]][,2]
       Datos<-data.frame(dat,Npob)
       values$a<-Datos
+      #for (i in 1:20) {
+        #values$a[i,2]<-dat[i,2]
+        #values$a[i,3]<-input$bw_P
+      #  values$a[i,4]<-optn(values$a[i,5],dat[i,3],dat[i,2])
+      #}
       return(Datos)}
       values$a[input$CapEcu,2]<-input$bw_Error
-      values$a[input$CapEcu,3]<-input$bw_P
-      values$a[input$CapEcu,4]<-optn(values$a[input$CapEcu,5],input$bw_P,input$bw_Error)
+      values$a[input$CapEcu,3]<-values$a[input$CapEcu,3]#input$bw_P
+      values$a[input$CapEcu,4]<-optn(values$a[input$CapEcu,5],values$a[input$CapEcu,3],input$bw_Error)
     return(values$a)
   })
   
@@ -164,8 +170,8 @@ output$num52<-renderPrint({
   output$tabla4 <- renderDataTable({
     if(input$updat2==0) return()
     datasetInput6()
-  }, options = list(aLengthMenu = c(10, 30, 50), 
-                    iDisplayLength = 10))
+  }, options = list(lengthMenu = c(10, 30, 50), 
+                    pageLength = 10))
 
   output$DescarResum <- downloadHandler(
     filename = function() {
@@ -353,14 +359,14 @@ Etapa2DataInt4 <- reactive({
 output$Etapa2Tabla1 <- renderDataTable({
   if (is.null(input$Etapa2file1)) return(NULL)
   Etapa2Data1()
-},options = list(aLengthMenu = c(5, 10, 50), 
-                 iDisplayLength = 5))
+},options = list(lengthMenu = c(5, 10, 50), 
+                 pageLength = 5))
 
 output$Etapa2Tabla2 <- renderDataTable({
   if (input$E2updat1==0) return(NULL)
   Etapa2Data2()
-},options = list(aLengthMenu = c(5, 10, 50), 
-                 iDisplayLength = 10))
+},options = list(lengthMenu = c(5, 10, 50), 
+                 pageLength = 10))
 
 output$Etapa2Tabla31 <- renderTable({
   if (input$E2updat1==0) return(NULL)
@@ -576,7 +582,9 @@ Etapa4Data2 <- reactive({
   Tam<-isolate(RevicE4(CAUSADEF=Etapa4Data1()[,input$E4CA],
                      RECODCBD=Etapa4Data1()[,input$E4C1],
                      RECODCBD2=Etapa4Data1()[,input$E4C2],
-                     COD_SEL=Etapa4Data1()[,input$E4CF]))
+                     COD_SEL=Etapa4Data1()[,input$E4CF]
+                     #Ns=Etapa4DataTot()[,input$E4Po]
+                     ))
   #Ta<-as.data.frame(Tam)
   return(Tam)
 })
@@ -671,22 +679,25 @@ Etapa4DataInt4 <- reactive({
   return(Datos)
 })
 
-Etapa4DataExp <- reactive({
-  if (input$E4Inter==0) return(NULL)
-  Dat<-PonerFact(Etapa4Data2(),Etapa4DataTot()[,input$E4Po])
-  return(Dat)
-})
+#Etapa4DataExp <- reactive({
+#  if (input$E4Inter==0) return(NULL)
+#  Dat<-PonerFact(Etapa4Data2(),Etapa4DataTot()[,input$E4Po])
+#  return(Dat)
+#})
 
 Etapa4DataPon3 <- reactive({
   if (input$E4Inter==0) return(NULL)
-  Dat<-Etapa4DataExp()
+  Dat<-Etapa4Data2()
   #Dat2<-Dat[substr(Dat[,1],1,3)!=substr(Dat[,5],1,3),]
-  CapAut_Fin<-cbind(as.integer(Dat[,15]),as.integer(Dat[,17]),Dat[,27])
+  #Tabla<-cbind(Dat[,15],Dat[,17],Dat[,27])
+  #names(Tabla)<-c("CapAut","CapFin","FactExp")
+  #CapAut_Fin<-as.data.frame(Tabla)
+  CapAut_Fin<-cbind(Dat[,15],Dat[,17],Dat[,27])
   #CapA<-as.integer(Dat[,15])
   #Tabla<-as.matrix(Etapa4Data32())
   #Datos<-TabPon(CapAut_CapFin,Etapa4DataTot()[,input$E4Po])
   Datos<-TabPon(CapAut_Fin)
-  return(Dat)
+  return(CapAut_Fin)
 })
 
 #_____________________________________________________________
@@ -696,14 +707,14 @@ Etapa4DataPon3 <- reactive({
 output$Etapa4Tabla1 <- renderDataTable({
   if (is.null(input$Etapa4file1)) return(NULL)
   Etapa4Data1()
-},options = list(aLengthMenu = c(5, 10, 50), 
-                 iDisplayLength = 5))
+},options = list(lengthMenu = c(5, 10, 50), 
+                 pageLength = 5))
 
 output$Etapa4Tabla2 <- renderDataTable({
   if (input$E4updat1==0) return(NULL)
   Etapa4Data2()
-},options = list(aLengthMenu = c(5, 10, 50), 
-                 iDisplayLength = 10))
+},options = list(lengthMenu = c(5, 10, 50), 
+                 pageLength = 10))
 
 output$Etapa4Tabla31 <- renderTable({
   if (input$E4updat1==0) return(NULL)
@@ -752,11 +763,11 @@ output$Etapa4TabPon3 <- renderTable({
 
 
 
-output$Etapa4Prueba <- renderDataTable({
-  if (input$E4updat1==0) return(NULL)
-  Etapa4DataPon3()
-},options = list(aLengthMenu = c(5, 10, 50), 
-                 iDisplayLength = 10))
+#output$Etapa4Prueba <- renderDataTable({
+#  if (input$E4updat1==0) return(NULL)
+#  Etapa4DataPon3()
+#},options = list(lengthMenu = c(5, 10, 50), 
+#                 pageLength = 10))
 
 
 
