@@ -12,7 +12,8 @@ Ordenar<-function(IDm,CausaD)
   cat("~~~ Ordenando Datos                               ~~~ \n")
   codcapor<-codcap[order(CausaD),]
   Id<-1:dim(codcapor)[1]
-  codord<-cbind(codcapor,Id)
+  IDo <- as.integer(codcapor[,1])
+  codord<-cbind(codcapor,Id,IDo)
   Tem<-codord[codord$CapAut==1,]
   PN<-c(1,dim(Tem)[1])
   for (i in 2:20){
@@ -25,6 +26,7 @@ Ordenar<-function(IDm,CausaD)
 OptFact<-function(V1,Ns,n)
   {
   cat("~~~ Inicia etapa de muestra                       ~~~ \n")
+  set.seed(2013)
   t<-0;pr<-0
   while (pr==0){t<-t+1
                 if (Ns[t]>0){
@@ -388,7 +390,7 @@ for (i in 1:dimn)
   if (substr(RECODCBD2[i],4,4)=="X") {Ca<-substr(RECODCBD2[i],1,3)}
   CF<-substr(CAUSADEF[i],1,4)
   if (substr(CAUSADEF[i],4,4)=="X") {CF<-substr(CAUSADEF[i],1,3)}
-  if (Ca==CF) {Aut4c2[i]<-1} 
+  if (Ca==CF) {Aut4c2[i]<-1}
   else {Aut4c2[i]<-0}
 }
 
@@ -399,18 +401,20 @@ return(Etapa5rev)
 }
 
 PonerFact<-function(Base,Ns){
+  #Base_ord<-data.frame(Base[order(Base[,1]),])
   Base_ord<-Base[order(Base[,1]),]
   cat("Dim orde",dim(Base_ord),"\n")
+  
   #i<-1 #Esto es para el primer capitulo
   #n<-0
   n<-rep(0,20)
   Tempo<-subset(Base_ord,as.integer(Base_ord[,15])==1)#nrow(Base_ord[Base_ord[,1]==i,])
   n[1]<-nrow(Tempo)
-  #cat("Dim n 1 ",dim(n),"Valor Ns ",Ns[1],"Valor n ",n[1], "\n")
+  cat("Dim n 1 ",dim(n),"Valor Ns ",Ns[1],"Valor n ",n[1], "\n")
   Capit<-as.integer(rep(1,n[1]))
   FactorExp<-rep(Ns[1]/n[1],n[1])
   #cat("Capit ",Capit," Fsa ",FactorExp, "\n")
-  CapFact<-cbind(Capit,FactorExp)
+  CapFact<-data.frame(Capit,FactorExp)
   #cat("Dim CapFact 1",dim(CapFact),"\n")
   
   Ac<-Ns[1]
@@ -426,8 +430,7 @@ PonerFact<-function(Base,Ns){
       cat("lugar",i, "dim Mu ",dim(Mu),"\n")
       CapFact<-rbind(CapFact,Mu)}}
   
-  
-  BaseFacExp<-cbind(Base_ord,CapFact)
+  BaseFacExp<-data.frame(Base_ord,CapFact)
   cat("dim ",dim(BaseFacExp))
   return(BaseFacExp)
 }
