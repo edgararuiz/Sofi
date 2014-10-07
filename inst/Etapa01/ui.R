@@ -59,10 +59,10 @@ shinyUI(navbarPage("Defunciones",
                                      choices=c(1:20),selected="1"),
                          sliderInput(inputId = "bw_Error",
                                      label = "Valor para Error:",
-                                     min = 0, max = 0.2, value = .04, step = 0.01),
-                         sliderInput(inputId = "bw_P",
-                                     label = "Valor para P:",
-                                     min = 0, max = 1, value = .5, step = 0.05)
+                                     min = 0, max = 0.1, value = .04, step = 0.005)
+                         #sliderInput(inputId = "bw_P",
+                         #            label = "Valor para P:",
+                         #            min = 0, max = 1, value = .5, step = 0.05)
         ),
         conditionalPanel(condition = 'input.En === "man"',
                          actionButton("updat4", "Renovar"),
@@ -83,13 +83,13 @@ shinyUI(navbarPage("Defunciones",
         helpText('Elige las variables a exhibir'),
         checkboxGroupInput('show_vars', 'Elegir:',
                            c("Id" = "Id",
-                             "ID Original" = "IDm",
+                             "ID Original" = "IDo",
                              "Código de defunción" = "CausaD",
                              "CapAut" = "CapAut",
                              "Capit" = "Capit",
                              "FactorExp" = "FactorExp",
                              "En Muestra" = "EnMuestra"),
-                           selected = c("Id","IDm","CausaD","CapAut","Capit","FactorExp","EnMuestra")),
+                           selected = c("Id","IDo","CausaD","CapAut","Capit","FactorExp","EnMuestra")),
         tags$hr(),
         checkboxInput("mues","Solo los elementos de la muestra",value = T),
         downloadButton('DescarMuestra', 'Guardar')
@@ -101,8 +101,9 @@ shinyUI(navbarPage("Defunciones",
         id = 'Etap01',
         tabPanel("Datos",    
           fluidRow(
-            column(4,offset = 1,h4("Tabla de códigos"),
-                tableOutput('tabla1')),
+            column(4,offset = 1,h4("Tabla de códigos")
+                #tableOutput('tabla1')
+                ),
             column(4,offset = 1,h4("Tabla de Datos"),
                 tableOutput('tabla2')
                   )
@@ -373,6 +374,24 @@ tabPanel("Etapa 4 y 5",
                uiOutput("Etap4Causa1"),
                uiOutput("Etap4Causa2"),
                uiOutput("Etap4CausaF"),
+               helpText('Se requiere el tamaño total de la población, usar archivo de la Etapa 1 sección Resumen'),
+               fileInput('Etapa4file2', 'Archivo de datos (texto o csv)',
+                         accept=c('text/csv',
+                                  'text/comma-separated-values,text/plain', 
+                                  '.csv')),
+               
+               checkboxInput('header', 'Encabezado', TRUE),
+               radioButtons('sep', 'Separado por:',
+                            c(Coma=',',
+                              Puntoycoma=';',
+                              Tabulador='\t'),
+                            ','),
+               radioButtons('quote', 'Quote',
+                            c(None='',
+                              'Double Quote'='"',
+                              'Single Quote'="'"),
+                            '"'),
+               uiOutput("Etap4Pobla"),
                tags$hr()
                
              ),
@@ -433,29 +452,7 @@ tabPanel("Etapa 4 y 5",
                tags$hr()
              ),
              ####
-             conditionalPanel(
-               'input.Etap04 === "Población"',
-               ####
-               helpText('Se requiere el tamaño total de la población, usar archivo de la Etapa 1 sección Resumen'),
-               fileInput('Etapa4file2', 'Archivo de datos (texto o csv)',
-                         accept=c('text/csv',
-                                  'text/comma-separated-values,text/plain', 
-                                  '.csv')),
-               
-               checkboxInput('header', 'Encabezado', TRUE),
-               radioButtons('sep', 'Separado por:',
-                            c(Coma=',',
-                              Puntoycoma=';',
-                              Tabulador='\t'),
-                            ','),
-               radioButtons('quote', 'Quote',
-                            c(None='',
-                              'Double Quote'='"',
-                              'Single Quote'="'"),
-                            '"'),
-               uiOutput("Etap4Pobla"),
-               tags$hr()
-             ),
+             
              #####
              conditionalPanel(
                'input.Etap04 === "Limites"',
@@ -546,10 +543,7 @@ tabPanel("Etapa 4 y 5",
                         )
                ),
                
-               tabPanel("Población",
-                        h4("Tabla para Población"),
-                        tableOutput('Etapa4TablaTot')
-               ),
+               
                
                tabPanel("Limites",
                         conditionalPanel(condition = 'input.E4Lim === "IC3D"',
@@ -570,8 +564,8 @@ tabPanel("Etapa 4 y 5",
                         ),
                         conditionalPanel(condition = 'input.E4Lim === "Ta3D"',
                                          h4("Tabla de ponderados a 3 dígitos"),
-                                         #plotOutput('Etapa4TabPon3')
-                                         dataTableOutput('Etapa4Prueba')
+                                         plotOutput('Etapa4TabPon3')
+                                         #dataTableOutput('Etapa4Prueba')
                                          
                         )
                         
