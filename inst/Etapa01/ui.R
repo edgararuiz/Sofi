@@ -84,14 +84,15 @@ shinyUI(navbarPage("Defunciones",
         checkboxGroupInput('show_vars', 'Elegir:',
                            c("Id" = "Id",
                              "ID Original" = "IDo",
+                             "ID Originalm" = "IDm",
                              "Código de defunción" = "CausaD",
                              "CapAut" = "CapAut",
                              "Capit" = "Capit",
                              "FactorExp" = "FactorExp",
                              "En Muestra" = "EnMuestra"),
-                           selected = c("Id","IDo","CausaD","CapAut","Capit","FactorExp","EnMuestra")),
+                           selected = c("Id","IDo","IDm","CausaD","CapAut","Capit","FactorExp","EnMuestra")),
         tags$hr(),
-        checkboxInput("mues","Solo los elementos de la muestra",value = T),
+        checkboxInput("mues","Solo los elementos de la muestra",value = F),
         downloadButton('DescarMuestra', 'Guardar')
       )
       ),
@@ -99,15 +100,12 @@ shinyUI(navbarPage("Defunciones",
     mainPanel(
       tabsetPanel(
         id = 'Etap01',
-        tabPanel("Datos",    
-          fluidRow(
-            column(4,offset = 1,h4("Tabla de códigos")
-                #tableOutput('tabla1')
-                ),
-            column(4,offset = 1,h4("Tabla de Datos"),
-                tableOutput('tabla2')
-                  )
-                  )
+        tabPanel("Datos",
+                 h4("Tabla de códigos"),
+                 dataTableOutput('tabla1'),
+                 tags$hr(),
+                 h4("Tabla de Datos"),
+                 tableOutput('tabla2')
                 ),
         
         tabPanel("Resumen",
@@ -284,7 +282,8 @@ conditionalPanel(condition = 'input.E2Lim === "Gr4D"',
                  uiOutput("Etap2Int4"),
                  tags$hr()               
 ),
-tags$hr()
+tags$hr(),
+downloadButton('downloadReportE2', 'Reporte')
 
 )
              
