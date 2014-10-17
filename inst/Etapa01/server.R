@@ -27,7 +27,7 @@ shinyServer(function(input, output) {
     if (is.null(input$file1))
       return(NULL)
     selectInput("Codigo","Seleccionar c\u00F3digos", 
-                choices=c("",colnames(datasetInput1())),selected="")
+                choices=c("",colnames(datasetInput1())),selected="CAUSADEF")
   })
   
   datasetInput2 <- reactive({
@@ -59,8 +59,7 @@ shinyServer(function(input, output) {
     input$updat2
     MuestraGr<-isolate(OptFact(dat$Capitulo,N,values$c))
     Orig<-data.frame(datasetInput3()[[1]])
-    Muestra<-merge(Orig, MuestraGr, by.x="Id", 
-                   by.y="NT")
+    Muestra<-merge(Orig, MuestraGr, by.x="Id",by.y="NT")
     return(Muestra)
   })
  
@@ -139,12 +138,11 @@ output$num52<-renderPrint({
   #Tablas
   #_______________________________________________________________
 #####
-  output$tabla1 <- renderTable({
-    inFile <- input$file1
-    if (is.null(inFile))
-      return(NULL)
-    head(datasetInput1(), n = input$obs)
-  })
+  output$tabla1 <- renderDataTable({
+    if(is.null(input$file1)) return(NULL)
+    datasetInput1()
+  }, options = list(lengthMenu = c(10, 30, 50), 
+                    pageLength = 10))
   
   output$tabla2 <- renderTable({
     if (is.null(input$file2))
@@ -871,6 +869,20 @@ output$DescarE4Inter4 <- downloadHandler(
   },
   content = function(file) {
     write.csv(Etapa4DataInt4(), file)
+  }
+)
+
+output$downloadReportE2 <- downloadHandler(
+  filename = function() {
+    paste('Eta2Rep',input$file[1],Sys.Date(), '.pdf', sep='_')
+  },
+  content = function(file) {
+    rnw <- normalizePath('ReporteE2.Rnw')
+    owd <- setwd(tempdir())
+    on.exit(setwd(owd))
+    library(knitr)
+    out <- knit2pdf(rnw)
+    file.rename(out, file)
   }
 )
 
