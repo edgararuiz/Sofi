@@ -1,0 +1,80 @@
+\documentclass[letterpaper]{article}
+\usepackage{lscape}
+%\usepackage{lmodern}
+%\usepackage[T1]{fontenc}
+%\usepackage{mathtools}
+
+\title{INEGI}
+\author{Defunciones 2013}
+\date{}
+
+\begin{document}
+\maketitle
+
+\textbf{Metodolog\'ia para la evaluaci\'on del Sistema para la Codificaci\'on Autom\´itica de la Causa de la Defunci\'on}
+
+\begin{center}
+\section*{Reporte Defunciones}
+\end{center}
+
+Aqu\'i se muestra un peque\~no resumen de los \Sexpr{dim(Etapa2Data1())[1]} registros, Obtenidos del archivo \Sexpr{input$Etapa2file1[1]}.
+
+\begin{table}\centering
+<<results='asis',echo=FALSE>>=
+library(knitr)
+kable(Etapa2Data31(), caption = "Tabla de Totales por Caso")
+@
+\end{table}
+
+\newpage
+\begin{table}\centering
+<<results='asis',echo=FALSE>>=
+kable(Etapa2Data32(), caption = "Tabla de Errores a 3 Dígitos")
+@
+\end{table}
+
+\newpage
+\begin{table}\centering
+<<results='asis',echo=FALSE>>=
+kable(Etapa2Data33(), caption = "Tabla de Errores a 4 Dígitos")
+@
+\end{table}
+
+
+\newpage
+\begin{table}\centering
+<<results='asis',echo=FALSE>>=
+kable(Etapa2DataMis(), caption = "Frecuencias para mismo capítulo")
+@
+\end{table}
+
+\newpage
+\begin{table}\centering
+<<results='asis',echo=FALSE>>=
+kable(Etapa2DataDif(), caption = "Frecuencias para diferente capítulo")
+@
+\end{table}
+
+\newpage
+\begin{table}\centering
+<<results='asis',echo=FALSE>>=
+kable(Etapa2DataInt3(), caption = "Intervalos de confianza a 3 dígitos")
+@
+\end{table}
+
+\newpage
+\begin{table}\centering
+<<results='asis',echo=FALSE>>=
+kable(Etapa2DataInt4(), caption = "Intervalos de confianza a 4 dígitos")
+@
+\end{table}
+
+
+<<two-caps, fig.cap=c('Hi figure one', 'Gráfico a 3 Dígitos'), fig.width=2, fig.height=1.5, fig.align='center'>>=
+Etapa4TabPon3
+@
+
+
+
+
+\end{document}
