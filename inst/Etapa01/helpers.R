@@ -162,13 +162,14 @@ Frecu<-function(TabFrec){
 return(TabFrec2)
 }
 
-InterVal<-function(CapAutBien,Pob,Error){
+InterVal<-function(CapAut,Bien,Pob,Error){
   #INTERVALOS DE CONFIANZA
   Muestra<-rep(0,21)
   Bien<-Muestra;BienT<-Muestra;Poblacion<-Muestra;P<-Muestra;Pn<-Muestra;FactorExp<-Muestra
   
   for (i in 1:20)
   {TemCap<-CapAutBien[CapAutBien[,1]==i,]
+   TemCap<-as.matrix(TemCap)
    Muestra[i]<-nrow(TemCap)
    Bien[i]<-sum(TemCap[,2])
    FactorExp[i]<-Pob[i]/Muestra[i]
