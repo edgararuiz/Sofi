@@ -1,6 +1,6 @@
-\name{CensosEco2014-package}
-\alias{CensosEco2014-package}
-\alias{CensosEco2014}
+\name{INEGI-package}
+\alias{INEGI-package}
+\alias{INEGI}
 \encoding{UTF-8}
 \docType{package}
 \title{Soporte para registros administrativos}
@@ -9,10 +9,10 @@ Este paquete tiene la finalidad de ayudar a la dirección de registros administr
 }
 \details{
 \tabular{ll}{
-Package: \tab CensosEco2014\cr
+Package: \tab INEGI\cr
 Type: \tab Package\cr
-Version: \tab 0.0.15\cr
-Date: \tab 2014-07-23\cr
+Version: \tab 0.0.16\cr
+Date: \tab 2014-11-10\cr
 License: \tab GPL (>= 3)\cr
 }
 Aquí se usan pocas funciones como es DefCap y Etapa01, otras en desarrollo.
