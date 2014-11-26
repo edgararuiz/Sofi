@@ -10,9 +10,9 @@ Ordenar<-function(IDm,CausaD)
   CapAut<-as.integer(CapA[[1]])
   codcap<-as.data.frame(cbind(IDm,CausaD,CapAut))
   cat("~~~ Ordenando Datos                               ~~~ \n")
-  codcapor<-codcap[order(CausaD),]
+  codcapor<-codcap[order(codcap$CausaD),]
   Id<-1:dim(codcapor)[1]
-  IDo <- as.integer(codcapor[,1])
+  IDo <- as.integer(as.character(codcapor[,1]))
   codord<-cbind(codcapor,Id,IDo)
   Tem<-codord[codord$CapAut==1,]
   PN<-c(1,dim(Tem)[1])
@@ -26,7 +26,8 @@ Ordenar<-function(IDm,CausaD)
 OptFact<-function(V1,Ns,n)
   {
   cat("~~~ Inicia etapa de muestra                       ~~~ \n")
-  set.seed(2013)
+  #set.seed(2013)
+  set.seed(as.integer(format(Sys.time(), "%Y")))
   t<-0;pr<-0
   while (pr==0){t<-t+1
                 if (Ns[t]>0){
@@ -90,7 +91,7 @@ for (i in 1:dimn)
   else if (Ca==R1 & R1!=R2) {Valor3[i]<-2}
   else if (Ca==R2 & R1!=R2) {Valor3[i]<-3}
   else if (Ca!=R1 & R1==R2) {Valor3[i]<-4}
-  else if (Ca!=R1 & R1!=R2) {Valor3[i]<-5}
+  else if ((Ca!=R1) & (R1!=R2 & Ca!=R2)) {Valor3[i]<-5}
   else Valor[i]<-6
 }
 
@@ -99,14 +100,14 @@ for (i in 1:dimn)
   Ca<-substr(Caus[i],1,4)
   if (substr(Caus[i],4,4)=="X") {Ca<-substr(Caus[i],1,3)}
   R1<-substr(Rec1[i],1,4)
-  if (substr(Rec1[i],4,4)=="X") {Ca<-substr(Rec1[i],1,3)}
+  if (substr(Rec1[i],4,4)=="X") {R1<-substr(Rec1[i],1,3)}
   R2<-substr(Rec2[i],1,4)
-  if (substr(Rec2[i],4,4)=="X") {Ca<-substr(Rec2[i],1,3)}
+  if (substr(Rec2[i],4,4)=="X") {R2<-substr(Rec2[i],1,3)}
   if (Ca==R1 & R1==R2) {Valor4[i]<-1;Bien[i]<-1}
   else if (Ca==R1 & R1!=R2) {Valor4[i]<-2;Rev[i]<-1}
   else if (Ca==R2 & R1!=R2) {Valor4[i]<-3;Rev[i]<-1}
   else if (Ca!=R1 & R1==R2) {Valor4[i]<-4}
-  else if (Ca!=R1 & R1!=R2) {Valor4[i]<-5;Rev[i]<-1}
+  else if ((Ca!=R1) & (R1!=R2 & Ca!=R2)) {Valor4[i]<-5;Rev[i]<-1}
   else Valor[i]<-6
 }
 
@@ -128,14 +129,16 @@ return(Etapa4)
 Frecu<-function(TabFrec){
   d<-dim(TabFrec)
   #cat("TabFrec",d)
-  PosDif<-matrix(NA, d[1], 35)
+  PosDif<-matrix(NA, d[1], 50)
   for (i in 1:d[1]){
     PosDif[i,1]<-i
     PosDif[i,2]<-sum(TabFrec[i,])
     p<-3
     for (j in 1:d[2]) {
       if (TabFrec[i,j]!=0) {p<-p+1
-                            PosDif[i,p]<-j}
+                            PosDif[i,p]<-j
+                            #cat("Valor de j ",j,"\n")
+      }
     }
     PosDif[i,3]<-p-3
   }
@@ -162,39 +165,53 @@ Frecu<-function(TabFrec){
 return(TabFrec2)
 }
 
-InterVal<-function(CapAut,Bien,Pob,Error){
+InterVal<-function(CapAutBien,Pob,Error){
   #INTERVALOS DE CONFIANZA
   Muestra<-rep(0,21)
   Bien<-Muestra;BienT<-Muestra;Poblacion<-Muestra;P<-Muestra;Pn<-Muestra;FactorExp<-Muestra
   
   for (i in 1:20)
-  {TemCap<-CapAutBien[CapAutBien[,1]==i,]
-   TemCap<-as.matrix(TemCap)
-   Muestra[i]<-nrow(TemCap)
-   Bien[i]<-sum(TemCap[,2])
+  {TemCap<-CapAutBien[CapAutBien[,1]==i,,drop = FALSE]
+   #TemCap<-as.matrix(TemCap)
+   Dim_Cap<-dim(TemCap)
+   Muestra[i]<-Dim_Cap[1]
+   #cat("Muestra ",i," es ",Muestra[i]," dim ",Dim_Cap[2], " \n")
+   if (Dim_Cap[2]==1){
+     Bien[i]<-sum(TemCap[2,1])
+     Muestra[i]<-1
+     #cat("Fue 1")
+   } else {
+     Bien[i]<-sum(TemCap[,2])
+     #cat("No es 1 ")
+   }
    FactorExp[i]<-Pob[i]/Muestra[i]
-   Pn[i]<-(Bien[i]/Muestra[i])*100
-   BienT[i]<-sum(TemCap[,2])*FactorExp[i]
+   Pn[i]<-(Bien[i]/Muestra[i])#*100
+   if (Dim_Cap[2]==1){
+     BienT[i]<-sum(TemCap[2,1])*FactorExp[i]
+   } else {
+     BienT[i]<-sum(TemCap[,2])*FactorExp[i]
+   }
+   
    Poblacion[i]<-Pob[i]
-   P[i]<-(BienT[i]/Pob[i])*100
+   P[i]<-(BienT[i]/Pob[i])#*100
   }
 
   i<-21
   Muestra[i]<-nrow(CapAutBien)
   Bien[i]<-sum(CapAutBien[,2])
-  Pn[i]<-(Bien[i]/Muestra[i])*100
+  Pn[i]<-(Bien[i]/Muestra[i])#*100
   Poblacion[i]<-sum(Pob)
   BienT[i]<-sum(BienT,na.rm = T)
-  P[i]<-(BienT[i]/Poblacion[i])*100
+  P[i]<-(BienT[i]/Poblacion[i])#*100
   Cap<-c(1:21)
   
-  psup<-(qbeta(1-Error/2,Bien+.5,Muestra-Bien+.5))*100
-  pinf<-(qbeta(Error/2,Bien+.5,Muestra-Bien+.5))*100
+  psup<-(qbeta(1-Error/2,Bien+.5,Muestra-Bien+.5))#*100
+  pinf<-(qbeta(Error/2,Bien+.5,Muestra-Bien+.5))#*100
   psup2<-P+(psup-Pn)
   pinf2<-P-(Pn-pinf)
   pinf3<-P-(1-(Muestra/Poblacion))^(1/2)*(P-pinf2)
   psup3<-P+(1-(Muestra/Poblacion))^(1/2)*(psup2-P)
-  Int.Conf<-cbind(Cap,Poblacion,BienT,Muestra,Bien,P,pinf3,psup3)
+  Int.Conf<-cbind(Cap,Poblacion,BienT,Muestra,Bien,Pn,P,pinf3,psup3)
   Int.Conf<-Int.Conf[!is.na(Int.Conf[,3]),]
   return(Int.Conf)
 }
