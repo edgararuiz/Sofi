@@ -1,6 +1,6 @@
 library(shiny)
 
-shinyUI(navbarPage("Defunciones",
+shinyUI(navbarPage("Defunciones",#theme = "Readable.min.css",
                    tabPanel("Etapa 1",
 ###
   #fluidPage(#theme = "bootstrap02.css",
@@ -510,7 +510,10 @@ tabPanel("Etapa 4 y 5",
                ###
                tabPanel("Datos",    
                         h4("Tabla de Datos"),
-                        dataTableOutput('Etapa4Tabla1')
+                        dataTableOutput('Etapa4Tabla1'),
+                        tags$hr(),
+                        tableOutput('Etapa4TablaTot')
+                        
                ),
                
                tabPanel("Revisión",
