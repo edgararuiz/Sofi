@@ -26,11 +26,13 @@ DefCap <- function(cau="character")
     else if ("P00"<=ca & ca<="P96") {Capitulo[i]<-16}
     else if ("Q00"<=ca & ca<="Q99") {Capitulo[i]<-17}
     else if ("R00"<=ca & ca<="R99") {Capitulo[i]<-18}
-    else if ("S01"<=ca & ca<="T99") {Capitulo[i]<-19}
-    else if ("V00"<=ca & ca<="Y98") {Capitulo[i]<-20}
-    else Capitulo[i]<-99
+    else if ("S00"<=ca & ca<="T98") {Capitulo[i]<-19}
+    else if ("V01"<=ca & ca<="Y98") {Capitulo[i]<-20}
+    else if ("Z00"<=ca & ca<="Z99") {Capitulo[i]<-21}
+    else if ("U00"<=ca & ca<="U99") {Capitulo[i]<-22}
+    else Capitulo[i]<-23
   }
-  Error<-sum(Capitulo==99)
+  Error<-sum(Capitulo==23)
   cat("~~~ Finalizo lectura de los c\u00F3digos con",Error, "Errores ~~~ \n")
   list(Capitulo,Error)
 }
