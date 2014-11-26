@@ -309,15 +309,17 @@ Etapa2Data33 <- reactive({
 
 Etapa2Data34 <- reactive({
   if (is.null(Etapa2Data2())) return(NULL)
-  dat<-as.data.frame(Etapa2Data2(),stringsAsFactors = FALSE)
-  dat2<-dat[dat[,7]==4,]
-  CapMis<-dat2[dat2[,4]==dat2[,5],]
-  CapDif<-dat2[dat2[,4]!=dat2[,5],]
-  FrecMis<-table(CapMis[,1],CapMis[,2])
-  FrecDif<-table(CapDif[,1],CapDif[,2])
-  TableMis<-Frecu(FrecMis)
-  TableDif<-Frecu(FrecDif)
-  list(TableMis,TableDif)
+  E2dat<-as.data.frame(Etapa2Data2(),stringsAsFactors = FALSE)
+  #dat<-Etapa4Data2()
+  E2dat<-E2dat[as.integer(E2dat[,7])==4,]
+  E2dat<-E2dat[E2dat[,1]!=E2dat[,2],]
+  E2CapMis<-E2dat[as.integer(E2dat[,4])==as.integer(E2dat[,5]),]
+  E2CapDif<-E2dat[as.integer(E2dat[,4])!=as.integer(E2dat[,5]),]
+  E2FrecMis<-table(E2CapMis[,1],E2CapMis[,2])
+  E2FrecDif<-table(E2CapDif[,1],E2CapDif[,2])
+  E2TableMis<-Frecu(E2FrecMis)
+  E2TableDif<-Frecu(E2FrecDif)
+  list(E2TableMis,E2TableDif)
 })
 
 Etapa2DataMis <- reactive({
@@ -501,7 +503,7 @@ output$DescarE2Inter3 <- downloadHandler(
 
 output$DescarE2Inter4 <- downloadHandler(
   filename = function() {
-    paste('InterConf3',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
+    paste('InterConf4',input$Etapa2file1[1], Sys.Date(), '.csv', sep='_') 
   },
   content = function(file) {
     write.csv(Etapa2DataInt4(), file)
@@ -865,7 +867,7 @@ output$DescarE4Inter3 <- downloadHandler(
 
 output$DescarE4Inter4 <- downloadHandler(
   filename = function() {
-    paste('InterConf3',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
+    paste('InterConf4',input$Etapa4file1[1], Sys.Date(), '.csv', sep='_') 
   },
   content = function(file) {
     write.csv(Etapa4DataInt4(), file)
