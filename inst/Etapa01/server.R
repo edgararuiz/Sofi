@@ -1,8 +1,16 @@
+
+pkg <- c("foreign", "ggplot2", "sampling")
+new.pkg <- pkg[!(pkg %in% installed.packages())]
+if (length(new.pkg)) {
+  install.packages(new.pkg)
+}
+
 library(shiny)
 library(foreign)
 library(ggplot2)
 library(sampling)
 library(INEGI)
+
 source("helpers.R")
 options(shiny.maxRequestSize=1300*1024^2)
 
