@@ -1,7 +1,7 @@
 library(shiny)
 
 shinyUI(navbarPage("Defunciones",#theme = "Readable.min.css",
-                   tabPanel("Etapa 1",
+                   tabPanel("Etapa 1",icon = icon("random"),
 ###
   #fluidPage(#theme = "bootstrap02.css",
   #titlePanel("Etapa 1"),
@@ -39,7 +39,7 @@ shinyUI(navbarPage("Defunciones",#theme = "Readable.min.css",
         p('Nota: El archivo de códigos debe ser guardado en',
           'el formado', code("dBASE IV (DBF)"), 'y con solo las columnas', 
           'de ID y código si son más de 300,000 registros.'),
-        p(HTML('<br/>Para dudas y sugerencias escribir a <a href="mailto:jose.loera@inegi.org.mx" title="Enviar correo a Daniel">Enviar Mail</a>'))
+        p(HTML('<br/>Para dudas y sugerencias escribir a <a href="mailto:jose.loera@inegi.org.mx?subject=Registros%20administrativos" title="Enviar correo a Daniel">Enviar Mail</a>'))
       ),
       
       conditionalPanel(
@@ -47,7 +47,7 @@ shinyUI(navbarPage("Defunciones",#theme = "Readable.min.css",
         helpText('Elegir las variables a utilizar'),
         uiOutput("NomID"),
         uiOutput("NomCod"),
-        actionButton("updat1", "Obtener Población"),
+        actionButton("updat1", "Obtener Población", icon = icon("globe")),
         tags$hr(),
         radioButtons("En", "De donde tomar n:",
                      c("Archivo" = "arc",
