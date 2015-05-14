@@ -1,2 +1,4 @@
 importFrom("sampling", srswor)
-export(DefCap,Etapa01)
+importFrom("shiny", shinyAppDir)
+importFrom("foreign", read.dbf)
+export(DefCap,Etapa01,Defunciones,Estad)
