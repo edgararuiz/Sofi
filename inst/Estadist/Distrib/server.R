@@ -1,6 +1,6 @@
 library(shiny)
 library(VGAM)
-load("samplingApp.RData", envir=.GlobalEnv)
+load(system.file("Estadist/Distrib/samplingApp.RData", package="Sofi"), envir=.GlobalEnv)
 
 shinyServer(function(input, output, session){
 
