@@ -3,7 +3,7 @@ tabPanelAbout <- source("about.r")$value
 library(shinythemes)
 shinyUI(fluidPage(theme=shinytheme("united"),
 	headerPanel(
-		HTML('Distributions of Random Variables v4
+		HTML('Distribuciones de variables aleatorias (test para UAA)
 			<a href="http://snap.uaf.edu" target="_blank"><img align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
 		), "Distributions of Random Variables"
 	),
