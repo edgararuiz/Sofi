@@ -3,7 +3,7 @@ library(shiny)
 library(shinyjs)
 
 shinyUI(fluidPage(
-  title = "Demo of ggExtra::ggMarginal()",
+  title = "Demo of ggExtra::ggMarginal() UAA",
   tags$head(includeCSS(file.path('www', 'style.css'))),   
   useShinyjs(),
   
