@@ -10,7 +10,7 @@ Suggests: ggplot2
 encoding: UTF-8
 Author: Jose D. Loera
 Maintainer: Jose D. Loera <jose.loera@inegi.org.mx>
-URL: http://www.inegi.info/
+URL: http://www.inegi.info/sofi
 BugReports: https://github.com/loerasg/INEGI/issues
 Description: Este paquete tiene la finalidad de ayudar a aprender de una forma interactiva, teniendo ejemplos y la posibilidad de resolver nuevos al mismo tiempo. Apuntes de  clase interactivos.
 License: GPL-3
