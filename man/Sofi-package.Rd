@@ -11,8 +11,8 @@ Este paquete tiene  la finalidad de ayudar a aprender diversos temas académicos
 \tabular{ll}{
 Package: \tab Sofi\cr
 Type: \tab Package\cr
-Version: \tab 0.0.18\cr
-Date: \tab 2015-04-27\cr
+Version: \tab 0.0.21\cr
+Date: \tab 2015-05-18\cr
 License: \tab GPL (>= 3)\cr
 }
 Se pretende alcanzar una gran variedad de temas desde probabilidad, estadística, física, etc.
