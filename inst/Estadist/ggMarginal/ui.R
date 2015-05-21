@@ -3,13 +3,13 @@ library(shiny)
 library(shinyjs)
 
 shinyUI(fluidPage(
-  title = "Demo of ggExtra::ggMarginal() UAA",
+  title = "Demo of ggExtra::ggMarginal()",
   tags$head(includeCSS(file.path('www', 'style.css'))),   
   useShinyjs(),
   
   fluidRow(id = "title-row",
     column(12,
-      h1("Demo of ggExtra::ggMarginal()",
+      h1("Demo of ggExtra::ggMarginal() Test UAA",
         a("(link)", href = "https://github.com/daattali/ggExtra")
       ),
       h4("ggMarginal lets you add marginal plots to ggplot2 (finally!)"),
