@@ -1,4 +1,4 @@
-pkg <- c("ggplot2", "shinyjs")
+pkg <- c("ggplot2", "shinyjs","ggExtra","grid","gridExtra","knitr")
 new.pkg <- pkg[!(pkg %in% installed.packages())]
 if (length(new.pkg)) {
   install.packages(new.pkg)
@@ -7,6 +7,10 @@ if (length(new.pkg)) {
 library(shiny)
 library(ggplot2)
 library(shinyjs)
+library(ggExtra)
+library(grid)
+library(gridExtra)
+library(knitr)
 
 datasets <- list(
   "Random distribution" =
@@ -32,7 +36,7 @@ shinyServer(function(input, output, session) {
   })
   
   output$dataset_select <- renderUI({
-    selectInput("dataset", "Choose a dataset:", names(datasets))
+    selectInput("dataset", "Elegir un conjunto de datos:", names(datasets))
   })
   
   datasetInput <- reactive({

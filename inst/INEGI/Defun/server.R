@@ -13,6 +13,7 @@ library(Sofi)
 
 source("helpers.R")
 options(shiny.maxRequestSize=1300*1024^2)
+options(shiny.deprecation.messages=FALSE)
 
 shinyServer(function(input, output) {
 #Etapa 1

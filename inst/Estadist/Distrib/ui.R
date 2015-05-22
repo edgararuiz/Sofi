@@ -1,7 +1,8 @@
 library(shiny)
 tabPanelAbout <- source("about.r")$value
-library(shinythemes)
-shinyUI(fluidPage(theme=shinytheme("united"),
+#library(shinythemes)
+options(shiny.deprecation.messages=FALSE)
+shinyUI(fluidPage(#theme=shinytheme("united"),
 	headerPanel(
 		HTML('Distribuciones de variables aleatorias (test para UAA)
 			<a href="http://snap.uaf.edu" target="_blank"><img align="right" alt="SNAP Logo" src="./img/SNAP_acronym_100px.png" /></a>'
@@ -9,10 +10,10 @@ shinyUI(fluidPage(theme=shinytheme("united"),
 	),
 	fluidRow(
 		column(4,
-			wellPanel( radioButtons("disttype","Distribution type:",list("Discrete","Continuous"),selected="Discrete") ),
+			wellPanel( radioButtons("disttype","Tipo de distribución:",list("Discreta","Continua"),selected="Discreta") ),
 			wellPanel(	uiOutput("distName") ),
 			wellPanel(
-				numericInput("n","Sample size:",10000),
+				numericInput("n","Tamaño de la muestra:",1000),
 				uiOutput("dist1"),
 				uiOutput("dist2"),
 				uiOutput("dist3")
@@ -21,16 +22,16 @@ shinyUI(fluidPage(theme=shinytheme("united"),
 				uiOutput("sampDens"),
 				uiOutput("BW"),
 				fluidRow(
-					column(6, downloadButton("dlCurPlot", "Download Graphic", class="btn-block btn-primary")),
-					column(6, downloadButton("dldat", "Download Sample", class="btn-block btn-warning"))
+					column(6, downloadButton("dlCurPlot", "Descargar Gráfico", class="btn-block btn-primary")),
+					column(6, downloadButton("dldat", "Descargar Muestra", class="btn-block btn-warning"))
 				)
 			)
 		),
 		column(8,
 			tabsetPanel(
-				tabPanel("Plot",plotOutput("plot", width="100%", height="auto"),verbatimTextOutput("summary")),
+				tabPanel("Gráfico",plotOutput("plot", width="100%", height="auto"),verbatimTextOutput("summary")),
 				#tabPanel("Summary",verbatimTextOutput("summary")),
-				tabPanel("Table",tableOutput("table")),
+				tabPanel("Muestra",tableOutput("table")),
 				tabPanelAbout(),
 				id="tsp"
 			)

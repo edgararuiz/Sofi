@@ -1,7 +1,7 @@
 #library(shiny)
-library(shinythemes)
-
-shinyUI(navbarPage("Defunciones",theme = shinytheme("readable"),
+#library(shinythemes)
+options(shiny.deprecation.messages=FALSE)
+shinyUI(navbarPage("Defunciones",#theme = shinytheme("readable"),
 ####_____________________________________________________________
 #___________________________Etapa 1______________________________
 ####________________________________________________________________                   
