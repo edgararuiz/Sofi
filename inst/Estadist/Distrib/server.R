@@ -3,7 +3,7 @@ new.pkg <- pkg[!(pkg %in% installed.packages())]
 if (length(new.pkg)) {
   install.packages(new.pkg)
 }
-
+#Distribuciones de variables aleatorias (test para UAA)
 
 library(shiny)
 library(VGAM)
@@ -29,7 +29,7 @@ shinyServer(function(input, output, session){
 		dist <- switch(input$dist,
 			bern=rbern, bin=rbinom2, dunif=drunif, geom=rgeom2, hgeom=rhyper2, nbin=rnbinom2, poi=rpois2, # discrete
 			beta=rbeta2, cauchy=rcauchy2, chisq=rchisq2, exp=rexp2, F=rf2, gam=rgamma2, lap=rlaplace2, # Continua
-			logi=rlogis2, lognorm=rlnorm, norm=rnorm, pareto=rpareto2, t=rt2, unif=runif, weib=rweibull2,
+			logi=rlogis2, lognorm=rlnorm, norm=rnorm, pareto=rpareto2, t=rt2, unif=runif, weib=rweibull2
 			)
 
 		def.args <- switch(input$dist,

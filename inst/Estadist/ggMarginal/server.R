@@ -1,3 +1,4 @@
+#Graf
 pkg <- c("ggplot2", "shinyjs","ggExtra","grid","gridExtra","knitr")
 new.pkg <- pkg[!(pkg %in% installed.packages())]
 if (length(new.pkg)) {
@@ -10,7 +11,7 @@ library(shinyjs)
 library(ggExtra)
 library(grid)
 library(gridExtra)
-library(knitr)
+#library(knitr)
 
 datasets <- list(
   "Random distribution" =
