@@ -2,8 +2,8 @@ Package: Sofi
 Type: Package
 Language: es
 Title: Interfaz (web) interactiva con fines didacticos
-Version: 0.0.23
-Date: 2015-05-21
+Version: 0.0.24
+Date: 2015-05-26
 Depends: R (>= 3.1.0), shiny
 Imports: sampling, foreign
 Suggests: ggplot2, VGAM, shinyjs, ggExtra, grid, gridExtra
