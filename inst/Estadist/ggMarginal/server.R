@@ -1,17 +1,6 @@
-#Graf
-pkg <- c("ggplot2", "shinyjs","ggExtra","grid","gridExtra","knitr")
-new.pkg <- pkg[!(pkg %in% installed.packages())]
-if (length(new.pkg)) {
-  install.packages(new.pkg)
-}
-
 library(shiny)
 library(ggplot2)
 library(shinyjs)
-library(ggExtra)
-library(grid)
-library(gridExtra)
-#library(knitr)
 
 datasets <- list(
   "Random distribution" =
@@ -29,15 +18,11 @@ datasets <- list(
 shinyServer(function(input, output, session) {
   # show/hide the marginal plots settings
   observe({
-    if (input$show_marginal) {
-      show("marginal-settings", TRUE, "slide", 0.9)
-    } else {
-      hide("marginal-settings", TRUE, "slide", 0.9)
-    }
+    toggle("marginal-settings", TRUE, "slide", 0.3, input$show_marginal)
   })
   
   output$dataset_select <- renderUI({
-    selectInput("dataset", "Elegir un conjunto de datos:", names(datasets))
+    selectInput("dataset", "Choose a dataset:", names(datasets))
   })
   
   datasetInput <- reactive({
@@ -105,7 +90,7 @@ shinyServer(function(input, output, session) {
         marginFill = input$marginFill)
     }
     
-    p
+    print(p)
   })
   
   # the code to reproduce the plot

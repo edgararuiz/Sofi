@@ -12,9 +12,13 @@ Estad(Nivel)
 }
 \arguments{
   \item{Nivel}{
-Para los parámetros
-1 = Distribuciones diversas
-2 = Graficas de datos
+  Para los parámetros
+  \tabular{ll}{
+1 = \tab Calculadora de Distribución\cr
+2 = \tab Distribuciones de probabilidad\cr
+3 = \tab Menú de Sofi\cr
+4 = \tab Gráficas de datos\cr
+}
 }
 }
 \details{
@@ -31,13 +35,19 @@ José D. Loera
 }
 
 \examples{
-##Estas es una función que lanza diferentes interfaces.
+## Esta es una función que lanza diferentes interfaces.
 
-#Para ver distribuciones
-#Estad(1)
+# Para ver una Calculadora de Distribución
+# Estad(1)
 
-#Para ver graficas de datos
-#Estad(2)
+# Para ver Distribuciones de probabilidad
+# Estad(2)
+
+# Menú de Sofi
+# Estad(3)
+
+# Graficas de datos
+# Estad(4)
 }
 \keyword{ Graficas }
 \keyword{ Estadística }
