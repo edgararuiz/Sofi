@@ -9,7 +9,7 @@ library(shiny)
 library(foreign)
 library(ggplot2)
 library(sampling)
-library(Sofi)
+#library(Sofi)
 library(VGAM)
 library(openintro)
 library(gridExtra)
@@ -17,10 +17,10 @@ library(BHH2)
 require(ellipse) #Juego de Correlación
 require(plotrix) #Diagnósticos para la regresión lineal simple
 
-source("helpers.R")
-source('./Funciones/Tails.R') #Calculadora de Distribución
+#source("helpers.R")
+#source('./Funciones/Tails.R') #Calculadora de Distribución
 
-load(system.file("Estadist/Distrib/samplingApp.RData", package="Sofi"), envir=.GlobalEnv)
+#load(system.file("Estadist/Distrib/samplingApp.RData", package="Sofi"), envir=.GlobalEnv)
 
 
  ## Funciones usadas en Juego de Correlación
