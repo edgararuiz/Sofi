@@ -1,0 +1,47 @@
+# Pesos de alumnos
+
+A quote:
+> Este es un test
+
+    a lovely quiet paragraph
+      no code exists
+        still a valid knitr document
+
+-- My haiku on an empty document
+
+
+La media de los pesos de 500 estudiantes de un colegio es 70 kg y la desviacion tipica 3 kg. Suponiendo que los pesos se distribuyen normalmente, hallar cuantos estudiantes pesan: es nuestra valor
+<!--
+```{r model, collapse=TRUE}
+options(digits = 7)
+fit <- lm(regFormula(), data = mtcars)
+b   <- coef(fit)
+summary(fit)
+#input$area_CalDis
+#library(shiny)
+#textOutput("area_CalDis")
+```
+-->
+The fitting result is $mpg = `r b[1]` + `r b[2]``r input$x`$.
+Below is a scatter plot with the regression line.
+
+```{r plot, fig.height=5}
+par(mar = c(4, 4, 1, 1))
+plot(regFormula(), data = mtcars, pch = 19, col = 'gray')
+abline(fit, col = 'red', lwd = 2)
+```
+
+# A Minimal Example
+
+We examine the relationship between speed and stopping
+distance using a linear regression model:
+$Y = \beta_0 + \beta_1 x + \epsilon$.
+
+```{r modelo, fig.width=5, fig.height=4}
+par(mar = c(4, 4, 1, 1), mgp = c(2, 1, 0), cex = 0.8)
+plot(cars, pch = 20, col = 'darkgray')
+fit <- lm(dist ~ speed, data = cars)
+abline(fit, lwd = 2)
+```
+
+The slope of a simple linear regression is `r coef(fit)[2]`.
