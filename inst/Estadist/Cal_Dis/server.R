@@ -4,12 +4,16 @@
 source('./helper/Tails.R') #Calculadora de Distribución
 # set mirror
 options(repos=structure(c(CRAN="http://cran.rstudio.com")))
+#options(encoding = 'UTF-8')
 
 if (!("shiny" %in% names(installed.packages()[,"Package"]))) {install.packages("shiny")}
 suppressMessages(library(shiny, quietly = TRUE))
 
-if (!("openintro" %in% names(installed.packages()[,"Package"]))) {install.packages("openintro")}
-suppressMessages(library(openintro, quietly = TRUE))
+#if (!("openintro" %in% names(installed.packages()[,"Package"]))) {install.packages("openintro")}
+#suppressMessages(library(openintro, quietly = TRUE))
+
+#if (!("knitr" %in% names(installed.packages()[,"Package"]))) {install.packages("knitr")}
+#suppressMessages(library(knitr, quietly = TRUE))
 
 defaults = list("tail_CalDis" = "lower",
                 "lower_bound_CalDis" = "open",
@@ -18,6 +22,7 @@ defaults = list("tail_CalDis" = "lower",
 shinyServer(function(input, output)
 { 
   
+ 
 ##CalDis####
   output$tail_CalDis = renderUI(
   {
@@ -367,7 +372,7 @@ shinyServer(function(input, output)
       step = 1
     }
 
-    sliderInput("a_CalDis", "a",
+    numericInput("a_CalDis", "a",
                 value = value,
                 min   = min,
                 max   = max,
@@ -433,7 +438,7 @@ shinyServer(function(input, output)
         step = 1
       }
 
-      sliderInput("b_CalDis", "b",
+      numericInput("b_CalDis", "b",
                   value = value,
                   min   = min,
                   max   = max,
@@ -631,129 +636,113 @@ shinyServer(function(input, output)
   # Calculations #
   ###
 
-  output$area_CalDis = renderText(
-  {
-    if (is.null(input$tail_CalDis) | is.null(input$a_CalDis))
-    {
-      shiny:::flushReact()
-      return()
-    }
-
-    L = input$a_CalDis
-    U = NULL
-
-    if (input$tail_CalDis %in% c("both","middle")) 
-    {
-      if (is.null(input$b_CalDis))
-      {
-        shiny:::flushReact()
-        return()
-      }
-
-      U = input$b_CalDis
-      
-      error = FALSE
-      if (L>U) error = TRUE
-      if (error){
-        return()
-      }
-    }
-    
-
-
-    f = function() NULL
-
+  Valor=reactive({
     if (input$dist_CalDis == "rnorm")
     {
-      if (is.null(input$mu) | is.null(input$sd_CalDis))
-      {
-        shiny:::flushReact()
-        return()
-      }
-
-      f = function(x) pnorm(x,input$mu,input$sd_CalDis)
-    }  
-    else if (input$dist_CalDis == "rt")
-    {
-      if (is.null(input$df))
-      {
-        shiny:::flushReact()
-        return()
-      }
-      
-      f = function(x) pt(x,input$df)
+      Val<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis))
     }
-    else if (input$dist_CalDis == "rchisq"){
-      if (is.null(input$df))
-      {
-        shiny:::flushReact()
-        return()
-      }
-      
-      f = function(x) pchisq(x,input$df)
-    }
-    else if (input$dist_CalDis == "rf"){
-      if (is.null(input$df1_CalDis) | is.null(input$df2_CalDis))
-      {
-        shiny:::flushReact()
-        return()
-      }
-      
-      f = function(x) pf(x,input$df1_CalDis,input$df2_CalDis)
-    }    
-    else if (input$dist_CalDis == "rbinom")
-    {
-      if (is.null(input$n_CalDis) | is.null(input$p_CalDis) | is.null(input$lower_bound_CalDis))
-      {
-        shiny:::flushReact()
-        return()
-      }
-
-      if (input$tail_CalDis == "equal")
-      {
-        f = function(x) dbinom(x,input$n_CalDis,input$p_CalDis)
-      }
-      else
-      {
-        f = function(x) pbinom(x,input$n_CalDis,input$p_CalDis)
-      
-        if (input$tail_CalDis %in% c("lower","both") & input$lower_bound_CalDis == "open") L = L-1
-        if (input$tail_CalDis %in% c("upper")        & input$lower_bound_CalDis == "closed") L = L-1
-        if (input$tail_CalDis %in% c("middle")       & input$lower_bound_CalDis == "closed") L = L-1
-
-        if (input$tail_CalDis %in% c("both","middle")) 
-        {
-          if (is.null(input$upper_bound_CalDis))
-          {
-            shiny:::flushReact()
-            return()
-          }
-
-          if (input$tail_CalDis == "both"   & input$upper_bound_CalDis == "closed") U = U-1
-          if (input$tail_CalDis == "middle" & input$upper_bound_CalDis == "open") U = U-1
-        } 
-      }
-    }
-
-    val = NA
-    if (input$tail_CalDis == "lower")
-      val = f(L)
-    else if (input$tail_CalDis == "upper")
-      val = 1-f(L)
-    else if (input$tail_CalDis == "equal")
-      val = f(L)
-    else if (input$tail_CalDis == "both")
-      val = f(L) + (1-f(U))
-    else if (input$tail_CalDis == "middle")
-      val = f(U) - f(L)
+    else{Val<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis, 
+                                      input$df, input$df1_CalDis, input$df2_CalDis, input$n_CalDis, input$p_CalDis, input$lower_bound_CalDis, 
+                                      input$upper_bound_CalDis))}
     
-    text = paste(get_model_text(),"=",signif(val,3))
-  
-    
-    text = sub("a",input$a_CalDis,text)
-    if (input$tail_CalDis %in% c("both","middle")) 
-      text = sub("b",input$b_CalDis,text)
-    
-    text
+    return(Val)
   })
+  
+  output$area_CalDis = renderText(
+  {
+    text1 = paste(get_model_text(),"=",signif(Valor(),3))
+  #as.numeric(Valor_Final())
+    
+    text = sub("a",input$a_CalDis,text1)
+    if (input$tail_CalDis %in% c("both","middle")) 
+      text = sub("b",input$b_CalDis,text1)
+    
+    return(text)
+  })
+
+ 
+  observe({
+    #this observer monitors when input$newplot is invalidated
+    #or when input$difficulty is invalidated
+    #and generates a new plot
+    
+    input$newdat
+    Peso<- round(runif(1, 60, 80),digits=1)
+    DS_Peso<-round(runif(1, 2, 8),digits=1)
+    Cues_Val<-round(rnorm(1, mean=Peso, sd=DS_Peso),digits=1)
+    Valor_Cues<<-as.numeric(Valor_Fin(dist_CalDis="rnorm", tail_CalDis="lower", mu_CalDis=Peso, sd_CalDis=DS_Peso, a_CalDis=Cues_Val))
+    output$Peso_Est = source('./Problemas/Peso_Estudiantes.R',local=T,encoding="UTF-8")$value
+
+    #display text
+    output$status1 <- renderText({"Marque su respuesta y haga clic en 'Enviar'"})
+    output$status2 <- renderText({""})
+    #output$status3 <- renderText({""})
+    
+    #reset answered status
+    #answered<<-FALSE
+    
+    
+  })
+  
+  Resp <- 0.5
+  
+  observe({
+    #this observer monitors when input$submit is invalidated
+    #and displays the answer
+    input$submit
+    #Valor<<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis, 
+    #                             input$df, input$df1_CalDis, input$df2_CalDis, input$n_CalDis, input$p_CalDis, input$lower_bound_CalDis, 
+    #                             input$upper_bound_CalDis))
+    #Valor<<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis))
+    
+    #isolate({Resp<-as.numeric(Valor())})
+    
+    if(length(Valor()==0)) {Resp<-0.7}
+    #else{Resp<-as.numeric(Valor())}
+    cat(" Valor de Resp ",Resp)
+    isolate({
+      if(abs(Valor_Cues-Resp)<0.01){
+      output$status1 <- renderText({""})
+      output$status2 <- renderText({"Felicidades   valor correcto"})
+    }
+    else{
+      output$status1 <- renderText({""})
+      output$status2 <- renderText({""})
+      output$status3 <- renderText({"Incorrecto"})
+      
+    }}
+    )
+    
+    
+  })
+  
+  
+##Reporte
+#regFormula <- reactive({
+#  as.formula(paste('mpg ~', input$x))
+#})
+
+#output$report <- renderUI({
+#  src <- normalizePath('report.Rmd')
+#  
+  # temporarily switch to the temp dir, in case you do not have write
+  # permission to the current working directory
+#  owd <- setwd(tempdir())
+#  on.exit(setwd(owd))
+  #library(knitr)
+#  opts_knit$set(root.dir = owd)#knitr::opts_knit$set(root.dir = owd)
+  #options(encoding = 'UTF-8')
+#  tagList(
+#    HTML(knit2html(text = readLines(src), fragment.only = TRUE)),
+    #HTML(knitr::knit2html(text = readLines(src), fragment.only = TRUE)),
+    # typeset LaTeX math
+#    tags$script(HTML('MathJax.Hub.Queue(["Typeset", MathJax.Hub]);')),
+    # syntax highlighting
+#    tags$script(HTML("if (hljs) $('#report pre code').each(function(i, e) {
+#                     hljs.highlightBlock(e)
+#});"))
+#    )
+#})
+
+
 })
