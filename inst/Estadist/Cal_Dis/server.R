@@ -9,8 +9,8 @@ options(repos=structure(c(CRAN="http://cran.rstudio.com")))
 if (!("shiny" %in% names(installed.packages()[,"Package"]))) {install.packages("shiny")}
 suppressMessages(library(shiny, quietly = TRUE))
 
-#if (!("openintro" %in% names(installed.packages()[,"Package"]))) {install.packages("openintro")}
-#suppressMessages(library(openintro, quietly = TRUE))
+if (!("openintro" %in% names(installed.packages()[,"Package"]))) {install.packages("openintro")}
+suppressMessages(library(openintro, quietly = TRUE))
 
 #if (!("knitr" %in% names(installed.packages()[,"Package"]))) {install.packages("knitr")}
 #suppressMessages(library(knitr, quietly = TRUE))
@@ -648,6 +648,11 @@ shinyServer(function(input, output)
     return(Val)
   })
   
+#  Error_Peso= reactive({
+#    EP<-abs(Valor()-Valor_Cues)
+#    return(EP)
+#  })
+  
   output$area_CalDis = renderText(
   {
     text1 = paste(get_model_text(),"=",signif(Valor(),3))
@@ -660,6 +665,20 @@ shinyServer(function(input, output)
     return(text)
   })
 
+  output$Error_CalDis = renderText(
+    {
+      text1 = paste("Tu error es = ",signif(abs(Valor()-Valor_Cues),3))
+      #as.numeric(Valor_Final())
+      
+      #text = sub("a",input$a_CalDis,text1)
+      #if (input$tail_CalDis %in% c("both","middle")) 
+      #  text = sub("b",input$b_CalDis,text1)
+      
+      return(text1)
+    })
+  
+  
+  
  
   observe({
     #this observer monitors when input$newplot is invalidated
@@ -684,37 +703,8 @@ shinyServer(function(input, output)
     
   })
   
-  Resp <- 0.5
-  
-  observe({
-    #this observer monitors when input$submit is invalidated
-    #and displays the answer
-    input$submit
-    #Valor<<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis, 
-    #                             input$df, input$df1_CalDis, input$df2_CalDis, input$n_CalDis, input$p_CalDis, input$lower_bound_CalDis, 
-    #                             input$upper_bound_CalDis))
-    #Valor<<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis))
-    
-    #isolate({Resp<-as.numeric(Valor())})
-    
-    if(length(Valor()==0)) {Resp<-0.7}
-    #else{Resp<-as.numeric(Valor())}
-    cat(" Valor de Resp ",Resp)
-    isolate({
-      if(abs(Valor_Cues-Resp)<0.01){
-      output$status1 <- renderText({""})
-      output$status2 <- renderText({"Felicidades   valor correcto"})
-    }
-    else{
-      output$status1 <- renderText({""})
-      output$status2 <- renderText({""})
-      output$status3 <- renderText({"Incorrecto"})
-      
-    }}
-    )
-    
-    
-  })
+  #Resp <- 0.5
+
   
   
 ##Reporte
