@@ -63,8 +63,9 @@ shinyUI(pageWithSidebar(
     h5(textOutput("status2"),style="font-weight=500; color: #00CC00;"),
     h5(textOutput("status3"),style="font-weight=500; color: #FF0000;"),
     br(),
-    actionButton("submit","Enviar"),
+    #actionButton("submit","Enviar"),
     actionButton("newdat","Nuevos datos"),
+    h4(textOutput("Error_CalDis")),
     h4(textOutput("area_CalDis"), align = "center"),
     plotOutput("plot_CalDis"),
     #textOutput("area_CalDis")
