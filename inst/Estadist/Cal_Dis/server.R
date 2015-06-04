@@ -188,8 +188,8 @@ shinyServer(function(input, output)
       }
       else if (input$tail_CalDis == "both")
       {
-        # P(X < a or X > b)
-        text = paste0("P(X ", low_less, " a or X ", up_greater, " b)")
+        # P(X < a o X > b)
+        text = paste0("P(X ", low_less, " a o X ", up_greater, " b)")
       }
       else if (input$tail_CalDis == "equal")
       {
@@ -637,13 +637,18 @@ shinyServer(function(input, output)
   ###
 
   Valor=reactive({
-    if (input$dist_CalDis == "rnorm")
-    {
-      Val<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis))
-    }
-    else{Val<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis, 
+    #if (input$dist_CalDis == "rnorm")
+    #{
+    #  Val<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis))
+    #}
+    #else if (input$dist_CalDis == "rbinom"){
+    #  Val<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, n_CalDis=input$n_CalDis, p_CalDis=input$p_CalDis))
+    #}
+    #else{
+      Val<-as.numeric(Valor_Fin(input$dist_CalDis, input$tail_CalDis, input$mu, input$sd_CalDis, input$a_CalDis, input$b_CalDis, 
                                       input$df, input$df1_CalDis, input$df2_CalDis, input$n_CalDis, input$p_CalDis, input$lower_bound_CalDis, 
-                                      input$upper_bound_CalDis))}
+                                      input$upper_bound_CalDis))
+    #  }
     
     return(Val)
   })
@@ -655,26 +660,39 @@ shinyServer(function(input, output)
   
   output$area_CalDis = renderText(
   {
-    text1 = paste(get_model_text(),"=",signif(Valor(),3))
-  #as.numeric(Valor_Final())
+    #if (is.null(Valor()) | is.null(get_model_text())) return(NULL)
+    #else{
+      text = paste(get_model_text(),"=",signif(Valor(),3))
+      #as.numeric(Valor_Final())
+      if (is.null(input$a_CalDis) | is.null(text)) return(paste(signif(Valor(),3)))
+      else {
+      text = sub("a",input$a_CalDis,text)
+        #if (is.null(input$b_CalDis) | is.null(text)) return(NULL)
+        if (input$tail_CalDis %in% c("both","middle")){
+          if (is.null(input$b_CalDis) | is.null(text)) return(NULL)
+          text = sub("b",input$b_CalDis,text)
+        }
+        return(text)
+        }
+      
+    #}
     
-    text = sub("a",input$a_CalDis,text1)
-    if (input$tail_CalDis %in% c("both","middle")) 
-      text = sub("b",input$b_CalDis,text1)
-    
-    return(text)
   })
 
   output$Error_CalDis = renderText(
     {
-      text1 = paste("Tu error es = ",signif(abs(Valor()-Valor_Cues),3))
-      #as.numeric(Valor_Final())
+      if (is.null(Valor()) | is.null(Valor_Cues)) return(NULL)
+      else{
+        text1 = paste("Tu error es = ",signif(abs(Valor()-Valor_Cues),3))
+        #as.numeric(Valor_Final())
+        #if  (abs(Valor()-Valor_Cues)<0.005) text1 = "Felicidades"
+        #text = sub("a",input$a_CalDis,text1)
+        #if (input$tail_CalDis %in% c("both","middle")) 
+        #  text = sub("b",input$b_CalDis,text1)
+        
+        return(text1)
+      }
       
-      #text = sub("a",input$a_CalDis,text1)
-      #if (input$tail_CalDis %in% c("both","middle")) 
-      #  text = sub("b",input$b_CalDis,text1)
-      
-      return(text1)
     })
   
   
@@ -686,15 +704,15 @@ shinyServer(function(input, output)
     #and generates a new plot
     
     input$newdat
-    Peso<- round(runif(1, 60, 80),digits=1)
-    DS_Peso<-round(runif(1, 2, 8),digits=1)
-    Cues_Val<-round(rnorm(1, mean=Peso, sd=DS_Peso),digits=1)
-    Valor_Cues<<-as.numeric(Valor_Fin(dist_CalDis="rnorm", tail_CalDis="lower", mu_CalDis=Peso, sd_CalDis=DS_Peso, a_CalDis=Cues_Val))
-    output$Peso_Est = source('./Problemas/Peso_Estudiantes.R',local=T,encoding="UTF-8")$value
-
+    if (input$Ejem_Dis == "Peso_Est"){
+      output$Doc_Peso = source('./Problemas/Peso_Estudiantes.R',local=T,encoding="UTF-8")$value
+    }
+    else if (input$Ejem_Dis == "Tiro_Arc"){
+      output$Doc_Tiro = source('./Problemas/torneo_de_tiro.R',local=T,encoding="UTF-8")$value
+    }
     #display text
-    output$status1 <- renderText({"Marque su respuesta y haga clic en 'Enviar'"})
-    output$status2 <- renderText({""})
+    #output$status1 <- renderText({"Marque su respuesta y haga clic en 'Enviar'"})
+    #output$status2 <- renderText({""})
     #output$status3 <- renderText({""})
     
     #reset answered status
