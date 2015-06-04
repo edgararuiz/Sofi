@@ -43,8 +43,13 @@ shinyUI(pageWithSidebar(
     
     br(),
     
-    withMathJax(),  # include the MathJax library
-    helpText("Some math here $$Y = \\beta_0 + \\beta_1 x + \\epsilon$$"),
+    tags$hr(),
+    radioButtons("Ejem_Dis", "Ejemplos: ",
+                 c("Peso de estudiante" = "Peso_Est",
+                   "Tiro de arco" = "Tiro_Arc")),
+    
+    #withMathJax(),  # include the MathJax library
+    #helpText("Some math here $$Y = \\beta_0 + \\beta_1 x + \\epsilon$$"),
     #selectInput("x", "Construir un modelo de regresión de mpg en contra:",choices = names(mtcars)[-1]),
     
     helpText(a(href="https://duke.qualtrics.com/SE/?SID=SV_3L8WjmwQo32cVk9", target="_blank", "Rate this app!")),
@@ -57,11 +62,20 @@ shinyUI(pageWithSidebar(
   mainPanel(
     #uiOutput('report'),
     #div(h4(textOutput("Peso_Est"), align = "center")),
-    h3("Peso de estudiantes",align = "center"),
-    h4(textOutput("Peso_Est")),
-    p(textOutput("status1"),style="font-weight=500; color: #000000;"),
-    h5(textOutput("status2"),style="font-weight=500; color: #00CC00;"),
-    h5(textOutput("status3"),style="font-weight=500; color: #FF0000;"),
+    conditionalPanel(condition = 'input.Ejem_Dis === "Peso_Est"',
+                     h3("Peso de estudiantes",align = "center"),
+                     h4(textOutput("Doc_Peso"))
+                     
+                    
+    ),
+    conditionalPanel(condition = 'input.Ejem_Dis === "Tiro_Arc"',
+                     h3("Tiro de arco",align = "center"),
+                     h4(textOutput("Doc_Tiro"))
+    ),
+    
+    #p(textOutput("status1"),style="font-weight=500; color: #000000;"),
+    #h5(textOutput("status2"),style="font-weight=500; color: #00CC00;"),
+    #h5(textOutput("status3"),style="font-weight=500; color: #FF0000;"),
     br(),
     #actionButton("submit","Enviar"),
     actionButton("newdat","Nuevos datos"),
@@ -69,7 +83,7 @@ shinyUI(pageWithSidebar(
     h4(textOutput("area_CalDis"), align = "center"),
     plotOutput("plot_CalDis"),
     #textOutput("area_CalDis")
-    helpText("Some math here, $$Y = \\beta_0 + \\beta_1 x + \\epsilon$$"),
+    #helpText("Some math here, $$Y = \\beta_0 + \\beta_1 x + \\epsilon$$"),
     br()
     
     #uiOutput('report')
