@@ -46,7 +46,8 @@ shinyUI(pageWithSidebar(
     tags$hr(),
     radioButtons("Ejem_Dis", "Ejemplos: ",
                  c("Peso de estudiante" = "Peso_Est",
-                   "Tiro de arco" = "Tiro_Arc")),
+                   "Tiro de arco" = "Tiro_Arc",
+                   "Temperatura" = "Temp_Est")),
     
     #withMathJax(),  # include the MathJax library
     #helpText("Some math here $$Y = \\beta_0 + \\beta_1 x + \\epsilon$$"),
@@ -65,12 +66,14 @@ shinyUI(pageWithSidebar(
     conditionalPanel(condition = 'input.Ejem_Dis === "Peso_Est"',
                      h3("Peso de estudiantes",align = "center"),
                      h4(textOutput("Doc_Peso"))
-                     
-                    
     ),
     conditionalPanel(condition = 'input.Ejem_Dis === "Tiro_Arc"',
                      h3("Tiro de arco",align = "center"),
                      h4(textOutput("Doc_Tiro"))
+    ),
+    conditionalPanel(condition = 'input.Ejem_Dis === "Temp_Est"',
+                     h3("Temperatura",align = "center"),
+                     h4(textOutput("Doc_Temp"))
     ),
     
     #p(textOutput("status1"),style="font-weight=500; color: #000000;"),
@@ -79,6 +82,7 @@ shinyUI(pageWithSidebar(
     br(),
     #actionButton("submit","Enviar"),
     actionButton("newdat","Nuevos datos"),
+    actionButton("newEje","Nuevos Ejemplo"),
     h4(textOutput("Error_CalDis")),
     h4(textOutput("area_CalDis"), align = "center"),
     plotOutput("plot_CalDis"),
