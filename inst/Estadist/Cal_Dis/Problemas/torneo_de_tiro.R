@@ -76,7 +76,7 @@ renderText({
     #a_val<-min(Cues_Val)
     #b_val<-max(Cues_Val)
     Aciertos<-rbinom(1, tiros, probabi)
-    Cuestion<-paste("¿Cuál es la probabilidad de que acierte exactamente en ",Aciertos," ocasiones? ")
+    Cuestion<-paste("exactamente en ",Aciertos," ocasiones?")
     Valor_Cues<<-as.numeric(Valor_Fin(dist_CalDis=Distribu, tail_CalDis=Bus_Area, a_CalDis=Aciertos, n_CalDis=tiros, 
                                       p_CalDis=probabi, lower_bound_CalDis=lower_bound, upper_bound_CalDis=upper_bound))
   }
