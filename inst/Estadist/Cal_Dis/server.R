@@ -710,6 +710,9 @@ shinyServer(function(input, output)
     else if (input$Ejem_Dis == "Tiro_Arc"){
       output$Doc_Tiro = source('./Problemas/torneo_de_tiro.R',local=T,encoding="UTF-8")$value
     }
+    else if (input$Ejem_Dis == "Temp_Est"){
+      output$Doc_Temp = source('./Problemas/Temperatura.R',local=T,encoding="UTF-8")$value
+    }
     #display text
     #output$status1 <- renderText({"Marque su respuesta y haga clic en 'Enviar'"})
     #output$status2 <- renderText({""})
@@ -718,6 +721,15 @@ shinyServer(function(input, output)
     #reset answered status
     #answered<<-FALSE
     
+    
+  })
+  
+  
+  observe({
+    Ejemplos<-c("Peso_Est","Tiro_Arc","Temp_Est")
+    input$newEje
+    #EjeMenos<-Ejemplos[Ejemplos!=input$Ejem_Dis]
+    input$Ejem_Dis<-sample(Ejemplos, 1)
     
   })
   
