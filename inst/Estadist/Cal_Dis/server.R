@@ -19,7 +19,7 @@ defaults = list("tail_CalDis" = "lower",
                 "lower_bound_CalDis" = "open",
                 "upper_bound_CalDis" = "open")
 
-shinyServer(function(input, output)
+shinyServer(function(input, output, session)
 { 
   
  
@@ -726,10 +726,17 @@ shinyServer(function(input, output)
   
   
   observe({
-    Ejemplos<-c("Peso_Est","Tiro_Arc","Temp_Est")
+    
     input$newEje
-    #EjeMenos<-Ejemplos[Ejemplos!=input$Ejem_Dis]
-    input$Ejem_Dis<-sample(Ejemplos, 1)
+    Ejemplos<-c("Peso_Est","Tiro_Arc","Temp_Est")
+    
+    isolate({
+      EjeMenos<-Ejemplos[Ejemplos!=input$Ejem_Dis]
+      Tomar_ejem<-sample(EjeMenos, 1)
+      updateRadioButtons(session, "Ejem_Dis", selected = Tomar_ejem)
+      })
+    
+    #input$Ejem_Dis<-sample(Ejemplos, 1)
     
   })
   
