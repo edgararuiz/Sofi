@@ -2,7 +2,7 @@ library(shiny)
 
 shinyUI(pageWithSidebar(
   
-  headerPanel("Calculadora de Distribución"),
+  headerPanel("Ejercicios de distribución"),
   
   sidebarPanel(
     #radio button or dropdown?
@@ -41,24 +41,19 @@ shinyUI(pageWithSidebar(
     uiOutput("a_CalDis"),
     uiOutput("b_CalDis"),
     
-    br(),
-    
-    tags$hr(),
-    radioButtons("Ejem_Dis", "Ejemplos: ",
-                 c("Peso de estudiante" = "Peso_Est",
-                   "Tiro de arco" = "Tiro_Arc",
-                   "Temperatura" = "Temp_Est")),
-    
     #withMathJax(),  # include the MathJax library
     #helpText("Some math here $$Y = \\beta_0 + \\beta_1 x + \\epsilon$$"),
     #selectInput("x", "Construir un modelo de regresión de mpg en contra:",choices = names(mtcars)[-1]),
-    
-    helpText(a(href="https://duke.qualtrics.com/SE/?SID=SV_3L8WjmwQo32cVk9", target="_blank", "Rate this app!")),
-    helpText(a(href="https://github.com/ShinyEd/ShinyEd/tree/master/dist_calc", target="_blank", "View code")),
-    helpText(a(href="http://stat.duke.edu/~mc301/shiny/applets.html", target="_blank", "Check out other apps")),
-    helpText(a(href="https://www.coursera.org/course/statistics", target="_blank", "Want to learn more for free?"))),
-  
-  
+    br(),
+    tags$hr(),
+    br(),
+    p('Esta aplicación esta en desarrollo gracias a el útil código de ',a(href="https://github.com/mine-cetinkaya-rundel", "Mine Cetinkaya-Rundel"),' asi 
+    como de los paquetes ',a(href="http://cran.rstudio.com/web/packages/shiny/index.html", "shiny"),' y 
+      ',a(href="http://cran.rstudio.com/web/packages/openintro/index.html", "openintro")
+    ),
+    tags$hr(),
+    p(HTML('<br/>Para dudas y sugerencias escribir a <a href="mailto:jose.loera@inegi.org.mx?subject=Sofi" title="Enviar correo a Daniel">Daniel</a>'))
+    ),
   
   mainPanel(
     #uiOutput('report'),
@@ -82,13 +77,17 @@ shinyUI(pageWithSidebar(
     br(),
     #actionButton("submit","Enviar"),
     actionButton("newdat","Nuevos datos"),
-    actionButton("newEje","Nuevos Ejemplo"),
+    actionButton("newEje","Nuevo Ejemplo"),
     h4(textOutput("Error_CalDis")),
     h4(textOutput("area_CalDis"), align = "center"),
     plotOutput("plot_CalDis"),
     #textOutput("area_CalDis")
     #helpText("Some math here, $$Y = \\beta_0 + \\beta_1 x + \\epsilon$$"),
-    br()
+    tags$hr(),
+    radioButtons("Ejem_Dis", "Ejemplos: ",
+                 c("Peso de estudiante" = "Peso_Est",
+                   "Tiro de arco" = "Tiro_Arc",
+                   "Temperatura" = "Temp_Est"), inline = TRUE)
     
     #uiOutput('report')
   )
