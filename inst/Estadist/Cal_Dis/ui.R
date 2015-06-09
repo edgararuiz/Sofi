@@ -41,7 +41,14 @@ shinyUI(pageWithSidebar(
     uiOutput("a_CalDis"),
     uiOutput("b_CalDis"),
     
-    #withMathJax(),  # include the MathJax library
+    withMathJax(),  # include the MathJax library
+    p("Recuerda que la función de probabilidad de la distribución binomial es:
+      $$p(X=k)=\\left( \\begin{matrix} n \\\\ k \\end{matrix} \\right) { p }^{ k }\\bullet { q }^{ n-k }$$"),
+    p("n es el número de pruebas."),
+    p("k es el número de éxitos."),
+    p("p es la probabilidad de éxito."),
+    p("q es la probabilidad de fracaso."),
+    p("Y el número combinatorio: $$\\left( \\begin{matrix} n \\\\ k \\end{matrix} \\right) =\\frac { n! }{ k!(n-k)! }$$"),
     #helpText("Some math here $$Y = \\beta_0 + \\beta_1 x + \\epsilon$$"),
     #selectInput("x", "Construir un modelo de regresión de mpg en contra:",choices = names(mtcars)[-1]),
     br(),
@@ -52,7 +59,10 @@ shinyUI(pageWithSidebar(
       ',a(href="http://cran.rstudio.com/web/packages/openintro/index.html", "openintro")
     ),
     tags$hr(),
-    p(HTML('<br/>Para dudas y sugerencias escribir a <a href="mailto:jose.loera@inegi.org.mx?subject=Sofi" title="Enviar correo a Daniel">Daniel</a>'))
+    helpText("Para saber más sobre la distribución binomial leer ", 
+             a(href="http://es.wikipedia.org/wiki/Distribuci%C3%B3n_binomial", target="_blank", "esto,"),
+             " Y recuerda visitar la página de", a(href="http://www.inegi.info/sofi", target="_blank", "Sofi.")),
+    helpText(HTML('<br/>Para dudas y sugerencias escribir a <a href="mailto:jose.loera@inegi.org.mx?subject=Sofi" title="Enviar correo a Daniel">Daniel</a>'))
     ),
   
   mainPanel(
