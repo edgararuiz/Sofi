@@ -17,7 +17,8 @@ suppressMessages(library(openintro, quietly = TRUE))
 
 defaults = list("tail_CalDis" = "lower",
                 "lower_bound_CalDis" = "open",
-                "upper_bound_CalDis" = "open")
+                "upper_bound_CalDis" = "open",
+                Valor_Cues<-0.5)
 
 shinyServer(function(input, output, session)
 { 
@@ -696,8 +697,6 @@ shinyServer(function(input, output, session)
     })
   
   
-  
- 
   observe({
     #this observer monitors when input$newplot is invalidated
     #or when input$difficulty is invalidated
@@ -724,7 +723,6 @@ shinyServer(function(input, output, session)
     
   })
   
-  
   observe({
     
     input$newEje
@@ -739,11 +737,7 @@ shinyServer(function(input, output, session)
     #input$Ejem_Dis<-sample(Ejemplos, 1)
     
   })
-  
-  #Resp <- 0.5
 
-  
-  
 ##Reporte
 #regFormula <- reactive({
 #  as.formula(paste('mpg ~', input$x))
@@ -770,6 +764,4 @@ shinyServer(function(input, output, session)
 #});"))
 #    )
 #})
-
-
 })
