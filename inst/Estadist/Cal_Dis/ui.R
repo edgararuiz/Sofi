@@ -102,10 +102,23 @@ shinyUI(pageWithSidebar(
     actionButton("newdat","Nuevos datos"),
     actionButton("newEje","Nuevo Ejemplo"),
     tags$hr(),
-    numericInput("Res_Cuest",
-                 "Y tu respuesta es:",
-                 value = "",
-                 step=0.01),
+    
+    column(4,
+           numericInput("Res_Cuest",
+                        "Y tu respuesta es:",
+                        value = "",
+                        step=0.01)
+    ),
+    
+    column(8,
+           br(),
+           actionButton("Resp_Ejem","  Enviar")
+    ),
+    
+    br(),
+    br(),
+    br(),
+    
     h4(textOutput("Error_CalDis")),
     h4(textOutput("area_CalDis"), align = "center"),
     plotOutput("plot_CalDis"),
