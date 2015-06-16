@@ -52,7 +52,7 @@ renderText({
     
   }
   else if(Bus_Area=="middle") {
-    Cues_Val<-rbinom(2, tiros, probabi)
+    Cues_Val<-rbinom(3, tiros, probabi)
     a_val<-min(Cues_Val)
     b_val<-max(Cues_Val)
     if (lower_bound=="closed" & upper_bound=="closed"){
