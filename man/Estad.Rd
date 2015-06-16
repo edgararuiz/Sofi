@@ -38,16 +38,24 @@ José D. Loera
 ## Esta es una función que lanza diferentes interfaces.
 
 # Para ver una Calculadora de Distribución
-# Estad(1)
+if (interactive()) {
+  Estad(1)
+}
 
 # Para ver Distribuciones de probabilidad
-# Estad(2)
+if (interactive()) {
+  Estad(2)
+}
 
 # Menú de Sofi
-# Estad(3)
+if (interactive()) {
+  Estad(3)
+}
 
 # Graficas de datos
-# Estad(4)
+if (interactive()) {
+  Estad(4)
+}
 }
 \keyword{ Graficas }
 \keyword{ Estadística }
