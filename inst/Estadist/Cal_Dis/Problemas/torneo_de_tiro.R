@@ -82,6 +82,6 @@ renderText({
   }
   
   #Valor_a<-input$a_CalDis
-  paste("Un  hombre que practica para un torneo de tiro con arco dispara ",tiros,"veces, sus estadísticas dicen que tiene ",probabi,
+  paste("Un  hombre que práctica para un torneo de tiro con arco dispara ",tiros,"veces, sus estadísticas dicen que tiene ",probabi,
         " de probabilidades de acierto.¿Cuál es la probabilidad de que acierte ",Cuestion)
 })
