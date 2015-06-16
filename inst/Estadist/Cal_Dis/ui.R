@@ -47,7 +47,11 @@ shinyUI(pageWithSidebar(
                      p("Para tipificar una variable X que sigue una distribución $$N( \\mu , \\sigma )$$  se usa:
       $$Z=\\frac { X-\\mu  }{ \\sigma  } $$"),
                      p("μ es la media"),
+<<<<<<< HEAD
                      p("σ desviación típica"),
+=======
+                     p("σ desviación típica."),
+>>>>>>> origin/master
                      tags$hr(),
                      helpText("Para saber más sobre la distribución normal leer ", 
                               a(href="http://es.wikipedia.org/wiki/Distribuci%C3%B3n_normal", target="_blank", "esto,"),
@@ -67,9 +71,15 @@ shinyUI(pageWithSidebar(
                               " Y recuerda visitar la página de", a(href="http://www.inegi.info/sofi", target="_blank", "Sofi."))
                      ),
     tags$hr(),
+<<<<<<< HEAD
         p('Esta aplicación esta en desarrollo gracias a el útil código de ',a(href="https://github.com/mine-cetinkaya-rundel", target="_blank", "Mine Cetinkaya-Rundel"),' asi 
                        como de los paquetes ',a(href="http://cran.rstudio.com/web/packages/shiny/index.html", target="_blank", "shiny"),' y 
       ',a(href="http://cran.rstudio.com/web/packages/openintro/index.html", target="_blank", "openintro")
+=======
+        p('Esta aplicación esta en desarrollo gracias a el útil código de ',a(href="https://github.com/mine-cetinkaya-rundel", "Mine Cetinkaya-Rundel"),' asi 
+                       como de los paquetes ',a(href="http://cran.rstudio.com/web/packages/shiny/index.html", "shiny"),' y 
+      ',a(href="http://cran.rstudio.com/web/packages/openintro/index.html", "openintro")
+>>>>>>> origin/master
     ),
     helpText(HTML('<br/>Para dudas y sugerencias escribir a <a href="mailto:jose.loera@inegi.org.mx?subject=Sofi" title="Enviar correo a Daniel">Daniel</a>')
     )
@@ -103,6 +113,7 @@ shinyUI(pageWithSidebar(
     actionButton("newEje","Nuevo Ejemplo"),
     tags$hr(),
     
+<<<<<<< HEAD
     column(3,
            numericInput("Res_Cuest",
                         "Y tu respuesta es:",
@@ -134,6 +145,25 @@ shinyUI(pageWithSidebar(
     #br(),
     
     #h4(textOutput("Error_CalDis")),
+=======
+    column(4,
+           numericInput("Res_Cuest",
+                        "Y tu respuesta es:",
+                        value = "",
+                        step=0.01)
+    ),
+    
+    column(8,
+           br(),
+           actionButton("Resp_Ejem","  Enviar")
+    ),
+    
+    br(),
+    br(),
+    br(),
+    
+    h4(textOutput("Error_CalDis")),
+>>>>>>> origin/master
     h4(textOutput("area_CalDis"), align = "center"),
     plotOutput("plot_CalDis"),
     #textOutput("area_CalDis")

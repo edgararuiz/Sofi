@@ -17,7 +17,8 @@ suppressMessages(library(openintro, quietly = TRUE))
 
 defaults = list("tail_CalDis" = "lower",
                 "lower_bound_CalDis" = "open",
-                "upper_bound_CalDis" = "open")
+                "upper_bound_CalDis" = "open",
+                Valor_Cues<-0.5)
 
 
 generateResponse = function(response){
@@ -715,8 +716,6 @@ shinyServer(function(input, output, session,updateNum)
   # })
   
   
-  
- 
   observe({
     #this observer monitors when input$newplot is invalidated
     #or when input$difficulty is invalidated
@@ -742,7 +741,6 @@ shinyServer(function(input, output, session,updateNum)
 
     
   })
-  
   
   observe({
     
@@ -821,11 +819,7 @@ shinyServer(function(input, output, session,updateNum)
     #Valor_Cues<-NULL
     
   })
-  
-  #Resp <- 0.5
 
-  
-  
 ##Reporte
 #regFormula <- reactive({
 #  as.formula(paste('mpg ~', input$x))
@@ -852,6 +846,4 @@ shinyServer(function(input, output, session,updateNum)
 #});"))
 #    )
 #})
-
-
 })
