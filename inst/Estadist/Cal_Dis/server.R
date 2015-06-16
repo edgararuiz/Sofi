@@ -19,10 +19,26 @@ defaults = list("tail_CalDis" = "lower",
                 "lower_bound_CalDis" = "open",
                 "upper_bound_CalDis" = "open")
 
-shinyServer(function(input, output, session)
+
+generateResponse = function(response){
+  if (response==1){
+    print(sample(list("¡Correcto!","En el clavo!","¡Acertaste!"),1)[[1]])
+  }
+  else if (response ==2){
+    print(sample(list("Casi.","Cerca.","Sólo un poco fuera.."),1)[[1]])
+  }
+  else if (response == 3){
+    print(sample(list("Estas frío...","Algo lejos...","Inténtalo de nuevo.", "Estas  perdido"),1)[[1]])
+  }
+}
+
+shinyServer(function(input, output, session,updateNum)
 { 
   
- 
+  Valor_Cues <- 1 #current correlation
+  score <- 0 #user's score
+  answered <- FALSE # an indicator for whether question has been answered
+  
 ##CalDis####
   output$tail_CalDis = renderUI(
   {
@@ -679,21 +695,24 @@ shinyServer(function(input, output, session)
     
   })
 
-  output$Error_CalDis = renderText(
-    {
-      if (is.null(Valor()) | is.null(Valor_Cues)) return(NULL)
-      else{
-        text1 = paste("Tu error es = ",signif(abs(Valor()-Valor_Cues),3))
-        #as.numeric(Valor_Final())
-        #if  (abs(Valor()-Valor_Cues)<0.005) text1 = "Felicidades"
-        #text = sub("a",input$a_CalDis,text1)
-        #if (input$tail_CalDis %in% c("both","middle")) 
-        #  text = sub("b",input$b_CalDis,text1)
-        
-        return(text1)
-      }
-      
-    })
+  #output$Error_CalDis = renderText({
+  #    if (is.null(Valor()) | is.null(Valor_Cues)) return(NULL)
+  #    else{
+  #      text1 = paste("Tu error es = ",signif(abs(Valor()-Valor_Cues),3))
+  #      #as.numeric(Valor_Final())
+  #      errr<-abs(Valor()-Valor_Cues)
+  #      if (length(errr)==0) {return(NULL)}
+  #      else if (errr<0.005) {text1 = "Felicidades"}
+  #      
+  #      
+  #      #text = sub("a",input$a_CalDis,text1)
+  #      #if (input$tail_CalDis %in% c("both","middle")) 
+  #      #  text = sub("b",input$b_CalDis,text1)
+  #      
+  #      return(text1)
+  #    }
+  #    
+  # })
   
   
   
@@ -714,13 +733,13 @@ shinyServer(function(input, output, session)
       output$Doc_Temp = source('./Problemas/Temperatura.R',local=T,encoding="UTF-8")$value
     }
     #display text
-    #output$status1 <- renderText({"Marque su respuesta y haga clic en 'Enviar'"})
-    #output$status2 <- renderText({""})
-    #output$status3 <- renderText({""})
+    output$status1 <- renderText({"Escribe tu respuesta y haz clic en 'Enviar'"})
+    output$status2 <- renderText({""})
+    output$status3 <- renderText({""})
     
     #reset answered status
-    #answered<<-FALSE
-    
+    answered<<-FALSE
+
     
   })
   
@@ -734,9 +753,72 @@ shinyServer(function(input, output, session)
       EjeMenos<-Ejemplos[Ejemplos!=input$Ejem_Dis]
       Tomar_ejem<-sample(EjeMenos, 1)
       updateRadioButtons(session, "Ejem_Dis", selected = Tomar_ejem)
+      #Valor()<-NULL
       })
+    #Valor_Cues<-NULL
+    #errr<-NULL
+    #display text
+    output$status1 <- renderText({"Escribe tu respuesta y haz clic en 'Enviar'"})
+    output$status2 <- renderText({""})
+    output$status3 <- renderText({""})
     
-    #input$Ejem_Dis<-sample(Ejemplos, 1)
+    #reset answered status
+    answered<<-FALSE
+  })
+  
+  observe({
+    if (is.null(Valor())) return(NULL)
+    else{
+  updateNumericInput(session, "Res_Cuest", value = round(Valor(),4))}
+    
+  })
+  
+  observe({
+    
+    input$Resp_Ejem
+    isolate({
+      errr<-abs(Valor_Cues-input$Res_Cuest)
+    })
+    
+    if(errr<0.001){
+      output$status1 <- renderText({""})
+      output$status2 <- renderText({paste(generateResponse(1))})
+      output$status3 <- renderText({""})
+      if(!answered){
+        score <<- score+2
+        output$score <- renderText({sprintf("Tu puntuación : %d",score)})
+        answered <<- TRUE
+      }
+    }
+    else if(errr<0.05){
+      output$status1 <- renderText({""})
+      output$status2 <- renderText({""})
+      output$status3 <- renderText({generateResponse(2)})
+      if(!answered){
+        score <<- score+1
+        output$score <- renderText({sprintf("Tu puntuación : %d",score)})
+        answered <<- TRUE
+      }
+    }
+    else{
+      output$status1 <- renderText({""})
+      output$status2 <- renderText({""})
+      output$status3 <- renderText({paste(generateResponse(3), sprintf("(La respuesta correcta es: %.4f)",Valor_Cues))})
+      answered <<- TRUE
+    }
+    
+    
+    #if (is.null(Valor()) | is.null(input$Res_Cuest)) return(NULL)
+    #if (input$Ejem_Dis == "Peso_Est"){
+    #  output$R_Doc_Peso = source('./Problemas/R_Peso_Estudiantes.R',local=T,encoding="UTF-8")$value
+    #}
+    #else if (input$Ejem_Dis == "Tiro_Arc"){
+    #  output$R_Doc_Tiro = source('./Problemas/R_torneo_de_tiro.R',local=T,encoding="UTF-8")$value
+    #}
+    #else if (input$Ejem_Dis == "Temp_Est"){
+    #  output$R_Doc_Temp = source('./Problemas/R_Temperatura.R',local=T,encoding="UTF-8")$value
+    #}
+    #Valor_Cues<-NULL
     
   })
   
