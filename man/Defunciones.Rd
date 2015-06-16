@@ -28,6 +28,8 @@ José D. Loera
 
 \examples{
 ## Función para evaluar códigos de  defunción.
-#Defunciones()
+if (interactive()) {
+  Defunciones()
+}
 }
 \keyword{ Registros }
