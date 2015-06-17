@@ -1,20 +1,20 @@
-\name{Estad}
-\alias{Estad}
+\name{Estadistica}
+\alias{Estadistica}
 \encoding{UTF-8}
 \title{
 Para ejecutar diferentes niveles de estudio en estadística.
 }
 \description{
-Es la función principal para ejecutar los diversos niveles de estadística, por lo pronto solo dos de prueba.
+Es la función principal para ejecutar los diversos niveles de estadística, por lo pronto solo cuatro de prueba.
 }
 \usage{
-Estad(Nivel)
+Estadistica(Nivel)
 }
 \arguments{
   \item{Nivel}{
   Para los parámetros
   \tabular{ll}{
-1 = \tab Calculadora de Distribución\cr
+1 = \tab Ejercicios de distribución\cr
 2 = \tab Distribuciones de probabilidad\cr
 3 = \tab Menú de Sofi\cr
 4 = \tab Gráficas de datos\cr
@@ -28,7 +28,16 @@ Para más detalles ver los ejemplos que se describirán abajo
 No se tienen valores de salida
 }
 \references{
-Varios de internet
+ 
+  Fuentes de donde se tomo algo de código:
+  \tabular{ll}{
++  \tab Del repositorio \href{https://github.com/ShinyEd/ShinyEd}{ShinyEd} de la autora 
+\href{https://github.com/mine-cetinkaya-rundel}{Mine Cetinkaya-Rundel}\cr
++  \tab Del repositorio \href{https://github.com/ua-snap/shiny-apps}{shiny-apps} de la autora 
+\href{https://github.com/leonawicz}{Matthew Leonawicz}\cr
++  \tab Del repositorio \href{https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal}{ggMarginal} de la autora 
+\href{https://github.com/daattali}{Dean Attali}\cr
+}
 }
 \author{
 José D. Loera
@@ -37,24 +46,24 @@ José D. Loera
 \examples{
 ## Esta es una función que lanza diferentes interfaces.
 
-# Para ver una Calculadora de Distribución
+# Ejercicios de distribución
 if (interactive()) {
-  Estad(1)
+  Estadistica(1)
 }
 
 # Para ver Distribuciones de probabilidad
 if (interactive()) {
-  Estad(2)
+  Estadistica(2)
 }
 
 # Menú de Sofi
 if (interactive()) {
-  Estad(3)
+  Estadistica(3)
 }
 
 # Graficas de datos
 if (interactive()) {
-  Estad(4)
+  Estadistica(4)
 }
 }
 \keyword{ Graficas }
