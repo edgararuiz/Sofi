@@ -11,8 +11,8 @@ Este paquete tiene  la finalidad de ayudar a aprender diversos temas académicos
 \tabular{ll}{
 Package: \tab Sofi\cr
 Type: \tab Package\cr
-Version: \tab 0.0.24\cr
-Date: \tab 2015-05-26\cr
+Version: \tab 0.0.25\cr
+Date: \tab 2015-06-16\cr
 License: \tab GPL-3\cr
 }
 Se pretende alcanzar una gran variedad de temas desde probabilidad, estadística, física, etc.
@@ -29,20 +29,30 @@ José D. Loera <jose.loera@inegi.org.mx>
 \examples{
 # Esta es una función que lanza diferentes interfaces.
 
-# Para ver una Calculadora de Distribución
-# Estad(1)
+# Ejercicios de distribución
+if (interactive()) {
+  Estadistica(1)
+}
 
 # Para ver Distribuciones de probabilidad
-# Estad(2)
+if (interactive()) {
+  Estadistica(2)
+}
 
 # Menú de Sofi
-# Estad(3)
+if (interactive()) {
+  Estadistica(3)
+}
 
 # Graficas de datos
-# Estad(4)
+if (interactive()) {
+  Estadistica(4)
+}
 
 # Función para evaluar códigos de  defunción.
-# Defunciones()
+if (interactive()) {
+  Defunciones()
+}
 
 # Aquí vemos como usar la función DefCap, ejemplo general.
 Capis<-c("P456","C682","M613","F629","X392")
