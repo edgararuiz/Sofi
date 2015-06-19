@@ -44,10 +44,10 @@ shinyUI(pageWithSidebar(
     withMathJax(),  # include the MathJax library
     
     conditionalPanel(condition = 'input.dist_CalDis === "rnorm"',
-                     p("Para tipificar una variable X que sigue una distribución $$N( \\mu , \\sigma )$$  se usa:
+                     p("Para tipificar una variable \\(X\\) que sigue una distribución \\(\\ N(\\mu,\\sigma)\\)  se usa:
       $$Z=\\frac { X-\\mu  }{ \\sigma  } $$"),
-                     p("μ es la media"),
-                     p("σ desviación típica"),
+                     p("\\(\\mu\\) es la media"),
+                     p("\\(\\sigma\\) desviación típica"),
                      tags$hr(),
                      helpText("Para saber más sobre la distribución normal leer ", 
                               a(href="http://es.wikipedia.org/wiki/Distribuci%C3%B3n_normal", target="_blank", "esto,"),
@@ -56,10 +56,10 @@ shinyUI(pageWithSidebar(
     conditionalPanel(condition = 'input.dist_CalDis === "rbinom"',
                      p("Recuerda que la función de probabilidad de la distribución binomial es:
       $$p(X=k)=\\left( \\begin{matrix} n \\\\ k \\end{matrix} \\right) { p }^{ k }\\bullet { q }^{ n-k }$$"),
-                     p("n es el número de pruebas."),
-                     p("k es el número de éxitos."),
-                     p("p es la probabilidad de éxito."),
-                     p("q es la probabilidad de fracaso."),
+                     p("\\(\\ n\\) es el número de pruebas."),
+                     p("\\(\\ k\\) es el número de éxitos."),
+                     p("\\(\\ p\\) es la probabilidad de éxito."),
+                     p("\\(\\ q\\) es la probabilidad de fracaso."),
                      p("Y el número combinatorio: $$\\left( \\begin{matrix} n \\\\ k \\end{matrix} \\right) =\\frac { n! }{ k!(n-k)! }$$"),
                      tags$hr(),
                      helpText("Para saber más sobre la distribución binomial leer ", 
@@ -93,7 +93,8 @@ shinyUI(pageWithSidebar(
                      h3("Temperatura",align = "center"),
                      h4(textOutput("Doc_Temp"))
     ),
-    
+    checkboxInput('Ayuda_visible', 'Mostrar ayuda (alfa)', FALSE),
+    uiOutput('Ayuda'),
     #p(textOutput("status1"),style="font-weight=500; color: #000000;"),
     #h5(textOutput("status2"),style="font-weight=500; color: #00CC00;"),
     #h5(textOutput("status3"),style="font-weight=500; color: #FF0000;"),
