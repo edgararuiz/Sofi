@@ -22,7 +22,7 @@ Estadistica(Nivel)
 }
 }
 \details{
-Para más detalles ver los ejemplos que se describirán abajo
+Para más detalles ver los ejemplos que se describirán abajo o visitar \href{http://www.inegi.info/sofi}{Sofi}
 }
 \value{
 No se tienen valores de salida
@@ -33,9 +33,9 @@ No se tienen valores de salida
   \tabular{ll}{
 +  \tab Del repositorio \href{https://github.com/ShinyEd/ShinyEd}{ShinyEd} de la autora 
 \href{https://github.com/mine-cetinkaya-rundel}{Mine Cetinkaya-Rundel}\cr
-+  \tab Del repositorio \href{https://github.com/ua-snap/shiny-apps}{shiny-apps} de la autora 
++  \tab Del repositorio \href{https://github.com/ua-snap/shiny-apps}{shiny-apps} de el autor
 \href{https://github.com/leonawicz}{Matthew Leonawicz}\cr
-+  \tab Del repositorio \href{https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal}{ggMarginal} de la autora 
++  \tab Del repositorio \href{https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal}{ggMarginal} de el autor
 \href{https://github.com/daattali}{Dean Attali}\cr
 }
 }
