@@ -3,7 +3,7 @@
 \alias{Sofi}
 \encoding{UTF-8}
 \docType{package}
-\title{Interfaz (web) interactiva con fines didácticos}
+\title{Interfaz interactiva con fines didácticos}
 \description{
 Este paquete tiene  la finalidad de ayudar a aprender diversos temas académicos de una forma interactiva teniendo ejemplos y la posibilidad de resolver nuevos al mismo tiempo. Apuntes de  clase interactivos.
 }
@@ -15,12 +15,23 @@ Version: \tab 0.0.25\cr
 Date: \tab 2015-06-16\cr
 License: \tab GPL-3\cr
 }
-Se pretende alcanzar una gran variedad de temas desde probabilidad, estadística, física, etc.
+Se pretende alcanzar una gran variedad de temas desde probabilidad, estadística, física, etc. Para más detalles ver los ejemplos que se describirán abajo o visitar \href{http://www.inegi.info/sofi}{Sofi}
 }
 \author{
 José D. Loera <jose.loera@inegi.org.mx>
 }
-\references{Conocimiento global}
+\references{
+ 
+  Fuentes de donde se tomo algo de código:
+  \tabular{ll}{
++  \tab Del repositorio \href{https://github.com/ShinyEd/ShinyEd}{ShinyEd} de la autora 
+\href{https://github.com/mine-cetinkaya-rundel}{Mine Cetinkaya-Rundel}\cr
++  \tab Del repositorio \href{https://github.com/ua-snap/shiny-apps}{shiny-apps} de el autor
+\href{https://github.com/leonawicz}{Matthew Leonawicz}\cr
++  \tab Del repositorio \href{https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal}{ggMarginal} de el autor 
+\href{https://github.com/daattali}{Dean Attali}\cr
+}
+}
 \keyword{package}
 \keyword{Registros}
 \keyword{Procesos}
