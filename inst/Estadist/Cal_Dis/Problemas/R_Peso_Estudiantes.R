@@ -1,13 +1,27 @@
-renderText({
-  if (is.null(Valor()) | is.null(Valor_Cues)) return(NULL)
-  else{
-    #text1 = "¿Crees tener la respuesta correcta? Enviarla "
-    #as.numeric(Valor_Final())
- 
-    #errr<-abs(Valor()-input$Res_Cuest)
-    if (length(errr)==0) {return(NULL)}
-    else if (errr<0.005) {text1 = "Felicidades tu respuesta es correcta"}
-    else text1 = paste("Incorrecto, el valor correcto es: = ",signif(Valor_Cues,3))
-    return(text1)
+renderUI({
+  if (!input$Ayuda_visible) return()
+  
+  if(Bus_Area %in% c("lower","upper")) {
+    withMathJax(
+      helpText('Es simple, lo primero es solo sustituir los valores de la siguiente forma: 
+               $$Z=\\frac { X-\\mu  }{ \\sigma  }=\\frac { ',Cues_Val,'-\\',Peso,'  }{ \\',DS_Peso,' }=
+               ',signif((Cues_Val-Peso)/DS_Peso,4),' $$')
+      )
   }
-  })
+  else {
+    withMathJax(
+      helpText('Es simple, lo primero es solo sustituir los valores de la siguiente forma \\(\\ { Z }_{ 1 }\\): 
+               $${ Z }_{ 1 }=\\frac { X-\\mu  }{ \\sigma  }=\\frac { ',a_val,'-\\',Peso,'  }{ \\',DS_Peso,' }=
+               ',signif((a_val-Peso)/DS_Peso,4),' $$ Y para \\(\\ { Z }_{ 2 }\\): $${ Z }_{ 2 }=\\frac { X-\\mu  }{ \\sigma  }=\\frac { ',b_val,'-\\',Peso,'  }{ \\',DS_Peso,' }=
+               ',signif((b_val-Peso)/DS_Peso,4),' $$')
+      )
+  }
+  
+  
+  
+})
+
+
+
+#a_val<<-min(Cues_Val)
+#b_val<<-max(Cues_Val)
