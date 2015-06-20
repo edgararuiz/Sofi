@@ -18,6 +18,7 @@ shinyUI(pageWithSidebar(
     
 
     br(),
+
     uiOutput("mean_CalDis"),
     uiOutput("sd_CalDis"),
     uiOutput("df1_CalDis"),
@@ -120,7 +121,20 @@ shinyUI(pageWithSidebar(
     h5(textOutput("status2"),style="font-weight=500; color: #20f;"),
     h5(textOutput("status3"),style="font-weight=500; color: #f00000;"),
     tags$hr(),
+    #conditionalPanel(condition = 'input.Ejem_Dis === "Peso_Est"',
+    #                 #h3("Peso de estudiantes",align = "center"),
+    #                 h4(textOutput("R_Doc_Peso"))
+    #),
+    #conditionalPanel(condition = 'input.Ejem_Dis === "Tiro_Arc"',
+    #                 #h3("Tiro de arco",align = "center"),
+    #                 h4(textOutput("R_Doc_Tiro"))
+    #),
+    #conditionalPanel(condition = 'input.Ejem_Dis === "Temp_Est"',
+    #                 #h3("Temperatura",align = "center"),
+    #                 h4(textOutput("R_Doc_Temp"))
+    #),
     
+    #br(),
     
     #h4(textOutput("Error_CalDis")),
     h4(textOutput("area_CalDis"), align = "center"),
