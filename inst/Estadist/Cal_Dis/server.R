@@ -22,7 +22,7 @@ defaults = list("tail_CalDis" = "lower",
 
 generateResponse = function(response){
   if (response==1){
-    print(sample(list("¡Correcto!","¡En el clavo!","¡Acertaste!"),1)[[1]])
+    print(sample(list("¡Correcto!","¡En el clavo!","¡Acertaste!","¡Felicidades!","Bien"),1)[[1]])
   }
   else if (response ==2){
     print(sample(list("Casi.","Cerca.","Sólo un poco fuera.."),1)[[1]])
@@ -674,8 +674,7 @@ shinyServer(function(input, output, session,updateNum)
 #    return(EP)
 #  })
   
-  output$area_CalDis = renderText(
-  {
+  output$area_CalDis = renderText({
     #if (is.null(Valor()) | is.null(get_model_text())) return(NULL)
     #else{
       text = paste(get_model_text(),"=",signif(Valor(),3))
@@ -729,21 +728,11 @@ shinyServer(function(input, output, session,updateNum)
     }
     else if (input$Ejem_Dis == "Tiro_Arc"){
       output$Doc_Tiro = source('./Problemas/torneo_de_tiro.R',local=T,encoding="UTF-8")$value
-      output$Ayuda <- renderUI({
-        if (!input$Ayuda_visible) return()
-        withMathJax(
-          helpText('You do not see me initially: $$e^{i \\pi} + 1 = 0$$')
-        )
-      })
+      output$Ayuda = source('./Problemas/R_torneo_de_tiro.R',local=T,encoding="UTF-8")$value
     }
     else if (input$Ejem_Dis == "Temp_Est"){
       output$Doc_Temp = source('./Problemas/Temperatura.R',local=T,encoding="UTF-8")$value
-      output$Ayuda <- renderUI({
-        if (!input$Ayuda_visible) return()
-        withMathJax(
-          helpText('You do not see me initially: $$e^{i \\pi} + 1 = 0$$')
-        )
-      })
+      output$Ayuda <- source('./Problemas/R_Temperatura.R',local=T,encoding="UTF-8")$value
     }
     #display text
     output$status1 <- renderText({"Escribe tu respuesta y haz clic en 'Enviar'"})
@@ -793,7 +782,7 @@ shinyServer(function(input, output, session,updateNum)
       errr<-abs(Valor_Cues-input$Res_Cuest)
     })
     
-    if(errr<0.001){
+    if(errr<0.01){
       output$status1 <- renderText({""})
       output$status2 <- renderText({paste(generateResponse(1))})
       output$status3 <- renderText({""})
@@ -803,7 +792,7 @@ shinyServer(function(input, output, session,updateNum)
         answered <<- TRUE
       }
     }
-    else if(errr<0.02){
+    else if(errr<0.05){
       output$status1 <- renderText({""})
       output$status2 <- renderText({""})
       output$status3 <- renderText({generateResponse(2)})
@@ -817,6 +806,7 @@ shinyServer(function(input, output, session,updateNum)
       output$status1 <- renderText({""})
       output$status2 <- renderText({""})
       output$status3 <- renderText({paste(generateResponse(3), sprintf("(La respuesta correcta es: %.4f)",Valor_Cues))})
+      #score <<- score-1
       answered <<- TRUE
     }
     
