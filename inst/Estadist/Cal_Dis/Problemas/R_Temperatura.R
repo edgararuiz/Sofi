@@ -1,14 +1,24 @@
-renderText({
-  if (is.null(Valor()) | is.null(Valor_Cues)) return(NULL)
-  else{
-    #text1 = "¿Crees tener la respuesta correcta? Enviarla "
-    #as.numeric(Valor_Final())
-    #isolate({
-    #errr<-abs(Valor()-input$Res_Cuest)
-    if (length(errr)==0) {return(NULL)}
-    else if (errr<0.005) {text1 = "Felicidades tu respuesta es correcta"}
-    else text1 = text1 = paste("Incorrecto, el valor correcto es: = ",signif(Valor_Cues,3))
-    #})
-    return(text1)
+renderUI({
+  if (!input$Ayuda_visible) return()
+  
+  if(Bus_Area %in% c("lower","upper")) {
+    withMathJax(
+      helpText('Es simple, lo primero es solo sustituir los valores de la siguiente forma: 
+               $$Z=\\frac { X-\\mu  }{ \\sigma  }=\\frac { ',Cues_Val,'-\\',Temper,'  }{ \\',DS_Temper,' }=
+               ',signif((Cues_Val-Temper)/DS_Temper,4),' $$'),
+      helpText('Ahora la temperatura sigue una distribución normal con \\(\\mu\\) =0 y \\(\\sigma\\) =1')
+      )
   }
-})
+  else {
+    withMathJax(
+      helpText('Es simple, lo primero es solo sustituir los valores de la siguiente forma \\(\\ { Z }_{ 1 }\\): 
+               $${ Z }_{ 1 }=\\frac { X-\\mu  }{ \\sigma  }=\\frac { ',a_val,'-\\',Temper,'  }{ \\',DS_Temper,' }=
+               ',signif((a_val-Temper)/DS_Temper,4),' $$ Y para \\(\\ { Z }_{ 2 }\\): $${ Z }_{ 2 }=\\frac { X-\\mu  }
+               { \\sigma  }=\\frac { ',b_val,'-\\',Temper,'  }{ \\',DS_Temper,' }=
+               ',signif((b_val-Temper)/DS_Temper,4),' $$')
+      )
+  }
+  
+  
+  
+  })
