@@ -720,7 +720,7 @@ shinyServer(function(input, output, session,updateNum)
     #this observer monitors when input$newplot is invalidated
     #or when input$difficulty is invalidated
     #and generates a new plot
-    
+    if (input$sal == 1) stopApp()
     input$newdat
     if (input$Ejem_Dis == "Peso_Est"){
       output$Doc_Peso <- source('./Problemas/Peso_Estudiantes.R',local=T,encoding="UTF-8")$value
