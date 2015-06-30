@@ -21,7 +21,7 @@ if (!require("devtools"))
 devtools::install_github("loerasg/Sofi")
 ```
 
-Ya instalado el paquete lo cargamos con library("Sofi"). Por lo pronto la función que mejor representa los fines de este paquete es Estadistica con el parámetro 1, lo usamos así:
+Ya instalado el paquete lo cargamos con library("Sofi"). Por lo pronto la función que mejor representa los fines de este paquete es Estadistica con el parámetro 1, la usamos así:
 
 ```r
 library("Sofi")
