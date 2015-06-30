@@ -74,8 +74,9 @@ shinyUI(pageWithSidebar(
       ',a(href="http://cran.rstudio.com/web/packages/openintro/index.html", target="_blank", "openintro")
     ),
     helpText(HTML('<br/>Para dudas y sugerencias escribir a él <a href="mailto:jose.loera@inegi.org.mx?subject=Sofi" title="Enviar correo a Daniel">desarrollador</a>')
-    )
+    ),
     
+    actionButton("sal", "Salir")
     #tags$hr()
     
     ),
