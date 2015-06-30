@@ -13,7 +13,7 @@ Afortunadamente el paquete se  encuentra en CRAN así que es muy sencillo instal
 install.packages("Sofi")
 ```
 
-Para estar al día con la última versión subida a GitHub, poner lo siguiente:
+O para estar al día con la última versión subida a GitHub, poner lo siguiente:
 
 ```r
 if (!require("devtools"))
