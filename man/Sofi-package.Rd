@@ -11,8 +11,8 @@ Este paquete tiene  la finalidad de ayudar a aprender diversos temas académicos
 \tabular{ll}{
 Package: \tab Sofi\cr
 Type: \tab Package\cr
-Version: \tab 0.0.25\cr
-Date: \tab 2015-06-16\cr
+Version: \tab 0.0.27\cr
+Date: \tab 2015-07-01\cr
 License: \tab GPL-3\cr
 }
 Se pretende alcanzar una gran variedad de temas desde probabilidad, estadística, física, etc. Para más detalles ver los ejemplos que se describirán abajo o visitar \href{http://www.inegi.info/sofi}{Sofi}
