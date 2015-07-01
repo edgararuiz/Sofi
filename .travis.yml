@@ -1,6 +1,11 @@
 language: r
 warnings_are_errors: true
 
+r_binary_packages:
+  - Rcpp
+  - cairo
+  - knitr
+
 notifications:
   email:
     on_success: change
