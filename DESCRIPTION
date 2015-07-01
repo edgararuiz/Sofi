@@ -2,8 +2,8 @@ Package: Sofi
 Type: Package
 Language: es
 Title: Interfaz interactiva con fines didacticos
-Version: 0.0.25
-Date: 2015-06-16
+Version: 0.0.27
+Date: 2015-07-01
 Depends: R (>= 3.1.0), shiny
 Imports: sampling, foreign
 Suggests: ggplot2, VGAM, shinyjs, ggExtra, grid, gridExtra
@@ -11,6 +11,7 @@ Encoding: UTF-8
 Author: Jose D. Loera
 Maintainer: Jose D. Loera <jose.loera@inegi.org.mx>
 URL: http://www.inegi.info/sofi
+NeedsCompilation:	no
 BugReports: https://github.com/loerasg/Sofi/issues
 Description: Este paquete tiene la finalidad de ayudar a aprender de una forma interactiva, teniendo ejemplos y la posibilidad de resolver nuevos al mismo tiempo. Apuntes de clase interactivos.
 License: GPL (>= 2)
