@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/loerasg/Sofi.svg?branch=master)](https://travis-ci.org/loerasg/Sofi)
-
+[![Build Status](https://travis-ci.org/loerasg/Sofi.svg?branch=master)](https://travis-ci.org/loerasg/Sofi)  Integridad del empaquetamiento
+--------------------------------------------------------------
 # Sofi
 Aprender con R,
 Interfaz (web) interactiva con fines didácticos
