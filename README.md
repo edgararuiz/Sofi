@@ -1,8 +1,9 @@
-Integridad del empaquetamiento   [![Build Status](https://travis-ci.org/loerasg/Sofi.svg?branch=master)](https://travis-ci.org/loerasg/Sofi)
+# Sofi
+
+[![Build Status](https://travis-ci.org/loerasg/Sofi.svg?branch=master)](https://travis-ci.org/loerasg/Sofi) [![CRAN version](http://www.r-pkg.org/badges/version/Sofi)](http://cran.rstudio.com/web/packages/Sofi/index.html)
 
 ----------------------------------------------------------------------
 
-# Sofi
 Aprender con R,
 Interfaz (web) interactiva con fines didácticos
 
