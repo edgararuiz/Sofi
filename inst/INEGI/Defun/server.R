@@ -235,6 +235,13 @@ output$num52<-renderPrint({
     }
   )
 
+  observe({
+    #this observer monitors when input$newplot is invalidated
+    #or when input$difficulty is invalidated
+    #and generates a new plot
+    if (input$sal == 1) stopApp()
+  })
+  
 ####
 #_______________________________________________________________
 #_______________________________________________________________
