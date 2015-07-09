@@ -12,6 +12,7 @@ library(sampling)
 library(Sofi)
 
 source("helpers.R")
+load("History")
 options(shiny.maxRequestSize=1300*1024^2)
 options(shiny.deprecation.messages=FALSE)
 
@@ -39,9 +40,16 @@ shinyServer(function(input, output) {
                 choices=c("",colnames(datasetInput1())),selected="CAUSADEF")
   })
   
+  output$dataset_select <- renderUI({
+    selectInput("dataset", "Choose a dataset:", names(Hist_Er_Ps))
+  })
+  
   datasetInput2 <- reactive({
-    read.csv(input$file2$datapath, header=input$header, 
-             sep=input$sep, quote=input$quote)
+    #read.csv(input$file2$datapath, header=input$header, sep=input$sep, quote=input$quote)
+    if (is.null(input$dataset)) {
+      return(NULL)
+    }
+    datasets[[input$dataset]]
   })
   
   output$NomCap <- renderUI({
