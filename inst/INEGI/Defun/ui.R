@@ -14,7 +14,7 @@ tabPanel("Etapa 1",icon = icon("random"),
 #___________________________Etapa 2______________________________
 ####________________________________________________________________
 tabPanel("Etapa 2 y 3",
-    source(system.file("INEGI/Defun/General/IU_Etapa2.R", package="Sofi"),local=T,encoding="UTF-8")$value
+    source(system.file("INEGI/Defun/General/IU_Etapa2.R", package="Sofi"), local=T, encoding="UTF-8")$value
 ),#tabPanel("Etapa 2 y 3",
 ####_____________________________________________________________
 #___________________________Etapa 3______________________________
