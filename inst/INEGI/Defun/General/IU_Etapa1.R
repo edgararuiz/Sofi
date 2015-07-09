@@ -2,6 +2,11 @@ sidebarLayout(
 sidebarPanel(
   conditionalPanel(
     'input.Etap01 === "Datos"',
+    wellPanel(
+      dateInput("aEst", "Año estadístico", format = "yyyy",startview = "decade", language = "es")
+      #submitButton()
+    ),
+    
     fileInput('file2', 'Archivo de datos (texto o csv)',
               accept=c('text/csv',
                        'text/comma-separated-values,text/plain', 
@@ -118,7 +123,7 @@ mainPanel(
                               fluidRow(
                                 column(4,h4("Tabla de Resumen Archivo"),
                                        tableOutput('tabla5')),
-                                column(7,offset = 1,h5("Cantidad de registros para la muestra:"),
+                                column(6,offset = 1,h5("Cantidad de registros para la muestra:"),
                                        verbatimTextOutput("num5"))
                               )
              ),
@@ -142,6 +147,7 @@ mainPanel(
     tabPanel("Muestra",
              h4("Tabla con la muestra para la Etapa 1"),
              dataTableOutput('tabla4')
-    )   )
+            )
+    )
 )
 )
