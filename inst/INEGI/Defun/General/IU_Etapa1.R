@@ -6,30 +6,14 @@ sidebarPanel(
       dateInput("aEst", "Año estadístico", format = "yyyy",startview = "decade", language = "es")
       #submitButton()
     ),
+    uiOutput("dataset_select"),
     
-    fileInput('file2', 'Archivo de datos (texto o csv)',
-              accept=c('text/csv',
-                       'text/comma-separated-values,text/plain', 
-                       '.csv')),
     tags$hr(),
     
     fileInput('file1', 'Archivo de c\u00f3digos (en dbf)',
               accept=c('.dbf')),
     #        numericInput("obs", "Primeros casos del archive:", 20),
     
-    
-    
-    checkboxInput('header', 'Encabezado', TRUE),
-    radioButtons('sep', 'Separado por:',
-                 c(Coma=',',
-                   Puntoycoma=';',
-                   Tabulador='\t'),
-                 ','),
-    radioButtons('quote', 'Quote',
-                 c(None='',
-                   'Double Quote'='"',
-                   'Single Quote'="'"),
-                 '"'),
     tags$hr(),
     p('Para ver un ejemplo de c\u00f3mo est\u00e1n organizados los',
       'archivos .dbf y .cvs, puede descargar estos ejemplos',
@@ -120,12 +104,16 @@ mainPanel(
     
     tabPanel("Resumen",
              conditionalPanel(condition = 'input.En === "arc"',
-                              fluidRow(
-                                column(4,h4("Tabla de Resumen Archivo"),
-                                       tableOutput('tabla5')),
-                                column(6,offset = 1,h5("Cantidad de registros para la muestra:"),
-                                       verbatimTextOutput("num5"))
+                            
+                                wellPanel(
+                                h4("Tabla de Resumen Archivo"),
+                                tableOutput('tabla5')
+                              ),
+                             wellPanel(
+                               h5("Cantidad de registros para la muestra:"),
+                               verbatimTextOutput("num5")
                               )
+                              
              ),
              conditionalPanel(condition = 'input.En === "ecu"',
                               fluidRow(
