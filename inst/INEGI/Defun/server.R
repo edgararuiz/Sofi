@@ -12,7 +12,12 @@ library(sampling)
 library(Sofi)
 
 source("helpers.R")
-load("History")
+load("Historia.RData")
+load("Datos.RData")
+#Dat_Def<-as.data.frame(Dat_Def,stringsAsFactors = FALSE)
+Tamaño<-dim(Dat_Def)
+
+
 options(shiny.maxRequestSize=1300*1024^2)
 options(shiny.deprecation.messages=FALSE)
 
@@ -41,7 +46,7 @@ shinyServer(function(input, output) {
   })
   
   output$dataset_select <- renderUI({
-    selectInput("dataset", "Choose a dataset:", names(Hist_Er_Ps))
+    selectInput("dataset", "Datos históricos:", names(Historia))
   })
   
   datasetInput2 <- reactive({
@@ -49,35 +54,35 @@ shinyServer(function(input, output) {
     if (is.null(input$dataset)) {
       return(NULL)
     }
-    datasets[[input$dataset]]
+    Historia[[input$dataset]]
   })
   
   output$NomCap <- renderUI({
-    if (is.null(input$file1))
+    if (is.null(input$dataset))
       return(NULL)
     selectInput("Capit","Seleccionar capitulo", 
                 choices=c("",colnames(datasetInput2())),selected="Capitulo")
   })
   
   output$NomErr <- renderUI({
-    if (is.null(input$file1))
+    if (is.null(input$dataset))
       return(NULL)
     selectInput("Error","Seleccionar Errores", 
-                choices=c("",colnames(datasetInput2())),selected="Errores")
+                choices=c("",colnames(datasetInput2())),selected="Er_13")
   })
   
   output$NomEsp <- renderUI({
-    if (is.null(input$file1))
+    if (is.null(input$dataset))
       return(NULL)
     selectInput("Esper","Proporci\u00F3n esperada (o antecedentes)", 
-                choices=c("",colnames(datasetInput2())),selected="Ps")
+                choices=c("",colnames(datasetInput2())),selected="Ps_13")
   })
   
   output$NomAtn <- renderUI({
-    if (is.null(input$file1))
+    if (is.null(input$dataset))
       return(NULL)
     selectInput("TamMu","Tamaño de la muestral", 
-                choices=c("",colnames(datasetInput2())),selected="n")
+                choices=c("",colnames(datasetInput2())),selected="n_13")
   })
   
   datasetInput3 <- reactive({
@@ -194,7 +199,7 @@ output$num52<-renderPrint({
                     pageLength = 10))
   
   output$tabla2 <- renderTable({
-    if (is.null(input$file2))
+    if (is.null(input$dataset))
       return(NULL)
     datasetInput2()
   })
@@ -565,6 +570,58 @@ output$DescarE2Inter4 <- downloadHandler(
     write.csv(Etapa2DataInt4(), file)
   }
 )
+
+####
+#_______________________________________________________________
+#_______________________________________________________________
+#Etapa 3
+#_______________________________________________________________
+#_______________________________________________________________
+####
+
+output$Et3_Num_reg <- renderUI({
+  if (is.null(input$dataset)) return(NULL)
+  numericInput("Num_Reg",
+               "Número de registro:",
+               min = 1,
+               max = Tamaño[1],
+               value = 1)
+})
+
+
+output$E3NORE<-renderText({
+  #if (input$updat1==0) return(":-)")
+  Dat_Def[input$Num_Reg,"NOREG1"]
+  #sum(datasetInput5()[,input$TamMu])
+  })
+output$E3Foli<-renderText({
+  Dat_Def[input$Num_Reg,"FOLIOCER"]
+})
+output$E3Sexo<-renderText({
+  Dat_Def[input$Num_Reg,"SEXO"]
+})
+output$E3Edad<-renderText({
+  Dat_Def[input$Num_Reg,"EDAD"]
+})
+output$E3Desc1<-renderText({
+  Dat_Def[input$Num_Reg,"DESCR_LIN1"]
+})
+output$E3Desc2<-renderText({
+  Dat_Def[input$Num_Reg,"DESCR_LIN2"]
+})
+output$E3Desc3<-renderText({
+  Dat_Def[input$Num_Reg,"DESCR_LIN3"]
+})
+output$E3Desc4<-renderText({
+  Dat_Def[input$Num_Reg,"DESCR_LIN4"]
+})
+output$E3Desc5<-renderText({
+  Dat_Def[input$Num_Reg,"DESCR_LIN5"]
+})
+output$E3Dura<-renderText({
+  Dat_Def[input$Num_Reg,"DURATION1"]
+})
+
 
 ####
 #_______________________________________________________________
