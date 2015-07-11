@@ -21,7 +21,7 @@ Tamaño<-dim(Dat_Def)
 options(shiny.maxRequestSize=1300*1024^2)
 options(shiny.deprecation.messages=FALSE)
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 #Etapa 1
 ##_____________________________________________________________
 # Leer Datos
@@ -589,6 +589,7 @@ output$Et3_Num_reg <- renderUI({
 })
 
 
+
 output$E3NORE<-renderText({
   #if (input$updat1==0) return(":-)")
   Dat_Def[input$Num_Reg,"NOREG1"]
@@ -620,6 +621,44 @@ output$E3Desc5<-renderText({
 })
 output$E3Dura<-renderText({
   Dat_Def[input$Num_Reg,"DURATION1"]
+})
+output$E3CAUS<-renderText({
+  Dat_Def[input$Num_Reg,"CAUSADEF"]
+})
+output$E3RECO<-renderText({
+  Dat_Def[input$Num_Reg,"RECODCBD"]
+})
+output$E3RECO2<-renderText({
+  Dat_Def[input$Num_Reg,"RECODCBD2"]
+})
+output$E3COD<-renderText({
+  Dat_Def[input$Num_Reg,"COD_SEL"]
+})
+
+observe({
+r_options <- list()
+r_options[[paste(Dat_Def[input$Num_Reg,"CAUSADEF"], "Automático")]] <-paste0(as.character(Dat_Def[input$Num_Reg,"CAUSADEF"]),"")
+  #paste0("option-", Dat_Def[input$Num_Reg,"CAUSADEF"], "-A")
+r_options[[paste(Dat_Def[input$Num_Reg,"RECODCBD"], "Codificador 1")]] <-paste0(as.character(Dat_Def[input$Num_Reg,"RECODCBD"]),"")
+  #paste0("option-", Dat_Def[input$Num_Reg,"RECODCBD"], "-B")
+r_options[[paste(Dat_Def[input$Num_Reg,"RECODCBD2"], "Codificador 2")]] <-paste0(as.character(Dat_Def[input$Num_Reg,"RECODCBD2"]),"")
+r_options[[paste(Dat_Def[input$Num_Reg,"COD_SEL"], "Experto")]] <-paste0(as.character(Dat_Def[input$Num_Reg,"COD_SEL"]),"")
+
+# Set the label, choices, and selected item
+updateRadioButtons(session, "Cod_Cor",
+                   label = "¿Cuál  es el código correcto?",
+                   choices = r_options,
+                   selected = paste0(as.character(Dat_Def[input$Num_Reg,"CAUSADEF"]),"")
+)
+
+})
+
+observe({
+  Cod_fin<-input$Cod_Cor
+  updateTextInput(session, "Et3_inText",
+                  label = paste("New", "2 hola"),
+                  value = paste(Cod_fin)
+  )
 })
 
 
