@@ -25,16 +25,24 @@ sidebarLayout(
   
   sidebarPanel(
     h4("Opciones  para el registro de los códigos sugeridos por el codificador experto."),
+    wellPanel(h5("Total de registros:"),verbatimTextOutput("E3Tam")),
+   
     uiOutput("Et3_Num_reg"),
     uiOutput("Et3_Causa"),
     
     radioButtons("Cod_Cor", "Radio buttons:",
                  c("label 1" = "option1",
-                   "label 2" = "option2",
+                   #"label 2" = "option2",
                    "label 3" = "option3",
                    "label 4" = "option4")),
-    textInput("Et3_inText",  "Text input:", value = "start text")
+    textInput("Et3_inText",  "Text input:", value = "start text"),
     
+    actionButton("Bot_Guar", "Guardar"),
+    actionButton("Bot_Ant", "Anterior"),
+    actionButton("Bot_Sig", "Siguiente"),
+    
+    wellPanel(h5("COD_SEL:"),verbatimTextOutput("E3COD")),
+    wellPanel(h5("Nulos:"),verbatimTextOutput("E3Nul"))
     
     
   ),
@@ -49,6 +57,7 @@ sidebarLayout(
       wellPanel(h5("Sexo:"),verbatimTextOutput("E3Sexo")),
       wellPanel(h5("Edad:"),verbatimTextOutput("E3Edad")),
       wellPanel(h5("Descr_lin1:"),verbatimTextOutput("E3Desc1")),
+      wellPanel(h5("TXT_CODIA:"),verbatimTextOutput("Txt_CoA")),
       wellPanel(h5("Descr_lin2:"),verbatimTextOutput("E3Desc2")),
       wellPanel(h5("Descr_lin3:"),verbatimTextOutput("E3Desc3")),
       wellPanel(h5("Descr_lin4:"),verbatimTextOutput("E3Desc4")),
@@ -56,6 +65,7 @@ sidebarLayout(
       wellPanel(h5("Duration1:"),verbatimTextOutput("E3Dura")),
       wellPanel(h5("CAUSADEF:"),verbatimTextOutput("E3CAUS"))
       )
+    #DT::dataTableOutput("Etapa3Tabla1", width = 900)
     
    
   ),
