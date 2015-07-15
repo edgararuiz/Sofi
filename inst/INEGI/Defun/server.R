@@ -13,7 +13,8 @@ library(Sofi)
 
 source("helpers.R")
 load("Historia.RData")
-load("Datos.RData")
+#load("Datos.RData")
+Dat_Def <-readRDS("Dat_Def.rds")
 #Dat_Def<-as.data.frame(Dat_Def,stringsAsFactors = FALSE)
 Tamaño<-dim(Dat_Def)
 
@@ -578,6 +579,21 @@ output$DescarE2Inter4 <- downloadHandler(
 #_______________________________________________________________
 #_______________________________________________________________
 ####
+observeEvent(input$Bot_Guar, {
+  SalvarDatos(Etapa3Data(),input$Num_Reg,input$Et3_inText)
+})
+
+Etapa3Data <- reactive({
+  if (is.null(input$dataset)) return(NULL)
+  input$Bot_Guar
+  Datos<-CargarDatos()
+  #output$E3COD<-isolate(renderText({Datos[input$Num_Reg,"COD_SEL"]}))
+  return(Datos)
+})
+
+#observeEvent(input$Bot_Guar, {
+#  output$E3COD<-isolate(renderText({Etapa3Data()[input$Num_Reg,"COD_SEL"]}))
+#})
 
 output$Et3_Num_reg <- renderUI({
   if (is.null(input$dataset)) return(NULL)
@@ -588,79 +604,73 @@ output$Et3_Num_reg <- renderUI({
                value = 1)
 })
 
-
-
-output$E3NORE<-renderText({
-  #if (input$updat1==0) return(":-)")
-  Dat_Def[input$Num_Reg,"NOREG1"]
-  #sum(datasetInput5()[,input$TamMu])
-  })
-output$E3Foli<-renderText({
-  Dat_Def[input$Num_Reg,"FOLIOCER"]
-})
-output$E3Sexo<-renderText({
-  Dat_Def[input$Num_Reg,"SEXO"]
-})
-output$E3Edad<-renderText({
-  Dat_Def[input$Num_Reg,"EDAD"]
-})
-output$E3Desc1<-renderText({
-  Dat_Def[input$Num_Reg,"DESCR_LIN1"]
-})
-output$E3Desc2<-renderText({
-  Dat_Def[input$Num_Reg,"DESCR_LIN2"]
-})
-output$E3Desc3<-renderText({
-  Dat_Def[input$Num_Reg,"DESCR_LIN3"]
-})
-output$E3Desc4<-renderText({
-  Dat_Def[input$Num_Reg,"DESCR_LIN4"]
-})
-output$E3Desc5<-renderText({
-  Dat_Def[input$Num_Reg,"DESCR_LIN5"]
-})
-output$E3Dura<-renderText({
-  Dat_Def[input$Num_Reg,"DURATION1"]
-})
-output$E3CAUS<-renderText({
-  Dat_Def[input$Num_Reg,"CAUSADEF"]
-})
-output$E3RECO<-renderText({
-  Dat_Def[input$Num_Reg,"RECODCBD"]
-})
-output$E3RECO2<-renderText({
-  Dat_Def[input$Num_Reg,"RECODCBD2"]
-})
-output$E3COD<-renderText({
-  Dat_Def[input$Num_Reg,"COD_SEL"]
+observe({
+  #input$Bot_Guar
+  output$E3NORE<-renderText({Etapa3Data()[input$Num_Reg,"NOREG1"]})
+  output$E3Foli<-renderText({Etapa3Data()[input$Num_Reg,"FOLIOCER"]})
+  output$E3Sexo<-renderText({Etapa3Data()[input$Num_Reg,"SEXO"]})
+  output$E3Edad<-renderText({Etapa3Data()[input$Num_Reg,"EDAD"]})
+  output$E3Desc1<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN1"]})
+  output$Txt_CoA<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODIA"]})
+  output$E3Desc2<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN2"]})
+  output$E3Desc3<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN3"]})
+  output$E3Desc4<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN4"]})
+  output$E3Desc5<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN5"]})
+  output$E3Dura<-renderText({Etapa3Data()[input$Num_Reg,"DURATION1"]})
+  output$E3CAUS<-renderText({Etapa3Data()[input$Num_Reg,"CAUSADEF"]})
+  output$E3RECO<-renderText({Etapa3Data()[input$Num_Reg,"RECODCBD"]})
+  output$E3RECO2<-renderText({Etapa3Data()[input$Num_Reg,"RECODCBD2"]})
+  output$E3COD<-renderText({Etapa3Data()[input$Num_Reg,"COD_SEL"]})
+  output$E3Tam<-renderText({Tamaño[1]})
+  output$E3Nul<-renderText({
+    Nulos <- Etapa3Data()[is.na(Etapa3Data()[,"COD_SEL"]),]
+    Cuan_Nul<-dim(Nulos)[1]
+    return(Cuan_Nul)})
 })
 
 observe({
 r_options <- list()
-r_options[[paste(Dat_Def[input$Num_Reg,"CAUSADEF"], "Automático")]] <-paste0(as.character(Dat_Def[input$Num_Reg,"CAUSADEF"]),"")
-  #paste0("option-", Dat_Def[input$Num_Reg,"CAUSADEF"], "-A")
-r_options[[paste(Dat_Def[input$Num_Reg,"RECODCBD"], "Codificador 1")]] <-paste0(as.character(Dat_Def[input$Num_Reg,"RECODCBD"]),"")
-  #paste0("option-", Dat_Def[input$Num_Reg,"RECODCBD"], "-B")
-r_options[[paste(Dat_Def[input$Num_Reg,"RECODCBD2"], "Codificador 2")]] <-paste0(as.character(Dat_Def[input$Num_Reg,"RECODCBD2"]),"")
-r_options[[paste(Dat_Def[input$Num_Reg,"COD_SEL"], "Experto")]] <-paste0(as.character(Dat_Def[input$Num_Reg,"COD_SEL"]),"")
+r_options[[paste(Etapa3Data()[input$Num_Reg,"CAUSADEF"], "Automático")]] <-paste0(as.character(Etapa3Data()[input$Num_Reg,"CAUSADEF"]),"")
+r_options[[paste(Etapa3Data()[input$Num_Reg,"RECODCBD"], "Codificador 1")]] <-paste0(as.character(Etapa3Data()[input$Num_Reg,"RECODCBD"]),"")
+r_options[[paste(Etapa3Data()[input$Num_Reg,"RECODCBD2"], "Codificador 2")]] <-paste0(as.character(Etapa3Data()[input$Num_Reg,"RECODCBD2"]),"")
+#r_options[[paste(Etapa3Data()[input$Num_Reg,"COD_SEL"], "Experto")]] <-paste0(as.character(Etapa3Data()[input$Num_Reg,"COD_SEL"]),"")
 
 # Set the label, choices, and selected item
 updateRadioButtons(session, "Cod_Cor",
                    label = "¿Cuál  es el código correcto?",
                    choices = r_options,
-                   selected = paste0(as.character(Dat_Def[input$Num_Reg,"CAUSADEF"]),"")
+                   selected = paste0(as.character(Etapa3Data()[input$Num_Reg,"CAUSADEF"]),"")
 )
-
+#Num_Reg<<-input$Num_Reg
 })
 
 observe({
-  Cod_fin<-input$Cod_Cor
+  #Cod_fin<<-input$Cod_Cor
   updateTextInput(session, "Et3_inText",
-                  label = paste("New", "2 hola"),
-                  value = paste(Cod_fin)
+                  label = paste("Código definitivo"),
+                  value = paste(input$Cod_Cor)
   )
 })
 
+
+observeEvent(input$Bot_Guar, {
+  if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
+})
+
+observeEvent(input$Bot_Ant, {
+  if (1<input$Num_Reg){updateNumericInput(session, "Num_Reg", value = input$Num_Reg-1)}
+})
+
+observeEvent(input$Bot_Sig, {
+  if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
+})
+
+#output$Etapa3Tabla1 <- DT::renderDataTable({
+#  input$Bot_Guar
+  #Etapa3Data()<-CargarDatos()
+  #Etapa3Data()
+#  CargarDatos()
+#})
 
 ####
 #_______________________________________________________________
