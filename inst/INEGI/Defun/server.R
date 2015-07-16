@@ -579,16 +579,27 @@ output$DescarE2Inter4 <- downloadHandler(
 #_______________________________________________________________
 #_______________________________________________________________
 ####
-observeEvent(input$Bot_Guar, {
-  SalvarDatos(Etapa3Data(),input$Num_Reg,input$Et3_inText)
-})
-
 Etapa3Data <- reactive({
   if (is.null(input$dataset)) return(NULL)
-  input$Bot_Guar
+  #input$Bot_Guar
   Datos<-CargarDatos()
+  values$d<-Datos[,"COD_SEL"]
   #output$E3COD<-isolate(renderText({Datos[input$Num_Reg,"COD_SEL"]}))
   return(Datos)
+})
+
+observeEvent(input$Bot_Guar, {
+  #Dat_Def<-Etapa3Data()
+  #Dat_Def[input$Num_Reg,"COD_SEL"]<-input$Et3_inText
+  #Etapa3Data()
+  SalvarDatos(Etapa3Data(),values$d)#input$Num_Reg,input$Et3_inText
+})
+
+observeEvent(input$Bot_RAM, {
+  values$d[input$Num_Reg]<-input$Et3_inText
+  #Dat_Def<-Etapa3Data()
+  #Dat_Def[input$Num_Reg,"COD_SEL"]<-input$Et3_inText
+  #SalvarDatos(Etapa3Data())
 })
 
 #observeEvent(input$Bot_Guar, {
@@ -611,20 +622,24 @@ observe({
   output$E3Sexo<-renderText({Etapa3Data()[input$Num_Reg,"SEXO"]})
   output$E3Edad<-renderText({Etapa3Data()[input$Num_Reg,"EDAD"]})
   output$E3Desc1<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN1"]})
-  output$Txt_CoA<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODIA"]})
+  output$E3t_CoA<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODIA"]})
   output$E3Desc2<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN2"]})
+  output$E3t_CoB<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODIB"]})
   output$E3Desc3<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN3"]})
+  output$E3t_CoC<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODIC"]})
   output$E3Desc4<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN4"]})
+  output$E3t_CoD<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODID"]})
   output$E3Desc5<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN5"]})
+  output$E3t_CoI<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODII"]})
   output$E3Dura<-renderText({Etapa3Data()[input$Num_Reg,"DURATION1"]})
   output$E3CAUS<-renderText({Etapa3Data()[input$Num_Reg,"CAUSADEF"]})
   output$E3RECO<-renderText({Etapa3Data()[input$Num_Reg,"RECODCBD"]})
   output$E3RECO2<-renderText({Etapa3Data()[input$Num_Reg,"RECODCBD2"]})
-  output$E3COD<-renderText({Etapa3Data()[input$Num_Reg,"COD_SEL"]})
+  output$E3COD<-renderText({values$d[input$Num_Reg]})
   output$E3Tam<-renderText({Tamaño[1]})
   output$E3Nul<-renderText({
-    Nulos <- Etapa3Data()[is.na(Etapa3Data()[,"COD_SEL"]),]
-    Cuan_Nul<-dim(Nulos)[1]
+    Nulos <- values$d[is.na(values$d)]
+    Cuan_Nul<-length(Nulos)
     return(Cuan_Nul)})
 })
 
@@ -653,7 +668,7 @@ observe({
 })
 
 
-observeEvent(input$Bot_Guar, {
+observeEvent(input$Bot_RAM, {
   if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
 })
 
@@ -665,6 +680,12 @@ observeEvent(input$Bot_Sig, {
   if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
 })
 
+#output$Etapa3Tabla1 <- DT::renderDataTable({
+#  input$Bot_Guar
+  #Etapa3Data()<-CargarDatos()
+  #Etapa3Data()
+#  CargarDatos()
+#})
 #output$Etapa3Tabla1 <- DT::renderDataTable({
 #  input$Bot_Guar
   #Etapa3Data()<-CargarDatos()
