@@ -37,11 +37,12 @@ sidebarLayout(
                    "label 4" = "option4")),
     textInput("Et3_inText",  "Text input:", value = "start text"),
     
-    actionButton("Bot_Guar", "Guardar"),
+    actionButton("Bot_RAM", "RAM"),
     actionButton("Bot_Ant", "Anterior"),
     actionButton("Bot_Sig", "Siguiente"),
     
     wellPanel(h5("COD_SEL:"),verbatimTextOutput("E3COD")),
+    actionButton("Bot_Guar", "DISCO"),
     wellPanel(h5("Nulos:"),verbatimTextOutput("E3Nul"))
     
     
@@ -57,11 +58,15 @@ sidebarLayout(
       wellPanel(h5("Sexo:"),verbatimTextOutput("E3Sexo")),
       wellPanel(h5("Edad:"),verbatimTextOutput("E3Edad")),
       wellPanel(h5("Descr_lin1:"),verbatimTextOutput("E3Desc1")),
-      wellPanel(h5("TXT_CODIA:"),verbatimTextOutput("Txt_CoA")),
+      wellPanel(h5("TXT_CODIA:"),verbatimTextOutput("E3t_CoA")),
       wellPanel(h5("Descr_lin2:"),verbatimTextOutput("E3Desc2")),
+      wellPanel(h5("TXT_CODIB:"),verbatimTextOutput("E3t_CoB")),
       wellPanel(h5("Descr_lin3:"),verbatimTextOutput("E3Desc3")),
+      wellPanel(h5("TXT_CODIC:"),verbatimTextOutput("E3t_CoC")),
       wellPanel(h5("Descr_lin4:"),verbatimTextOutput("E3Desc4")),
+      wellPanel(h5("TXT_CODID:"),verbatimTextOutput("E3t_CoD")),
       wellPanel(h5("Descr_lin5:"),verbatimTextOutput("E3Desc5")),
+      wellPanel(h5("TXT_CODII:"),verbatimTextOutput("E3t_CoI")),
       wellPanel(h5("Duration1:"),verbatimTextOutput("E3Dura")),
       wellPanel(h5("CAUSADEF:"),verbatimTextOutput("E3CAUS"))
       )
