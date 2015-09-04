@@ -1,5 +1,5 @@
 
-pkg <- c("foreign", "ggplot2", "sampling")
+pkg <- c("foreign", "ggplot2", "sampling","shinythemes")
 new.pkg <- pkg[!(pkg %in% installed.packages())]
 if (length(new.pkg)) {
   install.packages(new.pkg)
@@ -14,13 +14,15 @@ library(Sofi)
 source("helpers.R")
 load("Historia.RData")
 #load("Datos.RData")
-Dat_Def <-readRDS("Dat_Def.rds")
+E3Dat<-readRDS("Dat_Def.rds")
+E3Codigos<-readRDS("Codigos.rds")
+
 #Dat_Def<-as.data.frame(Dat_Def,stringsAsFactors = FALSE)
-Tamaño<-dim(Dat_Def)
+Tamaño<-dim(E3Dat)
 
 
-options(shiny.maxRequestSize=1300*1024^2)
-options(shiny.deprecation.messages=FALSE)
+options(shiny.maxRequestSize=1300*1024^2,shiny.deprecation.messages=FALSE)
+#options(shiny.deprecation.messages=FALSE)
 
 shinyServer(function(input, output, session) {
 #Etapa 1
@@ -120,7 +122,7 @@ shinyServer(function(input, output, session) {
  
   datasetInput5 <- reactive({
     if(input$updat1==0) return()
-    dat<-as.data.frame(datasetInput2())
+    dat<-as.data.frame(datasetInput2(),stringsAsFactors = FALSE)
     Npob<-datasetInput3()[[2]][,2]
     Datos<-data.frame(dat,Npob)
     return(Datos)
@@ -146,7 +148,7 @@ output$num52<-renderPrint({
 
   datasetInput51 <- reactive({
     if(input$updat3==0) {
-      dat<-as.data.frame(datasetInput2())
+      dat<-as.data.frame(datasetInput2(),stringsAsFactors = FALSE)
       Npob<-datasetInput3()[[2]][,2]
       Datos<-data.frame(dat,Npob)
       values$a<-Datos
@@ -164,7 +166,7 @@ output$num52<-renderPrint({
   
   datasetInput52 <- reactive({
     if(input$updat4==0) {
-      dat<-as.data.frame(datasetInput2())
+      dat<-as.data.frame(datasetInput2(),stringsAsFactors = FALSE)
       Npob<-datasetInput3()[[2]][,2]
       Datos<-data.frame(dat,Npob)
       values$b<-Datos
@@ -250,10 +252,7 @@ output$num52<-renderPrint({
   )
 
   observe({
-    #this observer monitors when input$newplot is invalidated
-    #or when input$difficulty is invalidated
-    #and generates a new plot
-    if (input$sal == 1) stopApp()
+    if (input$E1_sal == 1) stopApp()
   })
   
 ####
@@ -472,7 +471,7 @@ output$Etapa2Inter4 <- renderTable({
 
 output$E2GI3 <- renderPlot({
   if(is.null(Etapa2DataInt3())) return()
-  Int.Conf3<-as.data.frame(Etapa2DataInt3())
+  Int.Conf3<-as.data.frame(Etapa2DataInt3(),stringsAsFactors = FALSE)
   Fcolor<-as.factor(Etapa2DataInt3()[,input$E2I3])
   Int.Conf3<-data.frame(Int.Conf3,Fcolor)
   Graf3D<-ggplot(Int.Conf3, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.3,size = .8)+theme_bw(base_size=14)
@@ -481,7 +480,7 @@ output$E2GI3 <- renderPlot({
 
 output$E2GI4 <- renderPlot({
   if(is.null(Etapa2DataInt4())) return()
-  Int.Conf4<-as.data.frame(Etapa2DataInt4())
+  Int.Conf4<-as.data.frame(Etapa2DataInt4(),stringsAsFactors = FALSE)
   Fcolor<-as.factor(Etapa2DataInt4()[,input$E2I4])
   Int.Conf4<-data.frame(Int.Conf4,Fcolor)
   Graf4D<-ggplot(Int.Conf4, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.3,size = .8)+theme_bw(base_size=14)
@@ -572,6 +571,31 @@ output$DescarE2Inter4 <- downloadHandler(
   }
 )
 
+output$DescarE2Repot <- downloadHandler(
+  filename = function() {
+    paste('Reporte_1', sep = '.', switch(
+      input$format_1, HTML = 'html', Word = 'docx'
+    ))
+  },
+  
+  content = function(file) {
+    src <- normalizePath('Repote_1.Rmd')
+    
+    # temporarily switch to the temp dir, in case you do not have write
+    # permission to the current working directory
+    owd <- setwd(tempdir())
+    on.exit(setwd(owd))
+    file.copy(src, 'Repote_1.Rmd')
+    
+    library(rmarkdown)
+    out <- render('Repote_1.Rmd', switch(
+      input$format_1,
+      HTML = html_document(), Word = word_document()
+    ))
+    file.rename(out, file)
+  }
+)
+
 ####
 #_______________________________________________________________
 #_______________________________________________________________
@@ -579,24 +603,61 @@ output$DescarE2Inter4 <- downloadHandler(
 #_______________________________________________________________
 #_______________________________________________________________
 ####
-Etapa3Data <- reactive({
-  if (is.null(input$dataset)) return(NULL)
-  #input$Bot_Guar
-  Datos<-CargarDatos()
-  values$d<-Datos[,"COD_SEL"]
-  #output$E3COD<-isolate(renderText({Datos[input$Num_Reg,"COD_SEL"]}))
-  return(Datos)
+observe({
+  #E3Dat<-CargarDatos()
+  #E3Dat[,"Cap_Tex"]<-as.character(E3Dat[,"Cap_Tex"])
+  values$d<-E3Dat[,"COD_SEL"]
+  values$e<-E3Dat[,"Cap_Tex"]#E3Dat[,"Cap_Tex"]
+  E3_tem<-E3Dat[,"COD_SEL"]
+  names(E3_tem)<-1:Tamaño[1]
+  Val_Ini<<-as.integer(names(E3_tem[is.na(E3_tem)])[1])
 })
+
+#Etapa3Data <- reactive({
+#  if (is.null(input$dataset)) return(NULL)
+  #input$Bot_Guar
+#  Datos<-CargarDatos()
+#  values$d<-Datos[,"COD_SEL"]
+#  values$e<-Datos[,"Cap_Tex"]
+#  E3_tem<-Datos[,"COD_SEL"]
+#  names(E3_tem)<-1:Tamaño[1]
+#  Val_Ini<<-as.integer(names(E3_tem[is.na(E3_tem)])[1])
+  #updateNumericInput(session, "Num_Reg", value = Val_Ini)
+  #output$E3COD<-isolate(renderText({Datos[input$Num_Reg,"COD_SEL"]}))
+#  return(Datos)
+#})
 
 observeEvent(input$Bot_Guar, {
   #Dat_Def<-Etapa3Data()
   #Dat_Def[input$Num_Reg,"COD_SEL"]<-input$Et3_inText
   #Etapa3Data()
-  SalvarDatos(Etapa3Data(),values$d)#input$Num_Reg,input$Et3_inText
+  SalvarDatos(E3Dat,values$d,values$e)#input$Num_Reg,input$Et3_inText
 })
 
 observeEvent(input$Bot_RAM, {
-  values$d[input$Num_Reg]<-input$Et3_inText
+  if (!is.null(input$Cod_Cor) & input$Et3_inText==""){
+    values$d[input$Num_Reg]<-input$Cod_Cor
+    values$e[input$Num_Reg]<-CapDef(input$Cod_Cor)[[2]]
+    updateTextInput(session, "Et3_inText",  "Código:", value = "")
+    if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
+    }
+  else if (input$Et3_inText!="" & is.null(input$Cod_Cor)){
+    #if(nchar(input$Et3_inText)==4 & !is.na(as.integer(substr(input$Et3_inText,2,4)))){
+      E3_Tex<-gsub("\\b(\\w)","\\U\\1",input$Et3_inText, perl=TRUE)
+      E3_Val<-E3Codigos[E3Codigos[,1]==E3_Tex,2]
+      #Val_Cap<-CapDef(E3_Tex)
+      #Val_Cap1<-Val_Cap[[1]]
+      if(length(E3_Val)!=0){
+        values$d[input$Num_Reg]<-E3_Tex
+        values$e[input$Num_Reg]<-E3_Val
+        updateTextInput(session, "Et3_inText",  "Código:", value = "")
+        if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
+      }
+    #}
+    
+    }
+  
+  
   #Dat_Def<-Etapa3Data()
   #Dat_Def[input$Num_Reg,"COD_SEL"]<-input$Et3_inText
   #SalvarDatos(Etapa3Data())
@@ -608,69 +669,134 @@ observeEvent(input$Bot_RAM, {
 
 output$Et3_Num_reg <- renderUI({
   if (is.null(input$dataset)) return(NULL)
+  
   numericInput("Num_Reg",
-               "Número de registro:",
+               "Registro número:",
                min = 1,
                max = Tamaño[1],
-               value = 1)
+               value =Val_Ini)
 })
 
 observe({
   #input$Bot_Guar
-  output$E3NORE<-renderText({Etapa3Data()[input$Num_Reg,"NOREG1"]})
-  output$E3Foli<-renderText({Etapa3Data()[input$Num_Reg,"FOLIOCER"]})
-  output$E3Sexo<-renderText({Etapa3Data()[input$Num_Reg,"SEXO"]})
-  output$E3Edad<-renderText({Etapa3Data()[input$Num_Reg,"EDAD"]})
-  output$E3Desc1<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN1"]})
-  output$E3t_CoA<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODIA"]})
-  output$E3Desc2<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN2"]})
-  output$E3t_CoB<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODIB"]})
-  output$E3Desc3<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN3"]})
-  output$E3t_CoC<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODIC"]})
-  output$E3Desc4<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN4"]})
-  output$E3t_CoD<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODID"]})
-  output$E3Desc5<-renderText({Etapa3Data()[input$Num_Reg,"DESCR_LIN5"]})
-  output$E3t_CoI<-renderText({Etapa3Data()[input$Num_Reg,"TXT_CODII"]})
-  output$E3Dura<-renderText({Etapa3Data()[input$Num_Reg,"DURATION1"]})
-  output$E3CAUS<-renderText({Etapa3Data()[input$Num_Reg,"CAUSADEF"]})
-  output$E3RECO<-renderText({Etapa3Data()[input$Num_Reg,"RECODCBD"]})
-  output$E3RECO2<-renderText({Etapa3Data()[input$Num_Reg,"RECODCBD2"]})
+  output$E3DatIde<-renderText({
+    paste0("NOREG1: ",  E3Dat[input$Num_Reg,"NOREG1"], " \n",
+           "FOLIOCER:", E3Dat[input$Num_Reg,"FOLIOCER"], " \n",
+           "Entidad de registro::", E3Dat[input$Num_Reg,"ENTREG"], " \n",
+           "Año de registro:",     E3Dat[input$Num_Reg,"ANIOREG"], " \n",
+           "Mes de registro:",     E3Dat[input$Num_Reg,"MESREG"], " \n"
+           )
+   })
+  #output$E3NORE<-renderText({E3Dat[input$Num_Reg,"NOREG1"]})
+  #output$E3Foli<-renderText({E3Dat[input$Num_Reg,"FOLIOCER"]})
+  #output$E3Sexo<-renderText({E3Dat[input$Num_Reg,"SEXO"]})
+  #output$E3Edad<-renderText({E3Dat[input$Num_Reg,"EDAD"]})
+  output$E3Desc1<-renderText({E3Dat[input$Num_Reg,"DESCR_LIN1"]})#
+  output$E3t_CoA<-renderText({E3Dat[input$Num_Reg,"TXT_CODIA"]})#
+  output$E3Desc2<-renderText({E3Dat[input$Num_Reg,"DESCR_LIN2"]})#
+  output$E3t_CoB<-renderText({E3Dat[input$Num_Reg,"TXT_CODIB"]})#
+  output$E3Desc3<-renderText({E3Dat[input$Num_Reg,"DESCR_LIN3"]})#
+  output$E3t_CoC<-renderText({E3Dat[input$Num_Reg,"TXT_CODIC"]})#
+  output$E3Desc4<-renderText({E3Dat[input$Num_Reg,"DESCR_LIN4"]})#
+  output$E3t_CoD<-renderText({E3Dat[input$Num_Reg,"TXT_CODID"]})#
+  output$E3Desc5<-renderText({E3Dat[input$Num_Reg,"DESCR_LIN5"]})#
+  output$E3t_CoI<-renderText({E3Dat[input$Num_Reg,"TXT_CODII"]})#
+  output$E3DURATION1<-renderText({E3Dat[input$Num_Reg,"DURATION1"]})#
+  output$E3CAUS<-renderText({E3Dat[input$Num_Reg,"CAUSADEF"]})
+  output$E3RECO<-renderText({E3Dat[input$Num_Reg,"RECODCBD"]})
+  output$E3RECO2<-renderText({E3Dat[input$Num_Reg,"RECODCBD2"]})
+  
+  output$E3Folea1<-renderText({
+    paste0("SEXO:",     E3Dat[input$Num_Reg,"SEXO"], " \n",
+           "EDAD:",     E3Dat[input$Num_Reg,"EDAD"], " \n",
+           "Edad unitaria:", E3Dat[input$Num_Reg,"UNIEDAD"], " \n",
+           "Sitio de ocurrencia:", E3Dat[input$Num_Reg,"OCURRIO"], " \n",
+           "Recibió asistencia:", E3Dat[input$Num_Reg,"ASISTENCIA"], " \n"
+    )
+  })
+  #output$E3ENTREG<-renderText({E3Dat[input$Num_Reg,"ENTREG"]})
+  #output$E3ANIOREG<-renderText({E3Dat[input$Num_Reg,"ANIOREG"]})
+  #output$E3MESREG<-renderText({E3Dat[input$Num_Reg,"MESREG"]})
+  #output$E3UNIEDAD<-renderText({E3Dat[input$Num_Reg,"UNIEDAD"]})
+  #output$E3OCURRIO<-renderText({E3Dat[input$Num_Reg,"OCURRIO"]})
+  #output$E3ASISTENCIA<-renderText({E3Dat[input$Num_Reg,"ASISTENCIA"]})
+  
+  output$E3Folea2<-renderText({
+    paste0("Condición de embarazo:",E3Dat[input$Num_Reg,"CONDIEMB"], " \n",
+           "Fue un presunto:",     E3Dat[input$Num_Reg,"PRESUNTO"], " \n",
+           "Motivo de la lesión:",E3Dat[input$Num_Reg,"SITUACION"], " \n",
+           "Lugar donde ocurrió la lesión:",E3Dat[input$Num_Reg,"LUGLESION"], " \n",
+           "Parentesco del agresor:",E3Dat[input$Num_Reg,"VIOLENCIA"], " \n"
+    )
+  })
+  #output$E3CONDIEMB<-renderText({E3Dat[input$Num_Reg,"CONDIEMB"]})
+  #output$E3PRESUNTO<-renderText({E3Dat[input$Num_Reg,"PRESUNTO"]})
+  #output$E3SITUACION<-renderText({E3Dat[input$Num_Reg,"SITUACION"]})
+  #output$E3LUGLESION<-renderText({E3Dat[input$Num_Reg,"LUGLESION"]})
+  #output$E3VIOLENCIA<-renderText({E3Dat[input$Num_Reg,"VIOLENCIA"]})
+  output$E3DURATION2<-renderText({E3Dat[input$Num_Reg,"DURATION2"]})#
+  output$E3DURATION3<-renderText({E3Dat[input$Num_Reg,"DURATION3"]})#
+  output$E3DURATION4<-renderText({E3Dat[input$Num_Reg,"DURATION4"]})#
+  output$E3DURATION5<-renderText({E3Dat[input$Num_Reg,"DURATION5"]})#
+  #output$E3OMITIDO<-renderText({E3Dat[input$Num_Reg,"OMITIDO"]})
+  output$E3CODER<-renderText({E3Dat[input$Num_Reg,"CODER"]})
+  #output$E3RECODIA<-renderText({E3Dat[input$Num_Reg,"RECODIA"]})
+  #output$E3RECODIB<-renderText({E3Dat[input$Num_Reg,"RECODIB"]})
+  #output$E3RECODIC<-renderText({E3Dat[input$Num_Reg,"RECODIC"]})
+  #output$E3RECODID<-renderText({E3Dat[input$Num_Reg,"RECODID"]})
+  #output$E3RECODII<-renderText({E3Dat[input$Num_Reg,"RECODII"]})
+  output$E3CODER2<-renderText({E3Dat[input$Num_Reg,"CODER2"]})
+  output$E3REV<-renderText({E3Dat[input$Num_Reg,"REV"]})
+  output$E3NEWFLD<-renderText({E3Dat[input$Num_Reg,"NEWFLD"]})
+  
+  
+  
   output$E3COD<-renderText({values$d[input$Num_Reg]})
-  output$E3Tam<-renderText({Tamaño[1]})
+  #output$E3Tam<-renderText({Tamaño[1]})
   output$E3Nul<-renderText({
     Nulos <- values$d[is.na(values$d)]
     Cuan_Nul<-length(Nulos)
-    return(Cuan_Nul)})
+    Test<-paste0("Total de registros:",Tamaño[1],"                      ", "Nulos:",Cuan_Nul)
+    return(Test)})
+  
+  
+  #output$E3Link<-renderText({
+  #  Text<-paste0("https://eciemaps.mspsi.es/ecieMaps/browser/index_10_2008.html#search=",as.character(substr(values$d[input$Num_Reg],1,3)))
+    #cat("Text",Text)
+  #  return(Text)
+  #  })
+  output$E3CapTex<-renderText({values$e[input$Num_Reg]})
 })
 
 observe({
 r_options <- list()
-r_options[[paste(Etapa3Data()[input$Num_Reg,"CAUSADEF"], "Automático")]] <-paste0(as.character(Etapa3Data()[input$Num_Reg,"CAUSADEF"]),"")
-r_options[[paste(Etapa3Data()[input$Num_Reg,"RECODCBD"], "Codificador 1")]] <-paste0(as.character(Etapa3Data()[input$Num_Reg,"RECODCBD"]),"")
-r_options[[paste(Etapa3Data()[input$Num_Reg,"RECODCBD2"], "Codificador 2")]] <-paste0(as.character(Etapa3Data()[input$Num_Reg,"RECODCBD2"]),"")
+r_options[[paste(E3Dat[input$Num_Reg,"CAUSADEF"], "Automático")]] <-paste0(as.character(E3Dat[input$Num_Reg,"CAUSADEF"]),"")
+r_options[[paste(E3Dat[input$Num_Reg,"RECODCBD"], "Codificador 1")]] <-paste0(as.character(E3Dat[input$Num_Reg,"RECODCBD"]),"")
+r_options[[paste(E3Dat[input$Num_Reg,"RECODCBD2"], "Codificador 2")]] <-paste0(as.character(E3Dat[input$Num_Reg,"RECODCBD2"]),"")
 #r_options[[paste(Etapa3Data()[input$Num_Reg,"COD_SEL"], "Experto")]] <-paste0(as.character(Etapa3Data()[input$Num_Reg,"COD_SEL"]),"")
 
 # Set the label, choices, and selected item
-updateRadioButtons(session, "Cod_Cor",
+updateCheckboxGroupInput(session, "Cod_Cor",
                    label = "¿Cuál  es el código correcto?",
-                   choices = r_options,
-                   selected = paste0(as.character(Etapa3Data()[input$Num_Reg,"CAUSADEF"]),"")
+                   choices = r_options
+                   #selected = ""
+                   #selected = NULL #paste0(as.character(Etapa3Data()[input$Num_Reg,"CAUSADEF"]),"")
 )
 #Num_Reg<<-input$Num_Reg
 })
 
-observe({
+#observe({
   #Cod_fin<<-input$Cod_Cor
-  updateTextInput(session, "Et3_inText",
-                  label = paste("Código definitivo"),
-                  value = paste(input$Cod_Cor)
-  )
-})
+#  updateTextInput(session, "Et3_inText",
+#                  label = paste("Código definitivo"),
+#                  value = paste(input$Cod_Cor)
+#  )
+#})
 
 
-observeEvent(input$Bot_RAM, {
-  if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
-})
+#observeEvent(input$Bot_RAM, {
+#  if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
+#})
 
 observeEvent(input$Bot_Ant, {
   if (1<input$Num_Reg){updateNumericInput(session, "Num_Reg", value = input$Num_Reg-1)}
@@ -680,18 +806,20 @@ observeEvent(input$Bot_Sig, {
   if (input$Num_Reg<Tamaño[1]){updateNumericInput(session, "Num_Reg", value = input$Num_Reg+1)}
 })
 
-#output$Etapa3Tabla1 <- DT::renderDataTable({
-#  input$Bot_Guar
-  #Etapa3Data()<-CargarDatos()
-  #Etapa3Data()
-#  CargarDatos()
-#})
-#output$Etapa3Tabla1 <- DT::renderDataTable({
-#  input$Bot_Guar
-  #Etapa3Data()<-CargarDatos()
-  #Etapa3Data()
-#  CargarDatos()
-#})
+output$Etapa3Tabla1 <- renderDataTable({
+  E3Dat
+},options = list(lengthMenu = c(5, 10, 25, 50), 
+                 pageLength = 5))
+
+output$Etapa3Tabla2 <- renderDataTable({
+  E3Codigos
+},options = list(lengthMenu = c(5, 10, 25, 50), 
+                 pageLength = 10))
+
+observeEvent(input$E3_sal, {
+  SalvarDatos(E3Dat,values$d,values$e)#input$Num_Reg,input$Et3_inText
+  stopApp()
+})
 
 ####
 #_______________________________________________________________
@@ -957,7 +1085,7 @@ output$Etapa4TabPon3 <- renderTable({
 
 output$E4GI3 <- renderPlot({
   if(is.null(Etapa4DataInt3())) return()
-  Int.Conf3<-as.data.frame(Etapa4DataInt3())
+  Int.Conf3<-as.data.frame(Etapa4DataInt3(),stringsAsFactors = FALSE)
   Fcolor<-as.factor(Etapa4DataInt3()[,input$E4I3])
   Int.Conf3<-data.frame(Int.Conf3,Fcolor)
   Graf3D<-ggplot(Int.Conf3, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.3,size = .8)+theme_bw(base_size=14)
@@ -966,7 +1094,7 @@ output$E4GI3 <- renderPlot({
 
 output$E4GI4 <- renderPlot({
   if(is.null(Etapa4DataInt4())) return()
-  Int.Conf4<-as.data.frame(Etapa4DataInt4())
+  Int.Conf4<-as.data.frame(Etapa4DataInt4(),stringsAsFactors = FALSE)
   Fcolor<-as.factor(Etapa4DataInt4()[,input$E4I4])
   Int.Conf4<-data.frame(Int.Conf4,Fcolor)
   Graf4D<-ggplot(Int.Conf4, aes(x=factor(Cap), y=P,color=Fcolor))+geom_point()+geom_errorbar(aes(ymin=pinf3, ymax=psup3), width=0.3,size = .8)+theme_bw(base_size=14)
@@ -1057,19 +1185,45 @@ output$DescarE4Inter4 <- downloadHandler(
   }
 )
 
-output$downloadReportE2 <- downloadHandler(
+
+output$DescarE4Repot <- downloadHandler(
   filename = function() {
-    paste('Eta2Rep',input$file[1],Sys.Date(), '.pdf', sep='_')
+    paste('Reporte_2', sep = '.', switch(
+      input$format_2, HTML = 'html', Word = 'docx'
+    ))
   },
+  
   content = function(file) {
-    rnw <- normalizePath('ReporteE2.Rnw')
+    src <- normalizePath('Repote_2.Rmd')
+    
+    # temporarily switch to the temp dir, in case you do not have write
+    # permission to the current working directory
     owd <- setwd(tempdir())
     on.exit(setwd(owd))
-    library(knitr)
-    out <- knit2pdf(rnw)
+    file.copy(src, 'Repote_2.Rmd')
+    
+    library(rmarkdown)
+    out <- render('Repote_2.Rmd', switch(
+      input$format_2,
+      HTML = html_document(), Word = word_document()
+    ))
     file.rename(out, file)
   }
 )
+
+#output$downloadReportE2 <- downloadHandler(
+#  filename = function() {
+#    paste('Eta2Rep',input$file[1],Sys.Date(), '.pdf', sep='_')
+#  },
+#  content = function(file) {
+#    rnw <- normalizePath('ReporteE2.Rnw')
+#    owd <- setwd(tempdir())
+#    on.exit(setwd(owd))
+#    library(knitr)
+#    out <- knit2pdf(rnw)
+#    file.rename(out, file)
+#  }
+#)
 
 
 })
