@@ -2,7 +2,7 @@ Package: Sofi
 Type: Package
 Language: es
 Title: Interfaz interactiva con fines didacticos
-Version: 0.0.27
+Version: 0.0.28
 Date: 2015-07-01
 Depends: R (>= 3.1.0), shiny
 Imports: sampling, foreign
