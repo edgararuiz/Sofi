@@ -11,7 +11,7 @@ Este paquete tiene  la finalidad de ayudar a aprender diversos temas académicos
 \tabular{ll}{
 Package: \tab Sofi\cr
 Type: \tab Package\cr
-Version: \tab 0.0.27\cr
+Version: \tab 0.0.28\cr
 Date: \tab 2015-07-01\cr
 License: \tab GPL-3\cr
 }
