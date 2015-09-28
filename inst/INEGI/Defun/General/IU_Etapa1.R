@@ -33,7 +33,7 @@ sidebarPanel(
     uiOutput("NomAtn"),
     tags$hr(),
     p(HTML('<br/>Para dudas y sugerencias escribir a <a href="mailto:jose.loera@inegi.org.mx?subject=Registros%20administrativos" title="Enviar correo a Daniel">Enviar Mail</a>')),
-    actionButton("sal", "Salir")
+    actionButton("E1_sal", "Salir")
   ),
   
   conditionalPanel(

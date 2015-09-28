@@ -132,7 +132,11 @@ sidebarLayout(
                        tags$hr()               
       ),
       tags$hr(),
-      downloadButton('downloadReportE2', 'Reporte')
+      #downloadButton('downloadReportE2', 'Reporte')
+      
+      radioButtons('format_1', 'Formato del documento', c('HTML', 'Word'),
+                   inline = TRUE),
+      downloadButton('DescarE2Repot', 'Reporte 1')
       
     )
     

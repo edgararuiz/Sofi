@@ -134,7 +134,10 @@ sidebarLayout(
                        #uiOutput("Etap4Int4"),
                        tags$hr()               
       ),
-      tags$hr()
+      tags$hr(),
+      radioButtons('format_2', 'Formato del documento', c('HTML', 'Word'),
+                   inline = TRUE),
+      downloadButton('DescarE4Repot', 'Reporte 2')
       
     )
     
